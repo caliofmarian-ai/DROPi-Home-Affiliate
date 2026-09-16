@@ -1,8 +1,31 @@
 # Custom Furniture AI Intake
 
-Status: APPROVED DESIGN / DEFERRED IMPLEMENTATION
+Status: FOUNDATION IMPLEMENTED / CUSTOMER DATA COLLECTION DISABLED
 
-Owner decision: this capability is approved in principle, but implementation must wait until the independent commerce stream (affiliate, catalogue automation and any employer-independent no-stock commerce work) has been taken as far as possible without third-party account approvals or contracts.
+Owner decision: this capability is approved in principle. The employer-independent commerce stream has now reached the legitimate external-blocker boundary, so foundation implementation has started. No real customer intake, room-media upload, AI processing, manufacturer routing or employer integration is active yet.
+
+## Current implementation checkpoint — 16 September 2026
+
+Implemented in source:
+
+- `data/custom-intake-policy.json` — fail-closed feature policy;
+- `src/custom-intake.mjs` — request validation, readiness logic, actor permissions and state machine;
+- `tests/custom-intake.test.mjs` — safety/regression coverage;
+- `db/migrations/002-custom-intake.sql` — proposed private persistence schema;
+- SUPER_ADMIN build metadata/dashboard visibility for the intake gates.
+
+Current policy is deliberately:
+
+- public intake: **OFF**;
+- structured customer submission: **OFF**;
+- photo/video/audio uploads: **OFF**;
+- AI processing: **OFF**;
+- manufacturer routing: **OFF**;
+- private request storage: **NOT PROVISIONED**;
+- private media storage: **NOT PROVISIONED**;
+- AI training use of customer data: **NO_TRAINING**.
+
+The proposed database migration has been exercised on a temporary Neon branch only. Applying it to production requires a separate explicit owner approval. Creating empty private tables does not itself authorise collection of customer data; the feature policy remains OFF until privacy, retention, processor and storage gates are deliberately completed.
 
 ## Purpose
 
@@ -43,7 +66,9 @@ The intake should actively request missing measurements, for example:
 7. access route and stair/lift constraints where relevant;
 8. floor/wall irregularities that require a professional survey.
 
-Measurements should be stored in millimetres and tagged with provenance such as `CUSTOMER_TYPED`, `CUSTOMER_CONFIRMED`, `PHOTO_SUPPORTING_EVIDENCE` or `SITE_SURVEY_VERIFIED`.
+Measurements are stored in millimetres and tagged with provenance such as `CUSTOMER_TYPED`, `CUSTOMER_CONFIRMED`, `PHOTO_SUPPORTING_EVIDENCE` or `SITE_SURVEY_VERIFIED`.
+
+`PHOTO_SUPPORTING_EVIDENCE` alone is not sufficient to make a request human-review-ready for contract-critical dimensions. The current code requires customer-entered/confirmed or site-survey-verified dimensions.
 
 ## AI responsibilities
 
@@ -71,9 +96,11 @@ The AI must not:
 - represent a third-party branded design as freely copyable;
 - accept a consumer contract on behalf of a future manufacturing partner unless an explicit later commercial agreement authorises that role.
 
+The code explicitly rejects AI output fields that attempt to make binding quotation, manufacturing-guarantee, structural-safety or order-acceptance decisions.
+
 ## Structured request contract
 
-A future canonical request should include at least:
+The canonical request is designed to include at least:
 
 ```text
 request_id
@@ -95,8 +122,7 @@ budget_range
 target_date
 delivery_required
 fitting_required
-photos[]
-video[]
+media_refs[]
 transcript
 customer_notes
 ai_summary
@@ -107,11 +133,11 @@ manufacturing_status
 reviewer_notes
 ```
 
-Customer contact information and uploaded room media are private operational data and must never be committed to GitHub.
+Customer contact information and room media are private operational data and must never be committed to GitHub.
 
 ## Status model
 
-Suggested states:
+Canonical states:
 
 - `DRAFT_CUSTOMER_INPUT`
 - `WAITING_FOR_CUSTOMER_INFO`
@@ -126,7 +152,7 @@ Suggested states:
 - `CUSTOMER_DECLINED`
 - `CLOSED`
 
-`POTENTIALLY_PRODUCIBLE` is not a manufacturing commitment. A qualified human remains responsible for the production decision and quotation.
+`POTENTIALLY_PRODUCIBLE` is not a manufacturing commitment. The current state machine reserves manufacturing/quotation/decline decisions for `HUMAN_REVIEWER`; an `AI_INTAKE` actor cannot make them. Only the `CUSTOMER` actor may accept or decline a quotation.
 
 ## Routing with existing DROPi Home flows
 
@@ -162,15 +188,18 @@ Because customers may upload images or video from inside their homes:
 - uploads must be private by default;
 - the user must be warned not to film people, documents, screens or unrelated sensitive belongings where avoidable;
 - files must be stored outside GitHub in private object storage;
+- database media records store private storage keys, not public URLs;
 - access must be role-restricted and auditable;
 - retention must be documented and limited;
 - deletion requests must be supported;
 - AI processing must focus on the room, dimensions and requested furniture, not identity inference;
-- training/fine-tuning use of customer media is out of scope unless a later explicit lawful consent model is approved.
+- training/fine-tuning use of customer media remains out of scope unless a later explicit lawful model is approved.
+
+Enabling structured intake requires an approved retention period, versioned privacy notice and consent text, and evidence-backed privacy review. Enabling photo/video/audio or AI processing additionally requires processor/data-transfer review evidence.
 
 ## Employer/manufacturer dependency gate
 
-This module may be engineered only after the independent commerce work is substantially complete, but it must not send real leads to the current employer or any other manufacturer until a written commercial/data-processing arrangement defines:
+This module must not send real leads to the current employer or any other manufacturer until a written commercial/data-processing arrangement defines:
 
 - referral/agency/reseller status;
 - customer-contract owner;
@@ -183,16 +212,18 @@ This module may be engineered only after the independent commerce work is substa
 - media/brand permission;
 - conflict-of-interest/employment approval where relevant.
 
+The code has a separate `manufacturerRoutingEnabled` gate and refuses activation without agreement evidence.
+
 ## Approved implementation sequence
 
-1. Finish employer-independent affiliate/catalogue commerce work.
-2. Finish employer-independent dropshipping discovery and activation gates.
-3. Keep all custom-manufacturing functionality disabled.
-4. Build private intake storage, consent and request state machine.
-5. Add AI text/voice intake.
-6. Add photo/video intake and guided measurements.
-7. Add human review queue.
+1. Employer-independent affiliate/catalogue and dropshipping foundations — **reached external-blocker boundary**.
+2. Request state machine, consent/privacy gates and private schema — **foundation implemented; production schema pending owner approval**.
+3. Provision private persistent request storage and approve retention/privacy model.
+4. Add private text-only customer intake first.
+5. Add AI text/voice intake only after processor review.
+6. Provision private object storage and add photo/video intake plus guided measurements.
+7. Add restricted human review queue.
 8. Add manufacturing-partner routing only after a real written agreement exists.
-9. Add Who Fits It as a separately governed fitting route.
+9. Add `Who Fits It` as a separately governed fitting route.
 
-This document records the owner-approved concept so it is not lost while implementation is intentionally deferred.
+The project remains fail-closed: implementation progress does not by itself authorise processing real customer data or imply any relationship with the owner's employer.
