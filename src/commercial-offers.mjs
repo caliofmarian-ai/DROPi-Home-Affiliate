@@ -3,6 +3,7 @@ import { isFresh, affiliateDecision, affiliateTaxProfileValid } from './domain.m
 const PROGRAM_BY_PROVIDER = Object.freeze({ awin: 'awin', ebay: 'ebay-epn' });
 const MEDIA_SOURCE_BY_PROVIDER = Object.freeze({ awin: 'AWIN_FEED', ebay: 'EBAY_BROWSE_API' });
 const PROVIDER_PRIORITY = ['awin', 'ebay'];
+const DELIVERY_PRICE_STATUSES = new Set(['INCLUDED','EXCLUDED','CALCULATED_AT_CHECKOUT']);
 
 function evidenceOk(project, file) {
   return typeof file === 'string' && file.length > 0 && typeof project.evidenceExists === 'function' && project.evidenceExists(file);
@@ -17,6 +18,12 @@ export function validateCommercialApprovals(project, now = new Date()) {
     if (!isFresh(mapping.reviewedAt, project.site.sourceMaxAgeDays, now)) issues.push(`${key}: approved mapping review is missing or stale.`);
     if (!evidenceOk(project, mapping.approvalEvidenceFile)) issues.push(`${key}: approved mapping evidence file is missing.`);
     if (mapping.mediaApproved != null && typeof mapping.mediaApproved !== 'boolean') issues.push(`${key}: mediaApproved must be boolean when supplied.`);
+    if (mapping.priceDisplayApproved != null && typeof mapping.priceDisplayApproved !== 'boolean') issues.push(`${key}: priceDisplayApproved must be boolean when supplied.`);
+    if (mapping.priceDisplayApproved === true) {
+      if (typeof mapping.priceIncludesTax !== 'boolean') issues.push(`${key}: approved price display requires explicit priceIncludesTax.`);
+      if (!DELIVERY_PRICE_STATUSES.has(mapping.deliveryPriceStatus)) issues.push(`${key}: approved price display requires INCLUDED, EXCLUDED or CALCULATED_AT_CHECKOUT deliveryPriceStatus.`);
+      if (!evidenceOk(project, mapping.pricePresentationEvidenceFile)) issues.push(`${key}: approved price presentation requires evidence.`);
+    }
   }
   return issues;
 }
@@ -50,6 +57,19 @@ function currentOffer(project, mapping, now) {
   return { ok: true, offer };
 }
 
+function approvedPrice(mapping, offer, project) {
+  if (mapping.priceDisplayApproved !== true || !offer.price) return { price: null, pricePresentation: null };
+  if (typeof mapping.priceIncludesTax !== 'boolean' || !DELIVERY_PRICE_STATUSES.has(mapping.deliveryPriceStatus) || !evidenceOk(project, mapping.pricePresentationEvidenceFile)) return { price: null, pricePresentation: null };
+  return {
+    price: offer.price,
+    pricePresentation: {
+      approved: true,
+      tax: mapping.priceIncludesTax ? 'Tax included' : 'Tax excluded',
+      delivery: mapping.deliveryPriceStatus === 'INCLUDED' ? 'Delivery included' : mapping.deliveryPriceStatus === 'EXCLUDED' ? 'Delivery extra' : 'Delivery calculated at checkout'
+    }
+  };
+}
+
 export function providerOfferDecision(product, project, origin, now = new Date()) {
   const inactive = reason => ({ active: false, reason, url: product.source.url, kind: 'RESEARCH_ONLY' });
   if (!project.site?.monetization?.enabled) return inactive('MONETIZATION_DISABLED');
@@ -67,6 +87,7 @@ export function providerOfferDecision(product, project, origin, now = new Date()
     const media = mapped.mapping.mediaApproved === true && live.offer.imageUrl
       ? { status: 'APPROVED', source: MEDIA_SOURCE_BY_PROVIDER[provider], url: live.offer.imageUrl, alt: `${live.offer.title || product.name} product image`, checkedAt: live.offer.checkedAt }
       : null;
+    const price = approvedPrice(mapped.mapping, live.offer, project);
     return {
       active: true,
       reason: 'APPROVED_PROVIDER_OFFER',
@@ -74,7 +95,8 @@ export function providerOfferDecision(product, project, origin, now = new Date()
       provider,
       programId: programme.programId,
       url: live.offer.trackingUrl,
-      price: live.offer.price || null,
+      price: price.price,
+      pricePresentation: price.pricePresentation,
       availability: live.offer.availability || null,
       media,
       checkedAt: live.offer.checkedAt
