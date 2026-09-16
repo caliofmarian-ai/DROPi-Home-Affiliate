@@ -14,7 +14,14 @@
   },
   "operator": {
     "publicName": null,
-    "contactEmail": null
+    "legalName": null,
+    "geographicAddress": null,
+    "contactEmail": null,
+    "phone": null,
+    "businessNameStatus": "NOT_REVIEWED",
+    "businessNameEvidenceFile": null,
+    "taxReviewStatus": "NOT_REVIEWED",
+    "taxReviewEvidenceFile": null
   },
   "privacyReview": {
     "approved": false,
@@ -34,12 +41,18 @@
   "analytics": {
     "enabled": false
   },
+  "legalControls": {
+    "affiliateDisclosureLabel": "#Ad",
+    "conversionTrackingEnabled": false,
+    "dropshippingSellingEnabled": false,
+    "consumerCheckoutEnabled": false
+  },
   "spending": {
     "approvedNewMonthlyEUR": 0,
     "proposedMonthlyCeilingEUR": 50,
     "adsEnabled": false
   },
   "disclosure": "Research links are not affiliate links in this build. No commission is earned from them. We do not sell products, take payments or fulfil orders.",
-  "affiliateDisclosure": "Advertisement / affiliate links. We may earn a commission from eligible purchases. You buy from the named retailer, not from DROPi Home.",
+  "affiliateDisclosure": "#Ad — Affiliate links. We may earn a commission from eligible purchases. You buy from the named retailer, not from DROPi Home.",
   "amazonDisclosure": "As an Amazon Associate I earn from qualifying purchases."
 }
