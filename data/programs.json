@@ -11,6 +11,14 @@
     "approvalEvidenceFile": null,
     "approvedSiteOrigin": null,
     "termsReviewedAt": null,
+    "taxProfile": {
+      "status": "NOT_REVIEWED",
+      "counterpartyLegalName": null,
+      "countryCode": null,
+      "vatId": null,
+      "treatment": null,
+      "evidenceFile": null
+    },
     "publicInfoUrl": "https://affiliate-program.amazon.ie/"
   },
   {
@@ -26,6 +34,14 @@
     "approvalEvidenceFile": null,
     "approvedSiteOrigin": null,
     "termsReviewedAt": null,
+    "taxProfile": {
+      "status": "NOT_REVIEWED",
+      "counterpartyLegalName": null,
+      "countryCode": null,
+      "vatId": null,
+      "treatment": null,
+      "evidenceFile": null
+    },
     "publicInfoUrl": "https://www.awin.com/"
   },
   {
@@ -40,6 +56,14 @@
     "approvalEvidenceFile": null,
     "approvedSiteOrigin": null,
     "termsReviewedAt": null,
+    "taxProfile": {
+      "status": "NOT_REVIEWED",
+      "counterpartyLegalName": null,
+      "countryCode": null,
+      "vatId": null,
+      "treatment": null,
+      "evidenceFile": null
+    },
     "publicInfoUrl": "https://partnernetwork.ebay.com/"
   }
 ]
