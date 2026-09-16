@@ -23,8 +23,8 @@ function productCard(p, { compare = true } = {}) {
   const destination = p.affiliate.active
     ? `<span class="ad-label">#Ad · affiliate link</span><a class="text-link" href="${e(p.affiliate.url)}" rel="sponsored nofollow noopener" target="_blank">View offer ↗</a>`
     : `<a class="text-link" href="${e(p.source.url)}" rel="noopener noreferrer" target="_blank">Manufacturer specification ↗</a>`;
-  const commercial = p.affiliate.active && p.affiliate.price?.currency === 'EUR'
-    ? `<p class="offer-price"><strong>${e(euro(p.affiliate.price.amount))}</strong><br><span class="small muted">Provider feed price · checked ${e(p.affiliate.checkedAt || '')}. Retailer price at checkout controls.</span></p>`
+  const commercial = p.affiliate.active && p.affiliate.price?.currency === 'EUR' && p.affiliate.pricePresentation?.approved === true
+    ? `<p class="offer-price"><strong>${e(euro(p.affiliate.price.amount))}</strong><br><span class="small muted">${e(p.affiliate.pricePresentation.tax)} · ${e(p.affiliate.pricePresentation.delivery)} · provider feed checked ${e(p.affiliate.checkedAt || '')}. Retailer price at checkout controls.</span></p>`
     : '';
   return `<article class="product-card" data-product-id="${e(p.id)}" data-category="${e(p.category)}">
     <div class="card-top">${chip(categories[p.category])}${compare ? `<label class="compare-choice"><input type="checkbox" data-compare="${e(p.id)}"> Compare</label>` : ''}</div>
