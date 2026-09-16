@@ -7,6 +7,7 @@ import { validateCatalogueMedia } from '../src/catalogue-media.mjs';
 import { validateProviderMappings, validateProviderOffers } from '../src/provider-offers.mjs';
 import { validateCommercialApprovals } from '../src/commercial-offers.mjs';
 import { validateDropshipSuppliers } from '../src/dropship.mjs';
+import { validateDropshipSkus } from '../src/dropship-sku.mjs';
 import { renderSite } from '../src/render.mjs';
 
 function counts(list, key = 'status') {
@@ -24,7 +25,8 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     ...validateProviderMappings(p.providerMappings, p.products.map(x => x.id)),
     ...validateProviderOffers(p.providerOffers),
     ...validateCommercialApprovals(p, now),
-    ...validateDropshipSuppliers(p.dropshipSuppliers)
+    ...validateDropshipSuppliers(p.dropshipSuppliers),
+    ...validateDropshipSkus(p.dropshipSkus, p.dropshipSuppliers)
   ];
   if (issues.length) throw new Error(`Build blocked:\n- ${issues.join('\n- ')}`);
   const origin = publicOrigin(env.SITE_ORIGIN); const rendered = renderSite(p, { mode, origin, now });
@@ -56,6 +58,9 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     providerMappingsByStatus: counts(p.providerMappings),
     providerOffers: counts(p.providerOffers),
     dropshipSuppliers: counts(p.dropshipSuppliers),
+    dropshipSkuCount: p.dropshipSkus.length,
+    dropshipSkusByStatus: counts(p.dropshipSkus),
+    dropshipPilotSkuCount: p.dropshipSkus.filter(x => x.status === 'APPROVED_FOR_PILOT').length,
     dropshippingSellingEnabled: p.site.legalControls?.dropshippingSellingEnabled === true,
     consumerCheckoutEnabled: p.site.legalControls?.consumerCheckoutEnabled === true,
     conversionTrackingEnabled: p.site.legalControls?.conversionTrackingEnabled === true,
@@ -67,7 +72,7 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     mode,
     builtAt: new Date(now).toISOString(),
     expiresAt: new Date(Math.min(...deadlines)).toISOString(),
-    sourceSnapshotSha256: sha256({ site: p.site, products: p.products, guides: p.guides, links: p.links, programs: p.programs, reviews: p.reviews, providerMappings: p.providerMappings, providerOffers: p.providerOffers, dropshipSuppliers: p.dropshipSuppliers }),
+    sourceSnapshotSha256: sha256({ site: p.site, products: p.products, guides: p.guides, links: p.links, programs: p.programs, reviews: p.reviews, providerMappings: p.providerMappings, providerOffers: p.providerOffers, dropshipSuppliers: p.dropshipSuppliers, dropshipSkus: p.dropshipSkus }),
     pages: rendered.pages.size,
     products: p.products.length,
     guides: p.guides.length,
