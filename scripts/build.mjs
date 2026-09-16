@@ -17,8 +17,9 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
   if (!['preview', 'public'].includes(env.RELEASE_MODE || 'preview')) throw new Error('RELEASE_MODE must be preview or public.');
   const mode = env.RELEASE_MODE || 'preview'; const p = loadProject(root);
   if (mode === 'preview' && p.site.monetization.enabled) throw new Error('Preview builds cannot activate monetization.');
+  const publicReleaseBlockers = releaseIssues(p, env, now);
   const issues = [
-    ...(mode === 'public' ? releaseIssues(p, env, now) : validateProject(p)),
+    ...(mode === 'public' ? publicReleaseBlockers : validateProject(p)),
     ...validateCatalogueMedia(p),
     ...validateProviderMappings(p.providerMappings, p.products.map(x => x.id)),
     ...validateProviderOffers(p.providerOffers),
@@ -55,7 +56,11 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     providerMappingsByStatus: counts(p.providerMappings),
     providerOffers: counts(p.providerOffers),
     dropshipSuppliers: counts(p.dropshipSuppliers),
-    dropshippingSellingEnabled: false
+    dropshippingSellingEnabled: p.site.legalControls?.dropshippingSellingEnabled === true,
+    consumerCheckoutEnabled: p.site.legalControls?.consumerCheckoutEnabled === true,
+    conversionTrackingEnabled: p.site.legalControls?.conversionTrackingEnabled === true,
+    publicReleaseBlockerCount: publicReleaseBlockers.length,
+    publicReleaseBlockers
   };
   const metadata = {
     schemaVersion: 1,
