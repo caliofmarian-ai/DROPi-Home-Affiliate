@@ -1,0 +1,50 @@
+[
+  {
+    "id": "gie-ireland",
+    "name": "GIE Ireland",
+    "status": "RESEARCH_ONLY",
+    "website": "https://gieireland.com/",
+    "checkedAt": "2026-09-16",
+    "market": "IRELAND_FURNITURE",
+    "irelandDelivery": "PUBLICLY_CLAIMED",
+    "stockSync": "NOT_VERIFIED",
+    "orderAutomation": "NOT_VERIFIED",
+    "returnsTerms": "NOT_VERIFIED",
+    "mediaRights": "NOT_VERIFIED",
+    "tradeAccount": "APPLICATION_REQUIRED",
+    "paidPlanApproved": false,
+    "notes": "Public material describes furniture dropshipping/direct delivery and trade-account signup. Exact commercial terms require direct verification."
+  },
+  {
+    "id": "syncee-marketplace",
+    "name": "Syncee",
+    "status": "RESEARCH_ONLY",
+    "website": "https://www.syncee.com/",
+    "checkedAt": "2026-09-16",
+    "market": "SUPPLIER_MARKETPLACE",
+    "irelandDelivery": "SUPPLIER_DEPENDENT",
+    "stockSync": "PUBLICLY_CLAIMED",
+    "orderAutomation": "PUBLICLY_CLAIMED",
+    "returnsTerms": "SUPPLIER_DEPENDENT",
+    "mediaRights": "SUPPLIER_DEPENDENT",
+    "tradeAccount": "PLATFORM_ACCOUNT_REQUIRED",
+    "paidPlanApproved": false,
+    "notes": "Marketplace includes Home & Garden/Furniture; each supplier and SKU must independently pass Irish delivery, returns, compliance and margin gates."
+  },
+  {
+    "id": "bigbuy-eu",
+    "name": "BigBuy",
+    "status": "RESEARCH_ONLY",
+    "website": "https://www.bigbuy.eu/",
+    "checkedAt": "2026-09-16",
+    "market": "EU_DISTRIBUTOR",
+    "irelandDelivery": "TO_VERIFY",
+    "stockSync": "TO_VERIFY",
+    "orderAutomation": "TO_VERIFY",
+    "returnsTerms": "TO_VERIFY",
+    "mediaRights": "TO_VERIFY",
+    "tradeAccount": "TO_VERIFY",
+    "paidPlanApproved": false,
+    "notes": "EU supplier candidate. No subscription or commercial claim is approved until exact Irish pricing, API access and terms are checked directly."
+  }
+]
