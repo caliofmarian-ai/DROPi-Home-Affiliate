@@ -18,6 +18,27 @@ function ebayIrelandHost(raw) {
   } catch { return false; }
 }
 
+export function validateProviderMappings(mappings, productIds = []) {
+  const issues = [];
+  if (!Array.isArray(mappings)) return ['Provider mappings must be an array.'];
+  const known = new Set(productIds || []);
+  const seen = new Set();
+  for (const mapping of mappings) {
+    const provider = mapping?.provider;
+    const productId = mapping?.productId;
+    const key = `${provider}:${productId}`;
+    if (!['awin', 'ebay', 'amazon'].includes(provider)) issues.push(`${key}: unsupported provider.`);
+    if (!productId || (known.size && !known.has(productId))) issues.push(`${key}: unknown or missing local productId.`);
+    if (!mapping?.externalProductId) issues.push(`${key}: externalProductId is required.`);
+    if (seen.has(key)) issues.push(`${key}: duplicate local provider mapping.`);
+    seen.add(key);
+    if (provider === 'awin' && !String(mapping.advertiserId || '').match(/^\d+$/)) issues.push(`${key}: Awin advertiserId must be numeric.`);
+    if (provider === 'amazon' && !/^[A-Z0-9]{10}$/.test(String(mapping.externalProductId || ''))) issues.push(`${key}: Amazon externalProductId must be a 10-character ASIN.`);
+    if (mapping.status != null && !['PENDING', 'APPROVED', 'REVOKED'].includes(mapping.status)) issues.push(`${key}: invalid mapping status.`);
+  }
+  return issues;
+}
+
 export function parseAwinJsonl(text) {
   if (typeof text !== 'string') throw new Error('Awin feed must be text.');
   const rows = [];
@@ -64,21 +85,9 @@ export function stageAwinOffers({ rows, mappings, advertiserId, checkedAt }) {
     const row = byId.get(String(mapping.externalProductId));
     if (!row) continue;
     out.push({
-      provider: 'awin',
-      status: 'STAGED',
-      productId: String(mapping.productId),
-      advertiserId: String(advertiserId),
-      externalProductId: row.externalProductId,
-      title: row.title,
-      destinationUrl: row.destinationUrl,
-      trackingUrl: null,
-      imageUrl: row.imageUrl,
-      price: row.price,
-      availability: row.availability,
-      brand: row.brand,
-      gtin: row.gtin,
-      mpn: row.mpn,
-      checkedAt
+      provider: 'awin', status: 'STAGED', productId: String(mapping.productId), advertiserId: String(advertiserId),
+      externalProductId: row.externalProductId, title: row.title, destinationUrl: row.destinationUrl, trackingUrl: null,
+      imageUrl: row.imageUrl, price: row.price, availability: row.availability, brand: row.brand, gtin: row.gtin, mpn: row.mpn, checkedAt
     });
   }
   return out.sort((a, b) => a.productId.localeCompare(b.productId));
@@ -98,19 +107,12 @@ export function normaliseEbayItem(item) {
   const imageUrl = item.image?.imageUrl || null;
   if (imageUrl && !safeHttps(imageUrl)) throw new Error('eBay item image must be HTTPS.');
   const price = item.price && Number.isFinite(Number(item.price.value)) && typeof item.price.currency === 'string'
-    ? { amount: Number(item.price.value), currency: item.price.currency }
-    : null;
+    ? { amount: Number(item.price.value), currency: item.price.currency } : null;
   return {
-    externalProductId: String(item.itemId),
-    title: String(item.title),
-    destinationUrl: item.itemWebUrl,
-    trackingUrl: item.itemAffiliateWebUrl,
-    imageUrl,
-    price,
+    externalProductId: String(item.itemId), title: String(item.title), destinationUrl: item.itemWebUrl,
+    trackingUrl: item.itemAffiliateWebUrl, imageUrl, price,
     availability: typeof item.estimatedAvailabilities?.[0]?.estimatedAvailabilityStatus === 'string' ? item.estimatedAvailabilities[0].estimatedAvailabilityStatus : null,
-    brand: null,
-    gtin: item.gtin || null,
-    mpn: item.mpn || null
+    brand: null, gtin: item.gtin || null, mpn: item.mpn || null
   };
 }
 
@@ -118,10 +120,7 @@ export function stageEbayOffers({ items, mappings, campaignId, checkedAt }) {
   if (!Array.isArray(items) || !Array.isArray(mappings)) throw new Error('Items and mappings must be arrays.');
   if (!/^\d{10}$/.test(String(campaignId || ''))) throw new Error('eBay campaignId must be the 10-digit EPN campaign ID.');
   if (!dateOnly(checkedAt)) throw new Error('checkedAt must be YYYY-MM-DD.');
-  const byId = new Map(items.map(item => {
-    const n = normaliseEbayItem(item);
-    return [n.externalProductId, n];
-  }));
+  const byId = new Map(items.map(item => { const n = normaliseEbayItem(item); return [n.externalProductId, n]; }));
   const out = [];
   for (const mapping of mappings) {
     if (mapping.provider !== 'ebay') continue;
@@ -129,21 +128,9 @@ export function stageEbayOffers({ items, mappings, campaignId, checkedAt }) {
     const item = byId.get(String(mapping.externalProductId));
     if (!item) continue;
     out.push({
-      provider: 'ebay',
-      status: 'STAGED',
-      productId: String(mapping.productId),
-      campaignId: String(campaignId),
-      externalProductId: item.externalProductId,
-      title: item.title,
-      destinationUrl: item.destinationUrl,
-      trackingUrl: item.trackingUrl,
-      imageUrl: item.imageUrl,
-      price: item.price,
-      availability: item.availability,
-      brand: item.brand,
-      gtin: item.gtin,
-      mpn: item.mpn,
-      checkedAt
+      provider: 'ebay', status: 'STAGED', productId: String(mapping.productId), campaignId: String(campaignId),
+      externalProductId: item.externalProductId, title: item.title, destinationUrl: item.destinationUrl, trackingUrl: item.trackingUrl,
+      imageUrl: item.imageUrl, price: item.price, availability: item.availability, brand: item.brand, gtin: item.gtin, mpn: item.mpn, checkedAt
     });
   }
   return out.sort((a, b) => a.productId.localeCompare(b.productId));
@@ -151,8 +138,9 @@ export function stageEbayOffers({ items, mappings, campaignId, checkedAt }) {
 
 export function validateProviderOffers(offers) {
   const issues = [];
+  if (!Array.isArray(offers)) return ['Provider offers must be an array.'];
   const seen = new Set();
-  for (const offer of offers || []) {
+  for (const offer of offers) {
     const key = `${offer.provider}:${offer.productId}`;
     if (seen.has(key)) issues.push(`Duplicate provider offer ${key}.`);
     seen.add(key);
