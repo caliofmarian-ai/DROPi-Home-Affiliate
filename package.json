@@ -16,6 +16,8 @@
     "scenario": "node scripts/scenario.mjs",
     "import:ledger": "node scripts/import-ledger.mjs",
     "sync:awin": "node scripts/sync-awin.mjs",
-    "sync:ebay": "node scripts/sync-ebay.mjs"
+    "sync:ebay": "node scripts/sync-ebay.mjs",
+    "report:awin": "node scripts/fetch-awin-transactions.mjs",
+    "report:ebay": "node scripts/normalise-ebay-tdr.mjs"
   }
 }
