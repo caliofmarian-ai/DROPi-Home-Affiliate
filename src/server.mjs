@@ -9,17 +9,20 @@ function same(a, b) { const x = Buffer.from(a || ''), y = Buffer.from(b || ''); 
 function escapeHTML(value) { return String(value ?? '').replace(/[&<>"']/g, x => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[x]); }
 function readBody(req, max = 8192) { return new Promise((resolveBody, reject) => { let size = 0; const chunks = []; req.on('data', chunk => { size += chunk.length; if (size > max) { reject(new Error('Request too large.')); req.destroy(); return; } chunks.push(chunk); }); req.on('end', () => resolveBody(Buffer.concat(chunks).toString('utf8'))); req.on('error', reject); }); }
 function form(body) { const params = new URLSearchParams(body); return Object.fromEntries(params.entries()); }
-function page(title, body) { return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHTML(title)} · DROPi Home</title><link rel="stylesheet" href="/styles.css"></head><body><main class="shell" style="max-width:760px;margin:3rem auto;padding:1rem"><h1>${escapeHTML(title)}</h1>${body}</main></body></html>`; }
+function page(title, body) { return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHTML(title)} · DROPi Home</title></head><body><main style="max-width:760px;margin:3rem auto;padding:1rem;font:18px/1.45 system-ui,sans-serif"><h1>${escapeHTML(title)}</h1>${body}</main></body></html>`; }
 function loginForm({ setup = false, error = '' } = {}) { return page(setup ? 'Create super-admin account' : 'Admin sign in', `${error ? `<p role="alert"><strong>${escapeHTML(error)}</strong></p>` : ''}<p>${setup ? 'Create the first administrator account. Your password is sent directly to the authentication service and is never committed to GitHub.' : 'Sign in to the private administration area.'}</p><form method="post" action="${setup ? '/admin/setup' : '/admin/login'}"><label>${setup ? 'Display name' : 'Email'}<br><input name="${setup ? 'name' : 'email'}" ${setup ? '' : 'type="email"'} required autocomplete="${setup ? 'name' : 'username'}"></label>${setup ? '<br><br><label>Email<br><input name="email" type="email" required autocomplete="username"></label>' : ''}<br><br><label>Password<br><input name="password" type="password" minlength="12" maxlength="128" required autocomplete="${setup ? 'new-password' : 'current-password'}"></label><br><br><button type="submit">${setup ? 'Create super-admin' : 'Sign in'}</button></form>`); }
 function copySetCookies(upstream, res) { const values = typeof upstream.headers.getSetCookie === 'function' ? upstream.headers.getSetCookie() : []; if (values.length) res.setHeader('Set-Cookie', values); else { const cookie = upstream.headers.get('set-cookie'); if (cookie) res.setHeader('Set-Cookie', cookie); } }
 function hasSuperAdminRole(user) { const raw = user?.role ?? user?.roles ?? []; const roles = Array.isArray(raw) ? raw : String(raw).split(','); return roles.map(x => String(x).trim().toLowerCase()).includes('super_admin'); }
+function validOrigin(raw) { try { const u = new URL(raw); return u.protocol === 'https:' && !u.username && !u.password && !u.port && u.pathname === '/' && !u.search && !u.hash ? u.origin : null; } catch { return null; } }
 
-export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0.0.1', token = process.env.PREVIEW_ACCESS_CODE, now = () => new Date(), authBase = process.env.NEON_AUTH_BASE_URL, bootstrap = process.env.ADMIN_BOOTSTRAP_MODE === 'true', fetchImpl = fetch } = {}) {
+export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0.0.1', token = process.env.PREVIEW_ACCESS_CODE, now = () => new Date(), authBase = process.env.NEON_AUTH_BASE_URL, adminOrigin = process.env.ADMIN_PUBLIC_ORIGIN, bootstrap = process.env.ADMIN_BOOTSTRAP_MODE === 'true', fetchImpl = fetch } = {}) {
   const base = realpathSync(root); const meta = JSON.parse(readFileSync(resolve(base, '.build-meta.json'), 'utf8'));
   if (meta.schemaVersion !== 1 || !['public', 'preview'].includes(meta.mode) || !Number.isFinite(Date.parse(meta.expiresAt))) throw new Error('Invalid build metadata. Rebuild before serving.');
   if (meta.mode === 'preview' && !['127.0.0.1', '::1', 'localhost'].includes(host) && (!token || token.length < 32)) throw new Error('Non-loopback preview hosting requires PREVIEW_ACCESS_CODE with at least 32 characters. Noindex is not access control.');
   if (token && token.length < 32) throw new Error('PREVIEW_ACCESS_CODE must have at least 32 characters.');
   if ((bootstrap || process.env.ADMIN_AUTH_REQUIRED === 'true') && !authBase) throw new Error('NEON_AUTH_BASE_URL is required for admin authentication.');
+  const canonicalAdminOrigin = validOrigin(adminOrigin);
+  if ((bootstrap || process.env.ADMIN_AUTH_REQUIRED === 'true') && !canonicalAdminOrigin) throw new Error('ADMIN_PUBLIC_ORIGIN must be an absolute HTTPS origin.');
   const assets = new Map();
   for (const [route, file] of Object.entries(meta.routes)) {
     const absolute = realpathSync(resolve(base, file)); if (!absolute.startsWith(base + sep)) throw new Error('Build route escapes output directory.');
@@ -28,7 +31,7 @@ export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0
     assets.set(route, { buffer, contentType: mime[extname(file)] || 'application/octet-stream' });
   }
   const expected = token ? `Basic ${Buffer.from(`preview:${token}`).toString('base64')}` : null;
-  async function auth(path, options = {}) { return fetchImpl(`${authBase}${path}`, { redirect: 'manual', ...options, headers: { 'content-type': 'application/json', ...(options.headers || {}) } }); }
+  async function auth(path, options = {}) { return fetchImpl(`${authBase}${path}`, { redirect: 'manual', ...options, headers: { 'content-type': 'application/json', origin: canonicalAdminOrigin, ...(options.headers || {}) } }); }
   async function session(req) { if (!authBase) return null; const upstream = await auth('/get-session', { method: 'GET', headers: { cookie: req.headers.cookie || '' } }); if (!upstream.ok) return null; const data = await upstream.json().catch(() => null); return data?.user ? data : data?.data?.user ? data.data : null; }
 
   return httpServer({ requestTimeout: 15000, headersTimeout: 10000, maxHeaderSize: 8192 }, async (req, res) => {
@@ -48,7 +51,7 @@ export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0
       try {
         const input = form(await readBody(req));
         if (!input.name?.trim() || !/^\S+@\S+\.\S+$/.test(input.email || '') || String(input.password || '').length < 12) return send(400, loginForm({ setup: true, error: 'Use a valid name, email and a password of at least 12 characters.' }), 'text/html; charset=utf-8');
-        const upstream = await auth('/sign-up/email', { method: 'POST', body: JSON.stringify({ name: input.name.trim(), email: input.email.trim().toLowerCase(), password: input.password }) });
+        const upstream = await auth('/sign-up/email', { method: 'POST', body: JSON.stringify({ name: input.name.trim(), email: input.email.trim().toLowerCase(), password: input.password, callbackURL: `${canonicalAdminOrigin}/admin` }) });
         const payload = await upstream.json().catch(() => ({}));
         if (!upstream.ok) return send(400, loginForm({ setup: true, error: payload?.message || payload?.error?.message || 'Account creation failed.' }), 'text/html; charset=utf-8');
         copySetCookies(upstream, res); res.statusCode = 303; res.setHeader('Location', '/admin'); return res.end();
@@ -58,7 +61,7 @@ export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0
     if (path === '/admin/login' && req.method === 'POST') {
       try {
         const input = form(await readBody(req));
-        const upstream = await auth('/sign-in/email', { method: 'POST', body: JSON.stringify({ email: String(input.email || '').trim().toLowerCase(), password: String(input.password || ''), rememberMe: true }) });
+        const upstream = await auth('/sign-in/email', { method: 'POST', body: JSON.stringify({ email: String(input.email || '').trim().toLowerCase(), password: String(input.password || ''), rememberMe: true, callbackURL: `${canonicalAdminOrigin}/admin` }) });
         const payload = await upstream.json().catch(() => ({}));
         if (!upstream.ok) return send(401, loginForm({ error: payload?.message || payload?.error?.message || 'Invalid credentials.' }), 'text/html; charset=utf-8');
         copySetCookies(upstream, res); res.statusCode = 303; res.setHeader('Location', '/admin'); return res.end();
