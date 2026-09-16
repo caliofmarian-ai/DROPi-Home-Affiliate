@@ -4,15 +4,27 @@ import { fileURLToPath } from 'node:url';
 import { loadProject } from '../src/project.mjs';
 import { validateProject, releaseIssues, publicOrigin, dateOnly, DAY, sha256 } from '../src/domain.mjs';
 import { validateCatalogueMedia } from '../src/catalogue-media.mjs';
+import { validateProviderMappings, validateProviderOffers } from '../src/provider-offers.mjs';
+import { validateDropshipSuppliers } from '../src/dropship.mjs';
 import { renderSite } from '../src/render.mjs';
+
+function counts(list, key = 'status') {
+  return Object.fromEntries([...new Set((list || []).map(x => x?.[key] ?? 'UNKNOWN'))].sort().map(value => [value, (list || []).filter(x => (x?.[key] ?? 'UNKNOWN') === value).length]));
+}
+
 export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), env = process.env, now = new Date() } = {}) {
   if (!['preview', 'public'].includes(env.RELEASE_MODE || 'preview')) throw new Error('RELEASE_MODE must be preview or public.');
   const mode = env.RELEASE_MODE || 'preview'; const p = loadProject(root);
   if (mode === 'preview' && p.site.monetization.enabled) throw new Error('Preview builds cannot activate monetization.');
-  const issues = [...(mode === 'public' ? releaseIssues(p, env, now) : validateProject(p)), ...validateCatalogueMedia(p)];
+  const issues = [
+    ...(mode === 'public' ? releaseIssues(p, env, now) : validateProject(p)),
+    ...validateCatalogueMedia(p),
+    ...validateProviderMappings(p.providerMappings, p.products.map(x => x.id)),
+    ...validateProviderOffers(p.providerOffers),
+    ...validateDropshipSuppliers(p.dropshipSuppliers)
+  ];
   if (issues.length) throw new Error(`Build blocked:\n- ${issues.join('\n- ')}`);
   const origin = publicOrigin(env.SITE_ORIGIN); const rendered = renderSite(p, { mode, origin, now });
-  // Destructive output cleaning is deliberately restricted to a directory named dist.
   if (outDir !== resolve(root, 'dist')) throw new Error('Output must be the project dist directory.');
   rmSync(outDir, { recursive: true, force: true }); mkdirSync(resolve(outDir, 'assets'), { recursive: true });
   const routes = {};
@@ -32,7 +44,27 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     for (const program of p.programs.filter(x => p.links.some(l => l.programId === x.id))) deadlines.push(dateOnly(program.termsReviewedAt) + p.site.sourceMaxAgeDays * DAY);
   }
   const hashes = Object.fromEntries(Object.values(routes).map(f => [f, sha256(readFileSync(resolve(outDir, f), 'utf8'))]));
-  const metadata = { schemaVersion: 1, mode, builtAt: new Date(now).toISOString(), expiresAt: new Date(Math.min(...deadlines)).toISOString(), sourceSnapshotSha256: sha256({ site: p.site, products: p.products, guides: p.guides, links: p.links, programs: p.programs, reviews: p.reviews }), pages: rendered.pages.size, products: p.products.length, guides: p.guides.length, routes, hashes };
+  const commerce = {
+    monetizationEnabled: p.site.monetization.enabled,
+    affiliatePrograms: counts(p.programs),
+    providerMappings: p.providerMappings.length,
+    providerOffers: counts(p.providerOffers),
+    dropshipSuppliers: counts(p.dropshipSuppliers),
+    dropshippingSellingEnabled: false
+  };
+  const metadata = {
+    schemaVersion: 1,
+    mode,
+    builtAt: new Date(now).toISOString(),
+    expiresAt: new Date(Math.min(...deadlines)).toISOString(),
+    sourceSnapshotSha256: sha256({ site: p.site, products: p.products, guides: p.guides, links: p.links, programs: p.programs, reviews: p.reviews, providerMappings: p.providerMappings, providerOffers: p.providerOffers, dropshipSuppliers: p.dropshipSuppliers }),
+    pages: rendered.pages.size,
+    products: p.products.length,
+    guides: p.guides.length,
+    commerce,
+    routes,
+    hashes
+  };
   writeFileSync(resolve(outDir, '.build-meta.json'), JSON.stringify(metadata, null, 2));
   return metadata;
 }
