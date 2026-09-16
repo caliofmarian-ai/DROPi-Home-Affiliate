@@ -48,24 +48,37 @@ export function parseAwinJsonl(text) {
     let value;
     try { value = JSON.parse(line); } catch { throw new Error(`Invalid Awin JSONL at line ${index + 1}.`); }
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`Invalid Awin product at line ${index + 1}.`);
+    if (Object.hasOwn(value, 'error')) throw new Error(`Awin feed ended with an error at line ${index + 1}: ${String(value.message || value.error).slice(0, 180)}`);
     rows.push(value);
   }
   return rows;
 }
 
+function awinSections(row) {
+  const basic = row?.product_basic && typeof row.product_basic === 'object' ? row.product_basic : row;
+  const price = row?.price_and_availability && typeof row.price_and_availability === 'object' ? row.price_and_availability : row;
+  const category = row?.product_category && typeof row.product_category === 'object' ? row.product_category : row;
+  const identifiers = row?.product_identifiers && typeof row.product_identifiers === 'object' ? row.product_identifiers : category;
+  const media = row?.product_media && typeof row.product_media === 'object' ? row.product_media : basic;
+  return { basic, price, category, identifiers, media };
+}
+
 export function normaliseAwinProduct(row) {
-  if (!row?.id || !row?.title || !safeHttps(row.link)) throw new Error('Awin product requires id, title and HTTPS link.');
-  if (row.image_link && !safeHttps(row.image_link)) throw new Error('Awin image_link must be HTTPS before DROPi can stage it.');
-  const priceMatch = typeof row.price === 'string' ? row.price.trim().match(/^([0-9]+(?:\.[0-9]{1,2})?)\s+([A-Z]{3})$/) : null;
+  const { basic, price, identifiers, media } = awinSections(row);
+  if (!basic?.id || !basic?.title || !safeHttps(basic.link)) throw new Error('Awin product requires id, title and HTTPS link.');
+  const imageUrl = media?.image_link ?? basic?.image_link ?? row?.image_link ?? null;
+  if (imageUrl && !safeHttps(imageUrl)) throw new Error('Awin image_link must be HTTPS before DROPi can stage it.');
+  const rawPrice = price?.price ?? row?.price;
+  const priceMatch = typeof rawPrice === 'string' ? rawPrice.trim().match(/^([0-9]+(?:\.[0-9]{1,2})?)\s+([A-Z]{3})$/) : null;
   return {
-    externalProductId: String(row.id),
-    title: String(row.title),
-    destinationUrl: row.link,
-    imageUrl: row.image_link || null,
-    availability: typeof row.availability === 'string' ? row.availability : null,
-    brand: typeof row.brand === 'string' ? row.brand : null,
-    gtin: typeof row.gtin === 'string' ? row.gtin : null,
-    mpn: typeof row.mpn === 'string' ? row.mpn : null,
+    externalProductId: String(basic.id),
+    title: String(basic.title),
+    destinationUrl: basic.link,
+    imageUrl,
+    availability: typeof price?.availability === 'string' ? price.availability : null,
+    brand: typeof identifiers?.brand === 'string' ? identifiers.brand : typeof basic?.brand === 'string' ? basic.brand : null,
+    gtin: typeof identifiers?.gtin === 'string' ? identifiers.gtin : null,
+    mpn: typeof identifiers?.mpn === 'string' ? identifiers.mpn : null,
     price: priceMatch ? { amount: Number(priceMatch[1]), currency: priceMatch[2] } : null
   };
 }
