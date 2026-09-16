@@ -17,6 +17,7 @@ export function loadProject(root = process.cwd()) {
     reviews: json('reviews'),
     providerMappings: json('provider-mappings'),
     providerOffers: json('affiliate-offers.generated'),
+    dropshipSuppliers: json('dropship-suppliers'),
     guides,
     evidenceExists
   };
