@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { syncAwin } from '../scripts/sync-awin.mjs';
 import { syncEbay } from '../scripts/sync-ebay.mjs';
+import { fetchAwinTransactions } from '../scripts/fetch-awin-transactions.mjs';
 
 function rootWith(mappings) {
   const root = mkdtempSync(join(tmpdir(), 'dropi-provider-'));
@@ -81,4 +82,26 @@ test('eBay sync uses OAuth, EBAY_IE and official affiliate URL from Browse API',
   assert.ok(calls[1].headers['X-EBAY-C-ENDUSERCTX'].includes('affiliateCampaignId=1234567890'));
   const saved = JSON.parse(readFileSync(join(root, 'data/affiliate-offers.generated.json'), 'utf8'));
   assert.equal(saved[0].provider, 'ebay');
+});
+
+test('Awin reporting is a no-op without credentials', async () => {
+  const result = await fetchAwinTransactions({ publisherId: '', accessToken: '' });
+  assert.equal(result.skipped, true);
+});
+
+test('Awin reporting fetches transaction and amendment windows and emits privacy-minimised events', async () => {
+  const calls = [];
+  const fetchImpl = async url => {
+    const u = new URL(url); calls.push(u.searchParams.get('dateType'));
+    if (u.searchParams.get('dateType') === 'transaction') return jsonResponse([{ id: 1, status: 'pending', commissionAmount: { amount: 2.5, currency: 'EUR' }, transactionDate: '2026-09-15T10:00:00Z', orderRef: 'do-not-import' }]);
+    return jsonResponse([{ id: 1, status: 'approved', commissionAmount: { amount: 2.5, currency: 'EUR' }, validationDate: '2026-09-16T10:00:00Z', clickRef: 'do-not-import' }]);
+  };
+  const result = await fetchAwinTransactions({ publisherId: '123', accessToken: 'fixture', start: '2026-09-15T00:00:00Z', end: '2026-09-16T12:00:00Z', fetchImpl });
+  assert.deepEqual(calls.sort(), ['amendment', 'transaction']);
+  assert.equal(result.events.length, 1); assert.equal(result.events[0].status, 'APPROVED');
+  assert.equal(JSON.stringify(result.events).includes('do-not-import'), false);
+});
+
+test('Awin reporting refuses windows longer than provider maximum', async () => {
+  await assert.rejects(() => fetchAwinTransactions({ publisherId: '123', accessToken: 'fixture', start: '2026-07-01T00:00:00Z', end: '2026-09-16T00:00:00Z', fetchImpl: async () => { throw new Error('should not call'); } }), /31-day/);
 });
