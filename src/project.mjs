@@ -19,6 +19,7 @@ export function loadProject(root = process.cwd()) {
     providerOffers: json('affiliate-offers.generated'),
     dropshipSuppliers: json('dropship-suppliers'),
     dropshipSkus: json('dropship-skus'),
+    customIntakePolicy: json('custom-intake-policy'),
     guides,
     evidenceExists
   };
