@@ -8,6 +8,19 @@ function evidenceOk(project, file) {
   return typeof file === 'string' && file.length > 0 && typeof project.evidenceExists === 'function' && project.evidenceExists(file);
 }
 
+export function validateCommercialApprovals(project, now = new Date()) {
+  const issues = [];
+  for (const mapping of project.providerMappings || []) {
+    if (mapping.status !== 'APPROVED') continue;
+    const key = `${mapping.provider}:${mapping.productId}`;
+    if (!mapping.reviewedBy || typeof mapping.reviewedBy !== 'string') issues.push(`${key}: approved mapping requires reviewedBy.`);
+    if (!isFresh(mapping.reviewedAt, project.site.sourceMaxAgeDays, now)) issues.push(`${key}: approved mapping review is missing or stale.`);
+    if (!evidenceOk(project, mapping.approvalEvidenceFile)) issues.push(`${key}: approved mapping evidence file is missing.`);
+    if (mapping.mediaApproved != null && typeof mapping.mediaApproved !== 'boolean') issues.push(`${key}: mediaApproved must be boolean when supplied.`);
+  }
+  return issues;
+}
+
 function approvedProgramme(project, provider, origin, now) {
   const programId = PROGRAM_BY_PROVIDER[provider];
   const program = project.programs?.find(x => x.id === programId);
