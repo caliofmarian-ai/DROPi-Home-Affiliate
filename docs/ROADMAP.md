@@ -31,11 +31,11 @@ The owner-approved priority is: **finish the employer-independent commerce strea
 
 ## Current independent-commerce checkpoint
 
-A verified Railway deployment has passed **141/141 tests with 0 failures** after the Ireland/EU legal audit, counterparty-specific affiliate tax gate and basic accessibility regression baseline.
+A verified Railway deployment has passed **144/144 tests with 0 failures** after the Ireland/EU legal audit, counterparty-specific affiliate tax gate, accessibility regression baseline, accessibility-scope release gate and fail-closed affiliate price-presentation rule.
 
 The production Neon database contains the privacy-minimised affiliate ledger/sync schema. It is deliberately empty until real provider reporting exists. Applying schema did not activate monetisation or create any transaction data.
 
-The legal source of truth is `docs/LEGAL-COMPLIANCE-IRELAND-EU.md`; owner/external actions are separated in `docs/OWNER-LEGAL-ACTION-CHECKLIST.md`. The application remains fail-closed: public commercial release, tracking and dropshipping selling cannot be activated merely by changing a provider feed. `SUPER_ADMIN` now receives the current public/legal blocker count and blocker list from build metadata.
+The legal source of truth is `docs/LEGAL-COMPLIANCE-IRELAND-EU.md`; owner/external actions are separated in `docs/OWNER-LEGAL-ACTION-CHECKLIST.md`; EAA/accessibility scope is pinned in `docs/ACCESSIBILITY-EAA.md`. The application remains fail-closed: public commercial release, tracking and dropshipping selling cannot be activated merely by changing a provider feed. `SUPER_ADMIN` now receives the current public/legal blocker count and blocker list from build metadata.
 
 ### 1. Affiliate
 
@@ -43,7 +43,9 @@ Awin and eBay use exact external identifiers; fuzzy product-title matching canno
 
 Every future monetised link is rendered with a visible `#Ad` label. Public commercial pages also require the real operator identity, geographic address and contact details before build/release gates can pass.
 
-Amazon uses a separate policy foundation: durable ASIN mapping is allowed in the repository, but Product Advertising Content such as images/prices is treated as transient and must be obtained through the account's permitted API/feed path.
+Provider feed prices are staged internally but suppressed from public output by default. Display requires separate evidence of tax inclusion and delivery-cost treatment, so a raw API value cannot silently become an ambiguous public price.
+
+Amazon uses a separate policy foundation: durable ASIN mapping is allowed in the repository, but Product Advertising Content such as images/prices is treated as transient and must be obtained through the account's permitted API/feed path. Amazon activation also requires its programme-specific site-level Associate disclosure.
 
 No programme is marked live until actual acceptance evidence exists.
 
