@@ -13,9 +13,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  awin:
+  providers:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,6 +25,7 @@ jobs:
         run: |
           npm run check
           npm test
+
       - name: Detect Awin configuration
         id: awin
         shell: bash
@@ -37,7 +38,7 @@ jobs:
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "Awin is not configured; refresh is a clean no-op."
+            echo "Awin is not configured; Awin refresh is a clean no-op."
           fi
       - name: Refresh exact mapped Awin offers
         if: steps.awin.outputs.configured == 'true'
@@ -47,11 +48,35 @@ jobs:
           AWIN_ACCESS_TOKEN: ${{ secrets.AWIN_ACCESS_TOKEN }}
           AWIN_LOCALE: ${{ vars.AWIN_LOCALE || 'en_IE' }}
         run: npm run sync:awin
+
+      - name: Detect eBay/EPN configuration
+        id: ebay
+        shell: bash
+        env:
+          EBAY_CLIENT_ID: ${{ vars.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          EPN_CAMPAIGN_ID: ${{ vars.EPN_CAMPAIGN_ID }}
+        run: |
+          if [[ -n "$EBAY_CLIENT_ID" && -n "$EBAY_CLIENT_SECRET" && -n "$EPN_CAMPAIGN_ID" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "eBay/EPN is not configured; eBay refresh is a clean no-op."
+          fi
+      - name: Refresh exact mapped eBay offers
+        if: steps.ebay.outputs.configured == 'true'
+        env:
+          EBAY_CLIENT_ID: ${{ vars.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          EPN_CAMPAIGN_ID: ${{ vars.EPN_CAMPAIGN_ID }}
+          EBAY_MARKETPLACE: EBAY_IE
+        run: npm run sync:ebay
+
       - name: Validate generated state
-        if: steps.awin.outputs.configured == 'true'
+        if: steps.awin.outputs.configured == 'true' || steps.ebay.outputs.configured == 'true'
         run: npm test
       - name: Commit changed provider snapshot
-        if: steps.awin.outputs.configured == 'true'
+        if: steps.awin.outputs.configured == 'true' || steps.ebay.outputs.configured == 'true'
         shell: bash
         run: |
           if git diff --quiet -- data/affiliate-offers.generated.json; then
@@ -61,5 +86,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/affiliate-offers.generated.json
-          git commit -m "chore: refresh Awin offer snapshot"
+          git commit -m "chore: refresh affiliate offer snapshot"
           git push
