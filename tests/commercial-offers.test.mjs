@@ -11,7 +11,7 @@ function fixture(provider = 'awin') {
   const product = p.products[0];
   const programId = provider === 'awin' ? 'awin' : 'ebay-epn';
   const program = p.programs.find(x => x.id === programId);
-  Object.assign(program, { status: 'APPROVED', accountId: provider === 'awin' ? '12345' : '1234567890', approvalEvidenceFile: 'docs/evidence/fixture.md', approvedSiteOrigin: 'https://fixture.example.org', termsReviewedAt: '2026-09-16' });
+  Object.assign(program, { status: 'APPROVED', accountId: provider === 'awin' ? '12345' : '1234567890', approvalEvidenceFile: 'docs/evidence/fixture.md', approvedSiteOrigin: 'https://fixture.example.org', termsReviewedAt: '2026-09-16', taxProfile: { status: 'REVIEWED', counterpartyLegalName: 'Synthetic Counterparty Ltd', countryCode: 'DE', vatId: 'DE123456789', treatment: 'EU_B2B_REVERSE_CHARGE', evidenceFile: 'docs/evidence/fixture.md' } });
   const mapping = { provider, productId: product.id, externalProductId: provider === 'awin' ? 'AW-100' : 'v1|123|0', status: 'APPROVED', reviewedAt: '2026-09-16', reviewedBy: 'Fixture reviewer', approvalEvidenceFile: 'docs/evidence/fixture.md', mediaApproved: true };
   if (provider === 'awin') mapping.advertiserId = '9876';
   p.providerMappings = [mapping];
@@ -24,10 +24,15 @@ test('provider offer remains research-only while monetisation is disabled', () =
   assert.equal(providerOfferDecision(product, p, 'https://fixture.example.org', now).reason, 'MONETIZATION_DISABLED');
 });
 
-test('STAGED feed offer becomes active only behind approved programme and mapping', () => {
+test('STAGED feed offer becomes active only behind approved programme mapping and tax profile', () => {
   const { p, product } = fixture('awin');
   const result = providerOfferDecision(product, p, 'https://fixture.example.org', now);
   assert.equal(result.active, true); assert.equal(result.provider, 'awin'); assert.equal(result.price.amount, 49.95); assert.equal(result.media.source, 'AWIN_FEED');
+});
+
+test('unreviewed programme tax profile blocks generated offer', () => {
+  const { p, product, program } = fixture('awin'); program.taxProfile.status = 'NOT_REVIEWED';
+  assert.equal(providerOfferDecision(product, p, 'https://fixture.example.org', now).reason, 'PROGRAM_TAX_PROFILE_NOT_REVIEWED');
 });
 
 test('approved eBay mapping uses official provider tracking URL', () => {
