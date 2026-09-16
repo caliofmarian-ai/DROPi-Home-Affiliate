@@ -1,0 +1,65 @@
+name: Affiliate feed refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 4 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: affiliate-feed-refresh
+  cancel-in-progress: false
+
+jobs:
+  awin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate repository before provider access
+        run: |
+          npm run check
+          npm test
+      - name: Detect Awin configuration
+        id: awin
+        shell: bash
+        env:
+          AWIN_PUBLISHER_ID: ${{ vars.AWIN_PUBLISHER_ID }}
+          AWIN_ADVERTISER_ID: ${{ vars.AWIN_ADVERTISER_ID }}
+          AWIN_ACCESS_TOKEN: ${{ secrets.AWIN_ACCESS_TOKEN }}
+        run: |
+          if [[ -n "$AWIN_PUBLISHER_ID" && -n "$AWIN_ADVERTISER_ID" && -n "$AWIN_ACCESS_TOKEN" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Awin is not configured; refresh is a clean no-op."
+          fi
+      - name: Refresh exact mapped Awin offers
+        if: steps.awin.outputs.configured == 'true'
+        env:
+          AWIN_PUBLISHER_ID: ${{ vars.AWIN_PUBLISHER_ID }}
+          AWIN_ADVERTISER_ID: ${{ vars.AWIN_ADVERTISER_ID }}
+          AWIN_ACCESS_TOKEN: ${{ secrets.AWIN_ACCESS_TOKEN }}
+          AWIN_LOCALE: ${{ vars.AWIN_LOCALE || 'en_IE' }}
+        run: npm run sync:awin
+      - name: Validate generated state
+        if: steps.awin.outputs.configured == 'true'
+        run: npm test
+      - name: Commit changed provider snapshot
+        if: steps.awin.outputs.configured == 'true'
+        shell: bash
+        run: |
+          if git diff --quiet -- data/affiliate-offers.generated.json; then
+            echo "No provider snapshot change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/affiliate-offers.generated.json
+          git commit -m "chore: refresh Awin offer snapshot"
+          git push
