@@ -8,5 +8,16 @@ export function loadProject(root = process.cwd()) {
     try { const f = resolve(root, path); return !lstatSync(f).isSymbolicLink() && realpathSync(f).startsWith(evidenceRoot + sep) && readFileSync(f, 'utf8').trim().length >= 40; } catch { return false; }
   };
   const guides = readdirSync(resolve(root, 'content/guides')).filter(f => f.endsWith('.json')).sort().map(f => JSON.parse(readFileSync(resolve(root, 'content/guides', f), 'utf8')));
-  return { site: json('site'), products: json('products'), merchants: json('merchants'), programs: json('programs'), links: json('affiliate-links'), reviews: json('reviews'), guides, evidenceExists };
+  return {
+    site: json('site'),
+    products: json('products'),
+    merchants: json('merchants'),
+    programs: json('programs'),
+    links: json('affiliate-links'),
+    reviews: json('reviews'),
+    providerMappings: json('provider-mappings'),
+    providerOffers: json('affiliate-offers.generated'),
+    guides,
+    evidenceExists
+  };
 }
