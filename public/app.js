@@ -3,7 +3,27 @@ const $ = id => document.getElementById(id);
 const euro = n => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(n);
 function el(tag, text, className) { const node = document.createElement(tag); if (text != null) node.textContent = text; if (className) node.className = className; return node; }
 function showError(target, error) { target.replaceChildren(el('p', error.message || 'The operation could not be completed.', 'result-fail')); }
-async function catalogue() { const res = await fetch('/catalogue.json', { credentials: 'same-origin', cache: 'no-store' }); if (!res.ok) throw new Error('Candidate data is unavailable. Please reload.'); const data = await res.json(); if (!Array.isArray(data)) throw new Error('Invalid candidate data.'); return data; }
+let cataloguePromise;
+async function catalogue() { if (!cataloguePromise) cataloguePromise = fetch('/catalogue.json', { credentials: 'same-origin', cache: 'no-store' }).then(async res => { if (!res.ok) throw new Error('Candidate data is unavailable. Please reload.'); const data = await res.json(); if (!Array.isArray(data)) throw new Error('Invalid candidate data.'); return data; }); return cataloguePromise; }
+function productMedia(product) {
+  const media = el('div', null, 'product-media');
+  if (product?.media?.status === 'APPROVED' && typeof product.media.url === 'string') {
+    const img = document.createElement('img');
+    img.src = product.media.url; img.alt = product.media.alt || product.name || 'Product image'; img.loading = 'lazy'; img.decoding = 'async';
+    media.append(img);
+    const label = el('span', product.media.source === 'AWIN_FEED' ? 'Partner feed image' : 'Authorised product image', 'media-source'); media.append(label);
+  } else {
+    const mark = el('span', '▧', 'media-placeholder-mark');
+    const copy = el('span', 'Image pending approved partner feed', 'media-placeholder-copy');
+    media.classList.add('product-media-placeholder'); media.append(mark, copy);
+  }
+  return media;
+}
+async function initProductMedia() {
+  const cards = [...document.querySelectorAll('[data-product-id]')]; if (!cards.length) return;
+  const products = await catalogue(); const byId = new Map(products.map(p => [p.id, p]));
+  for (const card of cards) { if (card.querySelector('.product-media')) continue; const product = byId.get(card.dataset.productId); if (product) card.prepend(productMedia(product)); }
+}
 async function initCatalogue() {
   const products = await catalogue(); const chosen = new Set();
   const updateFilter = () => {
@@ -62,5 +82,5 @@ function initOps() {
   });
 }
 const page = document.body.dataset.page;
-try { if (page === 'catalogue') await initCatalogue(); if (page === 'fit') await initFit(); if (page === 'ops') initOps(); }
+try { await initProductMedia(); if (page === 'catalogue') await initCatalogue(); if (page === 'fit') await initFit(); if (page === 'ops') initOps(); }
 catch (error) { const target = $('fit-result') || $('result-count') || $('ledger-result'); if (target) showError(target, error); }
