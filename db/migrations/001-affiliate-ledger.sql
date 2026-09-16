@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE SCHEMA IF NOT EXISTS dropi_ops;
 REVOKE ALL ON SCHEMA dropi_ops FROM PUBLIC;
 
@@ -31,9 +29,3 @@ CREATE INDEX IF NOT EXISTS affiliate_ledger_current_status_idx
   ON dropi_ops.affiliate_ledger_current (provider, status, updated_at DESC);
 
 REVOKE ALL ON ALL TABLES IN SCHEMA dropi_ops FROM PUBLIC;
-
-COMMENT ON SCHEMA dropi_ops IS 'DROPi operational data; no customer identity data permitted in affiliate ledger tables.';
-COMMENT ON TABLE dropi_ops.affiliate_ledger_current IS 'Privacy-minimised current affiliate commission state keyed by provider transaction ID.';
-COMMENT ON TABLE dropi_ops.affiliate_sync_state IS 'Provider sync cursors/windows only; no customer identity data.';
-
-COMMIT;
