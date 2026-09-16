@@ -5,6 +5,7 @@ import { loadProject } from '../src/project.mjs';
 import { validateProject, releaseIssues, publicOrigin, dateOnly, DAY, sha256 } from '../src/domain.mjs';
 import { validateCatalogueMedia } from '../src/catalogue-media.mjs';
 import { validateProviderMappings, validateProviderOffers } from '../src/provider-offers.mjs';
+import { validateCommercialApprovals } from '../src/commercial-offers.mjs';
 import { validateDropshipSuppliers } from '../src/dropship.mjs';
 import { renderSite } from '../src/render.mjs';
 
@@ -21,6 +22,7 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     ...validateCatalogueMedia(p),
     ...validateProviderMappings(p.providerMappings, p.products.map(x => x.id)),
     ...validateProviderOffers(p.providerOffers),
+    ...validateCommercialApprovals(p, now),
     ...validateDropshipSuppliers(p.dropshipSuppliers)
   ];
   if (issues.length) throw new Error(`Build blocked:\n- ${issues.join('\n- ')}`);
@@ -42,12 +44,15 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
   if (p.site.monetization.enabled) {
     for (const link of p.links) deadlines.push(dateOnly(link.reviewedAt) + p.site.sourceMaxAgeDays * DAY);
     for (const program of p.programs.filter(x => p.links.some(l => l.programId === x.id))) deadlines.push(dateOnly(program.termsReviewedAt) + p.site.sourceMaxAgeDays * DAY);
+    for (const mapping of p.providerMappings.filter(x => x.status === 'APPROVED' && x.reviewedAt)) deadlines.push(dateOnly(mapping.reviewedAt) + p.site.sourceMaxAgeDays * DAY);
+    for (const offer of p.providerOffers.filter(x => x.checkedAt)) deadlines.push(dateOnly(offer.checkedAt) + p.site.sourceMaxAgeDays * DAY);
   }
   const hashes = Object.fromEntries(Object.values(routes).map(f => [f, sha256(readFileSync(resolve(outDir, f), 'utf8'))]));
   const commerce = {
     monetizationEnabled: p.site.monetization.enabled,
     affiliatePrograms: counts(p.programs),
     providerMappings: p.providerMappings.length,
+    providerMappingsByStatus: counts(p.providerMappings),
     providerOffers: counts(p.providerOffers),
     dropshipSuppliers: counts(p.dropshipSuppliers),
     dropshippingSellingEnabled: false
