@@ -18,6 +18,13 @@ export function isFresh(date, maxDays, now = new Date()) {
   const nowMS = new Date(now).getTime();
   return Number.isFinite(time) && Number.isFinite(nowMS) && Number.isInteger(maxDays) && maxDays > 0 && time <= nowMS && nowMS < time + maxDays * DAY;
 }
+const TAX_TREATMENTS = new Set(['IRISH_DOMESTIC','EU_B2B_REVERSE_CHARGE','NON_EU_B2B_REVIEWED','OTHER_REVIEWED']);
+export function affiliateTaxProfileValid(program, p) {
+  const t = program?.taxProfile;
+  if (!t || t.status !== 'REVIEWED' || !t.counterpartyLegalName?.trim() || !/^[A-Z]{2}$/.test(t.countryCode || '') || !TAX_TREATMENTS.has(t.treatment) || !p.evidenceExists(t.evidenceFile)) return false;
+  if (t.treatment === 'EU_B2B_REVERSE_CHARGE' && !t.vatId?.trim()) return false;
+  return true;
+}
 export function validateProject(p) {
   const issues = [];
   const fail = text => issues.push(text);
@@ -36,6 +43,14 @@ export function validateProject(p) {
   if (p.site?.legalControls?.affiliateDisclosureLabel !== '#Ad') fail('affiliateDisclosureLabel must remain #Ad for Irish affiliate disclosure.');
   if (!['NOT_REVIEWED', 'NOT_REQUIRED', 'REGISTERED'].includes(p.site?.operator?.businessNameStatus)) fail('operator.businessNameStatus must be NOT_REVIEWED, NOT_REQUIRED or REGISTERED.');
   if (!['NOT_REVIEWED', 'REVIEWED'].includes(p.site?.operator?.taxReviewStatus)) fail('operator.taxReviewStatus must be NOT_REVIEWED or REVIEWED.');
+  for (const program of p.programs) {
+    const tax = program.taxProfile;
+    if (!tax || !['NOT_REVIEWED','REVIEWED'].includes(tax.status)) fail(`Programme ${program.id}: taxProfile.status must be NOT_REVIEWED or REVIEWED.`);
+    if (tax?.status === 'REVIEWED') {
+      if (!tax.counterpartyLegalName?.trim() || !/^[A-Z]{2}$/.test(tax.countryCode || '') || !TAX_TREATMENTS.has(tax.treatment) || !tax.evidenceFile) fail(`Programme ${program.id}: reviewed tax profile is incomplete.`);
+      if (tax.treatment === 'EU_B2B_REVERSE_CHARGE' && !tax.vatId?.trim()) fail(`Programme ${program.id}: EU B2B reverse-charge treatment requires a counterparty VAT ID.`);
+    }
+  }
   for (const product of p.products) {
     const label = `Product ${product.id}`;
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(product.id)) fail(`${label}: invalid ID.`);
@@ -75,6 +90,7 @@ export function affiliateDecision(product, p, origin, now = new Date()) {
   if (!link) return no('NO_APPROVED_LINK');
   const program = p.programs.find(x => x.id === link.programId);
   if (!program || program.status !== 'APPROVED' || !program.accountId || !p.evidenceExists(program.approvalEvidenceFile)) return no('PROGRAM_NOT_APPROVED');
+  if (!affiliateTaxProfileValid(program, p)) return no('PROGRAM_TAX_PROFILE_NOT_REVIEWED');
   if (program.approvedSiteOrigin !== origin || !isFresh(program.termsReviewedAt, p.site.sourceMaxAgeDays, now)) return no('PROGRAM_SITE_OR_TERMS_NOT_VERIFIED');
   if (link.status !== 'APPROVED' || !p.evidenceExists(link.approvalEvidenceFile) || !isFresh(link.reviewedAt, p.site.sourceMaxAgeDays, now)) return no('LINK_NOT_APPROVED');
   if (!safeHttps(link.url, program.allowedHosts)) return no('UNSAFE_LINK');
@@ -105,8 +121,15 @@ export function releaseIssues(p, env = {}, now = new Date()) {
   if (!reviewValid(p.reviews.catalogue, p.products, p, now)) issues.push('Catalogue editorial approval is missing/stale/changed.');
   for (const product of p.products) if (!isFresh(product.source.checkedAt, p.site.sourceMaxAgeDays, now)) issues.push(`Source stale or future-dated: ${product.id}.`);
   if (p.site.monetization.enabled) {
-    if (operator.taxReviewStatus !== 'REVIEWED' || !p.evidenceExists(operator.taxReviewEvidenceFile)) issues.push('Affiliate tax/VAT treatment has not been reviewed and evidenced for the actual provider/counterparty.');
+    if (operator.taxReviewStatus !== 'REVIEWED' || !p.evidenceExists(operator.taxReviewEvidenceFile)) issues.push('Overall affiliate tax registration/filing treatment has not been reviewed and evidenced.');
     if (!p.links.length && !(p.providerMappings?.length > 0)) issues.push('Monetization enabled without approved affiliate links or provider mappings.');
+    const providerProgram = { awin: 'awin', ebay: 'ebay-epn', amazon: 'amazon-ie' };
+    const used = new Set(p.links.map(x => x.programId));
+    for (const mapping of p.providerMappings || []) if (providerProgram[mapping.provider]) used.add(providerProgram[mapping.provider]);
+    for (const programId of used) {
+      const program = p.programs.find(x => x.id === programId);
+      if (!affiliateTaxProfileValid(program, p)) issues.push(`Affiliate programme ${programId}: counterparty-specific VAT/tax profile is not reviewed and evidenced.`);
+    }
     for (const link of p.links) { const product = p.products.find(x => x.id === link.productId); if (product) { const decision = affiliateDecision(product, p, origin, now); if (!decision.active) issues.push(`Affiliate gate ${link.productId}: ${decision.reason}.`); } }
   }
   return [...new Set(issues)];
