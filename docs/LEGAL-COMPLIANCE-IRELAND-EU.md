@@ -73,6 +73,8 @@ Engineering rules:
 
 - never hard-code "no VAT required" merely because turnover is below the domestic threshold;
 - before first commercial payout/invoice, record the provider legal entity/country and the Revenue VAT treatment used;
+- each used affiliate programme has its own `taxProfile`; one generic business-tax checkbox cannot authorise all counterparties;
+- a reviewed EU B2B reverse-charge profile requires the actual counterparty VAT ID plus evidence;
 - preserve invoices/statements and provider business/VAT identifiers required for the chosen treatment;
 - do not store PPSN, tax passwords or bank credentials in GitHub.
 
@@ -146,10 +148,13 @@ Engineering rule: no dropship SKU may become sellable merely because the supplie
 
 Electrical/electronic goods, batteries, children's products, cosmetics, food, medical products and other regulated categories require their own compliance checks. A generic supplier statement is not enough.
 
+Where DROPi Home becomes an importer from outside the EU, importer duties are materially broader. CCPC guidance includes post-import monitoring/corrective-action/recall duties and keeping relevant compliance/safety documentation for 10 years. That role must be explicitly identified before activation; it cannot be hidden behind the word "dropshipping".
+
 Official sources:
 
 - EUR-Lex — Regulation (EU) 2023/988, Article 19: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:32023R0988
 - CCPC — General Product Safety Regulations: https://www.ccpc.ie/information-for-businesses/selling-goods-and-services/product-safety/general-product-safety-regulations
+- CCPC — Guidance for importing products: https://www.ccpc.ie/information-for-businesses/selling-goods-and-services/product-safety/product-safety-guidance/guidance-for-importing-products
 
 ## 8. Imports, IOSS, customs and EORI
 
@@ -184,7 +189,27 @@ Official source:
 
 - Consumer Rights Act 2022, section 107: https://www.irishstatutebook.ie/eli/2022/act/37/section/107/enacted/en/html
 
-## 10. Deferred Custom Furniture AI Intake
+## 10. Intellectual property, brand names and product content
+
+Product names, photos, descriptions, logos and website copy are not "free" merely because they are visible online. IPOI guidance notes that copyright arises automatically in protected works, including photographs and original written material, and advises obtaining permission before using third-party copyright material where an exception does not apply. IPOI also warns businesses to search existing intellectual-property rights before adopting a company/brand/product name; ignorance of an existing protected right is not a defence to infringement.
+
+Engineering rules:
+
+- write original editorial descriptions rather than copying retailer/manufacturer marketing copy;
+- do not download and republish arbitrary product photography;
+- expose product media only through a provider/feed/licence/merchant permission path whose terms allow that use;
+- do not use retailer/manufacturer logos as DROPi branding and do not imply endorsement or partnership;
+- preserve source/rights evidence for each commercial media path;
+- keep `DROPi Home` under `brandReview.approved=false` until Irish/EU trade-mark searches and the intended commercial classes have been reviewed;
+- business-name registration at CRO is not treated as trade-mark clearance.
+
+Official sources:
+
+- IPOI — Infringing others' IP: https://www.ipoi.gov.ie/en/understanding-ip/ip-infringement/infringing-others-ip/
+- IPOI — Copyright basics: https://www.ipoi.gov.ie/en/types-of-ip/copyright1/understanding-copyright/what-is-copyright/
+- IPOI — Trade Mark search tools: https://www.ipoi.gov.ie/en/types-of-ip/trade-marks/using-the-trade-mark-search-tools/
+
+## 11. Deferred Custom Furniture AI Intake
 
 The concept remains approved but deferred. Before enabling uploads from real customers, its separate launch gate must cover:
 
@@ -198,7 +223,7 @@ The concept remains approved but deferred. Before enabling uploads from real cus
 
 No employer/manufacturer relationship is to be implied without a real written agreement.
 
-## 11. Current legal release status
+## 12. Current legal release status
 
 ### Affiliate publishing
 
