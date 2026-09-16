@@ -27,7 +27,27 @@ test('provider offer remains research-only while monetisation is disabled', () =
 test('STAGED feed offer becomes active only behind approved programme mapping and tax profile', () => {
   const { p, product } = fixture('awin');
   const result = providerOfferDecision(product, p, 'https://fixture.example.org', now);
-  assert.equal(result.active, true); assert.equal(result.provider, 'awin'); assert.equal(result.price.amount, 49.95); assert.equal(result.media.source, 'AWIN_FEED');
+  assert.equal(result.active, true); assert.equal(result.provider, 'awin'); assert.equal(result.price, null); assert.equal(result.media.source, 'AWIN_FEED');
+});
+
+test('feed price remains hidden without explicit tax and delivery presentation evidence', () => {
+  const { p, product, mapping } = fixture('awin');
+  mapping.priceDisplayApproved = true;
+  let issues = validateCommercialApprovals(p, now);
+  assert.ok(issues.some(x => x.includes('priceIncludesTax')));
+  assert.ok(issues.some(x => x.includes('deliveryPriceStatus')));
+  assert.ok(issues.some(x => x.includes('price presentation')));
+  assert.equal(providerOfferDecision(product, p, 'https://fixture.example.org', now).price, null);
+});
+
+test('approved price display carries explicit tax and delivery basis', () => {
+  const { p, product, mapping } = fixture('awin');
+  Object.assign(mapping, { priceDisplayApproved: true, priceIncludesTax: true, deliveryPriceStatus: 'CALCULATED_AT_CHECKOUT', pricePresentationEvidenceFile: 'docs/evidence/fixture.md' });
+  assert.deepEqual(validateCommercialApprovals(p, now), []);
+  const result = providerOfferDecision(product, p, 'https://fixture.example.org', now);
+  assert.equal(result.price.amount, 49.95);
+  assert.equal(result.pricePresentation.tax, 'Tax included');
+  assert.equal(result.pricePresentation.delivery, 'Delivery calculated at checkout');
 });
 
 test('unreviewed programme tax profile blocks generated offer', () => {
