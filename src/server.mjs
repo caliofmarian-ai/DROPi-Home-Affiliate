@@ -5,7 +5,7 @@ import { resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8' };
 function same(a, b) { const x = Buffer.from(a || ''), y = Buffer.from(b || ''); return x.length === y.length && timingSafeEqual(x, y); }
-export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0.0.1', token = process.env.PREVIEW_TOKEN, now = () => new Date() } = {}) {
+export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0.0.1', token = process.env.PREVIEW_ACCESS_CODE, now = () => new Date() } = {}) {
   const base = realpathSync(root); const meta = JSON.parse(readFileSync(resolve(base, '.build-meta.json'), 'utf8'));
   if (meta.schemaVersion !== 1 || !['public', 'preview'].includes(meta.mode) || !Number.isFinite(Date.parse(meta.expiresAt))) throw new Error('Invalid build metadata. Rebuild before serving.');
   if (meta.mode === 'preview' && !['127.0.0.1', '::1', 'localhost'].includes(host) && (!token || token.length < 32)) throw new Error('Non-loopback preview hosting requires PREVIEW_TOKEN with at least 32 characters. Noindex is not access control.');
