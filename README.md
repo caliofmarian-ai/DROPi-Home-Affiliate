@@ -11,10 +11,11 @@ The employer-independent stream is intentionally built first: affiliate catalogu
 | Layer | Status | Evidence |
 | --- | --- | --- |
 | Core preview | IMPLEMENTED | 19 pages, 10 guides, 16 research candidates |
-| Railway verification | PASS | 138/138 Node tests, 0 failures, verified deployment SUCCESS |
+| Railway verification | PASS | 141/141 Node tests, 0 failures, verified deployment SUCCESS |
 | GitHub | CANONICAL SOURCE | private `main` branch |
 | SUPER_ADMIN auth | ACTIVE | Neon Auth in Frankfurt; one promoted `super_admin`; bootstrap closed |
 | Irish/EU legal gate | IMPLEMENTED / PUBLIC RELEASE HOLD | canonical legal control document plus fail-closed code gates |
+| Accessibility baseline | PASS / NOT A CERTIFICATION | generated-page landmark/language/live-status/image-alt regression contract; EAA scope still requires real operator facts |
 | Public publication | HOLD | operator/business-name/tax/privacy/brand/editorial facts and approvals still real external work |
 | Affiliate monetisation | DISABLED | no real programme/account approval or exact provider mapping yet |
 | Awin integration | IMPLEMENTATION READY | exact feed mapping, Link Builder, daily refresh and transaction reporting adapters |
@@ -29,13 +30,13 @@ The currently served Railway site is a private authenticated preview. Deployment
 
 ## Admin authentication
 
-The project owner has one real account with the `super_admin` role. `/admin/setup` is closed. `/admin` is role-gated and shows a read-only commerce status summary from the verified build.
+The project owner has one real account with the `super_admin` role. `/admin/setup` is closed. `/admin` is role-gated and now shows the current public/legal release blocker count and blocker list from verified build metadata.
 
 The temporary HTTP Basic preview gate remains in front of the whole pre-launch site as a second barrier until public/private routing is intentionally changed.
 
 ## Irish/EU legal controls
 
-The canonical legal gate is [docs/LEGAL-COMPLIANCE-IRELAND-EU.md](docs/LEGAL-COMPLIANCE-IRELAND-EU.md).
+The canonical legal gate is [docs/LEGAL-COMPLIANCE-IRELAND-EU.md](docs/LEGAL-COMPLIANCE-IRELAND-EU.md). The real-owner checklist is [docs/OWNER-LEGAL-ACTION-CHECKLIST.md](docs/OWNER-LEGAL-ACTION-CHECKLIST.md).
 
 Repository rules now enforce, among other things:
 
@@ -47,7 +48,8 @@ Repository rules now enforce, among other things:
 - dropshipping checkout remains disabled;
 - a future dropship pilot requires verified product-safety/GPSR, EU responsible-person, traceability, recall, consumer-remedy and customs/VAT evidence;
 - non-EU direct fulfilment must have a verified IOSS/DDP/importer-of-record model;
-- dropship unit economics include customs duty, import VAT and customs handling rather than hiding them outside the margin calculation.
+- dropship unit economics include customs duty, import VAT and customs handling rather than hiding them outside the margin calculation;
+- EAA/e-commerce accessibility scope must be reviewed against the real operator and service; microenterprise treatment is not silently assumed.
 
 These controls reduce the chance of accidentally launching an unlawful configuration; they are not a substitute for facts that only the real operator, provider, supplier, Revenue/CRO or a professional adviser can establish.
 
@@ -79,7 +81,7 @@ Implemented providers/foundations:
 
 ### Product media
 
-No arbitrary retailer/manufacturer images are copied into the repository. Catalogue media is exposed only through an approved provider/merchant rights path. Remote partner images are HTTPS-only and the application keeps script/connect origins locked to itself.
+No arbitrary retailer/manufacturer images are copied into the repository. Catalogue media is exposed only through an approved provider/merchant rights path. Remote partner images are HTTPS-only, use `no-referrer`, and the application keeps script/connect origins locked to itself.
 
 Until authorised media exists, product cards show a placeholder rather than a fabricated image.
 
@@ -100,6 +102,12 @@ Dropshipping is a secondary channel and is disabled by default. Research candida
 The code requires supplier/trade verification, Ireland delivery, stock/order automation, returns/damage terms, media rights, GPSR/product-safety evidence, EU responsible-person/traceability/recall controls, category-specific compliance, a lawful customs/VAT model where relevant, a passed sample order and positive landed contribution margin before a pilot can become eligible.
 
 Current research-only supplier candidates are stored in `data/dropship-suppliers.json`. No supplier subscription, checkout or paid plan is authorised.
+
+### Accessibility baseline
+
+`tests/accessibility-contract.test.mjs` prevents basic regressions in generated pages: `lang="en-IE"`, page titles, viewport, `main` landmark, skip link, form/live-status semantics and alternative text/no-referrer treatment for approved remote product images.
+
+This is a regression baseline, **not** a claim of formal WCAG/EAA certification. If the future service becomes an in-scope e-commerce service and no statutory exemption applies, the full accessibility obligations must be handled deliberately.
 
 ## Existing user-facing tools
 
@@ -148,6 +156,7 @@ Secrets, payout/bank data, tax credentials and private reports must never be com
 ## Canonical documentation
 
 - [Ireland / EU legal compliance gate](docs/LEGAL-COMPLIANCE-IRELAND-EU.md)
+- [Owner legal/commercial action checklist](docs/OWNER-LEGAL-ACTION-CHECKLIST.md)
 - [Independent commerce plan](docs/INDEPENDENT-COMMERCE-PLAN.md)
 - [Affiliate provider onboarding](docs/AFFILIATE-PROVIDER-ONBOARDING.md)
 - [Affiliate reporting and ledger](docs/AFFILIATE-REPORTING.md)
