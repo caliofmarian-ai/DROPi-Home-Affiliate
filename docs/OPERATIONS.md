@@ -18,7 +18,7 @@ A changed article or catalogue invalidates its approval hash. Record a real revi
 
 All programme accounts are unconnected. Until a real programme export exists, `data/ledger.json` remains empty.
 
-The importer accepts a deliberately small normalised JSON array, not arbitrary vendor CSV. Each event requires `provider`, `transactionId`, `status`, `commissionCents`, `currency`, `updatedAt` and `statementRef`. Use integer EUR cents, no customer data, and canonical UTC timestamps such as `2026-09-15T12:00:00.000Z`. Amount changes for an existing transaction require explicit investigation, not silent overwrite. Non-EUR currencies must be handled by a future audited adapter.
+The importer accepts a deliberately small normalised JSON array, not arbitrary vendor CSV. Each event requires `provider`, `transactionId`, `status`, `commissionCents`, `currency`, `updatedAt` and `statementRef`. Use integer EUR cents, no customer data, and canonical UTC timestamps. Amount changes for an existing transaction require explicit investigation, not silent overwrite. Non-EUR currencies require a future audited adapter.
 
 For a synthetic smoke test only:
 
@@ -27,22 +27,32 @@ npm run ledger:import -- examples/synthetic-events.json --out private/example-le
 npm run ledger:import -- examples/synthetic-events.json --out private/example-ledger.json
 ```
 
-The second run must not duplicate income. The imported file stays under ignored `private/`, uses restrictive permissions and a lock/atomic replacement. Back it up privately outside Git as appropriate. Never confuse the synthetic example with business results. The local owner workspace can open the resulting JSON file; it reads it in the browser without uploading it. It labels all totals as report-based, not bank-reconciled.
+The second run must not duplicate income. The imported file stays under ignored `private/`, uses restrictive permissions and a lock/atomic replacement. Never confuse synthetic output with business results.
 
 ## Cost control
 
-Authorised new monthly spend: **€0**. Proposed experimental ceiling: €50/month, pending owner approval. No paid APIs, cron jobs, ads or asset-generation calls are invoked. GitHub Actions files are manual-only until running CI is authorised within an account quota/budget. A run still consumes runner minutes; no claim about free remaining account quota is made.
+The owner explicitly authorised creation and publication of this private Railway preview in chat. No separate recurring spending ceiling was set for this deployment. Keep the service minimal, add no database/volume/paid API/ads without separate need, and monitor Railway usage. The previously discussed €50/month figure remains only a proposed experimental ceiling, not blanket authorisation for other spend.
 
-## Hosting procedure — later, after authorisation
+GitHub Actions files are manual-only; they have not been run. Do not infer CI PASS from local tests.
 
-1. Approve a separate Railway service and an explicit cost ceiling. Do not reuse an existing project's service, database, volume or secrets.
-2. Keep `RELEASE_MODE=preview`. Use a cryptographically random `PREVIEW_TOKEN` of at least 32 characters in Railway variables and HTTPS at its proxy. Never commit or print the real token. Network host is `0.0.0.0`.
-3. Build and run the supplied Dockerfile; configure `/healthz`. Verify unauthenticated page access is 401, authenticated preview works, and private files cannot be retrieved. Docker has not been executed in the current environment.
-4. Record real deployment SHA, URL, timestamp and health results. Test on the owner's physical Android phone.
-5. Only after launch gates pass, build explicitly with `RELEASE_MODE=public` and approved `SITE_ORIGIN`. Docker accepts those build arguments. Runtime-only variable changes do not regenerate the static build. Do not assume Railway forwards build settings until verified in its actual build log.
+## Current Railway preview
 
-No production rollback automation is connected. Keep a previous reviewed build, but do not roll back to content whose evidence has expired.
+- Project: `DROPi-Home-Affiliate` (separate from all other Railway projects).
+- Source: `caliofmarian-ai/DROPi-Home-Affiliate`, branch `main`.
+- Domain: `https://dropi-home-affiliate-production.up.railway.app`.
+- Mode: `RELEASE_MODE=preview`.
+- Host/port: `0.0.0.0:3000`.
+- Access: HTTP Basic username `preview`; password is stored only in Railway as `PREVIEW_ACCESS_CODE`. Never put its value in Git.
+- `/healthz` is intentionally unauthenticated for hosting health checks. Preview pages require authentication.
+
+Railway’s Docker build has executed successfully. The real deployment log confirmed the server listening on `0.0.0.0:3000`, matching the service-domain target port.
+
+For any future deployment, keep `RELEASE_MODE=preview` until the launch checklist is satisfied. Only after launch gates pass should an approved `SITE_ORIGIN` and `RELEASE_MODE=public` be used. Runtime-only variable changes do not regenerate static build content; verify the actual build log when changing build-time settings.
+
+## Owner phone acceptance
+
+On physical Android, verify: authentication challenge, home rendering, navigation, search/filter, comparison, fit calculator, disclosure/privacy drafts, owner workspace and absence of checkout/live affiliate claims. Record any failure before public publication.
 
 ## Optional UI checks
 
-`python scripts/browser-qa.py http://127.0.0.1:3000 private/browser-qa` needs separately installed Playwright/Chromium and a running local server. This is not an npm application dependency. `--offline` instead reads the generated HTML, injects CSS and application JS and substitutes the catalogue request with local build data. Offline results do not prove module loading, CSP enforcement, HTTP navigation or physical Android behaviour.
+`python scripts/browser-qa.py http://127.0.0.1:3000 private/browser-qa` needs separately installed Playwright/Chromium and a running local server. `--offline` reads generated HTML and local assets. Offline results do not prove network navigation, CSP enforcement or physical Android behaviour.

@@ -5,20 +5,20 @@
 Working brand: **DROPi Home**. Intended private repository: `caliofmarian-ai/DROPi-Home-Affiliate`.
 English editorial content for home organisation and small spaces in Ireland. No stock, checkout, order taking, purchased traffic, live affiliate accounts, or analytics are enabled.
 
-## Delivery status — 15 September 2026
+## Delivery status — 16 September 2026
 
 | Layer | Status | Evidence |
 | --- | --- | --- |
 | Local implementation | IMPLEMENTED | Source files and generated preview |
-| Local Node tests | PASS | `docs/evidence/node-tests.tap` |
+| Local Node tests | PASS (66/66) | Test suite is in `tests/`; rerun in the implementation session |
 | Browser UI checks | PASS, OFFLINE HARNESS ONLY | `docs/evidence/browser-qa.json`; limitations below |
-| Remote GitHub repository | CREATED / UPLOAD IN PROGRESS | Owner created `caliofmarian-ai/DROPi-Home-Affiliate`; remote initial commit verified |
+| Remote GitHub repository | SOURCE UPLOADED | `main` populated in `caliofmarian-ai/DROPi-Home-Affiliate` |
 | GitHub Actions execution | NOT RUN | Workflow definitions are supplied, not CI evidence |
-| Public deployment | NOT DEPLOYED | No Railway service or domain provisioned |
+| Private Railway preview | DEPLOYED / AUTHENTICATED | `dropi-home-affiliate-production.up.railway.app`; commercial publication still HOLD |
 | Publication readiness | HOLD | Missing approvals listed by `npm run release:check` |
 | Affiliate accounts / earnings | NOT CONNECTED / NOT MEASURED | Empty link and ledger datasets |
 
-The owner created the standalone repository. This source tree is being uploaded there without modifying any existing DROPi game, token, mobile, toolkit or trading repository. Remote verification after upload is required before SOURCE UPLOADED is claimed.
+The standalone private repository is populated and connected to a separate Railway project. GitHub remains the canonical source. The Railway deployment is an authenticated preview only; this does not approve commercial publication or monetisation.
 
 ## Run locally
 
@@ -34,7 +34,7 @@ npm start
 
 Open `http://127.0.0.1:3000`. No account or API key is needed for local preview. The supplied `.env.example` documents settings; Node does not automatically load it. Export variables explicitly or use your deployment provider's configuration.
 
-For a network-accessible private preview, set `HOST=0.0.0.0` and a random `PREVIEW_TOKEN` of at least 32 characters, and terminate HTTPS at a trusted host. Basic-auth username is `preview`. A preview is not private merely because it has `noindex`: the server enforces authentication when bound beyond loopback.
+For a network-accessible private preview, set `HOST=0.0.0.0` and a random `PREVIEW_ACCESS_CODE` of at least 32 characters, and terminate HTTPS at a trusted host. Basic-auth username is `preview`. A preview is not private merely because it has `noindex`: the server enforces authentication when bound beyond loopback.
 
 ## What is implemented
 
@@ -44,7 +44,7 @@ For a network-accessible private preview, set `HOST=0.0.0.0` and a random `PREVI
 - A private owner workspace with a clearly hypothetical revenue calculator and a local-only report viewer. Report contents are not uploaded or stored by the page.
 - An idempotent statement-import command with separate pending, approved, paid and reversed states. It is not connected to Amazon, Awin or a bank.
 - Publication and affiliate-link gates, editorial snapshot hashes, source-age audits, direct merchant-host allowlists, protected preview serving, static-output integrity checking and automated regression tests.
-- Docker/Railway configuration and manually triggerable GitHub workflows. No deployment or recurring task has been activated.
+- Docker/Railway configuration and manually triggerable GitHub workflows. A password-protected Railway preview is deployed; no recurring task is activated.
 
 Public builds exclude `/ops/`. Publishing does not itself enable monetisation. Live approved affiliate links must be supplied later; research links do not earn commission.
 
@@ -52,7 +52,7 @@ Public builds exclude `/ops/`. Publishing does not itself enable monetisation. L
 
 The brand is not cleared, articles are drafts, and the product list is a **research shortlist, not an affiliate-ready catalogue**. In particular, researching IKEA or Joseph Joseph does not establish that either has an available programme for this account or that the candidate is sold through a permitted Amazon/Awin offer. Programme acceptance, exact offer mapping, rights, current delivery, operator identity and publication approval remain real work.
 
-The source checker flags age and structure; it does **not** browse or refresh merchant pages. A deployment does not automatically attract traffic, create social accounts, or produce income. The €50/month amount is a proposal, not an authorised budget. Authorised new spending is €0.
+The source checker flags age and structure; it does **not** browse or refresh merchant pages. A deployment does not automatically attract traffic, create social accounts, or produce income. The €50/month amount is a proposal, not an authorised budget. Authorised new spending outside the explicitly requested Railway preview remains €0 unless separately approved.
 
 ## Documentation
 

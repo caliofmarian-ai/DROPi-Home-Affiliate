@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-09-15T20:52:00Z",
+  "recordedAt": "2026-09-16T06:10:00Z",
   "localNode": "v22.16.0",
   "localNpm": "10.9.2",
   "nodeTests": {
@@ -27,18 +27,24 @@
   },
   "remote": {
     "repositoryCreated": true,
-    "uploaded": false,
-    "lastRepositoryRead": "016df209c3421256929fb85598dfce5a64e8b041 (Initial commit)",
+    "uploaded": true,
+    "repository": "caliofmarian-ai/DROPi-Home-Affiliate",
+    "branch": "main",
     "githubActionsRun": false,
-    "dockerTested": false,
-    "railwayDeployed": false,
-    "target": "caliofmarian-ai/DROPi-Home-Affiliate"
+    "railwayProject": "DROPi-Home-Affiliate",
+    "railwayDeployed": true,
+    "railwayDomain": "dropi-home-affiliate-production.up.railway.app",
+    "deploymentMode": "preview-authenticated",
+    "containerPortVerified": 3000,
+    "physicalAndroidAccepted": false
   },
   "additionalSpendingAuthorisedEUR": 0,
-  "costCreatingActionsOrExternalServicesInSession": false,
+  "costCreatingActionsOrExternalServicesInSession": true,
   "limitations": [
-    "Chromium navigation blocked by managed environment URL policy; offline DOM harness used without changing policy.",
-    "No programme, merchant, banking, analytics or paid asset connection activated.",
+    "Offline Chromium QA is not a physical Android acceptance test.",
+    "GitHub Actions have not run; PASS evidence is from local execution only.",
+    "The Railway preview is deployment evidence, not approval for public commercial publication.",
+    "No affiliate programme, merchant payout, banking, analytics or paid traffic connection is activated.",
     "Product-source checks are dated specifications, not checkout availability or commercial partnership approval."
   ]
 }

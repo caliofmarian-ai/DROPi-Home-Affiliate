@@ -4,10 +4,10 @@ No checkbox below constitutes approval. Store factual evidence only after its ac
 
 ## Repository and delivery
 
-- [ ] Owner-created PRIVATE `caliofmarian-ai/DROPi-Home-Affiliate` exists and is accessible to the GitHub connection.
-- [ ] Full source uploaded, remote SHA read back and source manifest reconciled.
+- [x] Owner-created PRIVATE `caliofmarian-ai/DROPi-Home-Affiliate` exists and is accessible to the GitHub connection.
+- [x] Full source uploaded and remote source read back; repository reconciliation completed on 2026-09-16.
 - [ ] Manual CI executed successfully; runtime Node 24 and Docker checked.
-- [ ] Private deployment explicitly authorised, funded within a defined cap and verified.
+- [x] Private Railway preview explicitly authorised and deployed; service/domain/port verified. Recurring cost should still be monitored because no separate monthly ceiling was set.
 - [ ] Owner accepts the site on physical Android.
 
 ## Editorial launch (may precede monetisation)

@@ -8,8 +8,8 @@ function same(a, b) { const x = Buffer.from(a || ''), y = Buffer.from(b || ''); 
 export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0.0.1', token = process.env.PREVIEW_ACCESS_CODE, now = () => new Date() } = {}) {
   const base = realpathSync(root); const meta = JSON.parse(readFileSync(resolve(base, '.build-meta.json'), 'utf8'));
   if (meta.schemaVersion !== 1 || !['public', 'preview'].includes(meta.mode) || !Number.isFinite(Date.parse(meta.expiresAt))) throw new Error('Invalid build metadata. Rebuild before serving.');
-  if (meta.mode === 'preview' && !['127.0.0.1', '::1', 'localhost'].includes(host) && (!token || token.length < 32)) throw new Error('Non-loopback preview hosting requires PREVIEW_TOKEN with at least 32 characters. Noindex is not access control.');
-  if (token && token.length < 32) throw new Error('PREVIEW_TOKEN must have at least 32 characters.');
+  if (meta.mode === 'preview' && !['127.0.0.1', '::1', 'localhost'].includes(host) && (!token || token.length < 32)) throw new Error('Non-loopback preview hosting requires PREVIEW_ACCESS_CODE with at least 32 characters. Noindex is not access control.');
+  if (token && token.length < 32) throw new Error('PREVIEW_ACCESS_CODE must have at least 32 characters.');
   const assets = new Map();
   for (const [route, file] of Object.entries(meta.routes)) {
     const absolute = realpathSync(resolve(base, file)); if (!absolute.startsWith(base + sep)) throw new Error('Build route escapes output directory.');

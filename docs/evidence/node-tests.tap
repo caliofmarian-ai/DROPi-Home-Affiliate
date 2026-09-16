@@ -1,0 +1,410 @@
+
+> dropi-home-affiliate@0.1.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: preview builds 19 pages with no private configuration or tracker
+ok 1 - preview builds 19 pages with no private configuration or tracker
+  ---
+  duration_ms: 14.422453
+  type: 'test'
+  ...
+# Subtest: public build is blocked until approvals exist
+ok 2 - public build is blocked until approvals exist
+  ---
+  duration_ms: 3.533249
+  type: 'test'
+  ...
+# Subtest: fully synthetic approved public build excludes owner workspace and includes sitemap
+ok 3 - fully synthetic approved public build excludes owner workspace and includes sitemap
+  ---
+  duration_ms: 9.784573
+  type: 'test'
+  ...
+# Subtest: unknown release mode is rejected
+ok 4 - unknown release mode is rejected
+  ---
+  duration_ms: 0.164096
+  type: 'test'
+  ...
+# Subtest: HTTP page, assets, 404 and security headers
+ok 5 - HTTP page, assets, 404 and security headers
+  ---
+  duration_ms: 52.907594
+  type: 'test'
+  ...
+# Subtest: malformed/traversal paths do not escape the route allowlist
+ok 6 - malformed/traversal paths do not escape the route allowlist
+  ---
+  duration_ms: 21.8606
+  type: 'test'
+  ...
+# Subtest: network-exposed preview refuses to start without strong auth
+ok 7 - network-exposed preview refuses to start without strong auth
+  ---
+  duration_ms: 7.665079
+  type: 'test'
+  ...
+# Subtest: preview auth protects both pages and candidate JSON
+ok 8 - preview auth protects both pages and candidate JSON
+  ---
+  duration_ms: 11.899161
+  type: 'test'
+  ...
+# Subtest: changed build files fail integrity at startup
+ok 9 - changed build files fail integrity at startup
+  ---
+  duration_ms: 7.209404
+  type: 'test'
+  ...
+# Subtest: public source expiry blocks serving rather than carrying stale monetisation
+ok 10 - public source expiry blocks serving rather than carrying stale monetisation
+  ---
+  duration_ms: 10.788662
+  type: 'test'
+  ...
+# Subtest: public server never serves an owner workspace
+ok 11 - public server never serves an owner workspace
+  ---
+  duration_ms: 11.382604
+  type: 'test'
+  ...
+# Subtest: preview build refuses monetisation even when data flag is changed
+ok 12 - preview build refuses monetisation even when data flag is changed
+  ---
+  duration_ms: 3.301121
+  type: 'test'
+  ...
+# Subtest: seed project validates: 10 full guides and 16 candidates
+ok 13 - seed project validates: 10 full guides and 16 candidates
+  ---
+  duration_ms: 5.130369
+  type: 'test'
+  ...
+# Subtest: safe HTTPS requires exact hostname and prefix
+ok 14 - safe HTTPS requires exact hostname and prefix
+  ---
+  duration_ms: 0.276065
+  type: 'test'
+  ...
+# Subtest: invalid/future/stale dates fail closed
+ok 15 - invalid/future/stale dates fail closed
+  ---
+  duration_ms: 0.298969
+  type: 'test'
+  ...
+# Subtest: freshness boundary expires exactly at midnight plus window
+ok 16 - freshness boundary expires exactly at midnight plus window
+  ---
+  duration_ms: 0.158197
+  type: 'test'
+  ...
+# Subtest: HTML escapes script delimiters and quotes
+ok 17 - HTML escapes script delimiters and quotes
+  ---
+  duration_ms: 0.277948
+  type: 'test'
+  ...
+# Subtest: seed public release is held for real approvals
+ok 18 - seed public release is held for real approvals
+  ---
+  duration_ms: 1.678653
+  type: 'test'
+  ...
+# Subtest: synthetic fully reviewed non-commercial release passes pure gates
+ok 19 - synthetic fully reviewed non-commercial release passes pure gates
+  ---
+  duration_ms: 3.243073
+  type: 'test'
+  ...
+# Subtest: content change invalidates editorial receipt
+ok 20 - content change invalidates editorial receipt
+  ---
+  duration_ms: 1.48354
+  type: 'test'
+  ...
+# Subtest: catalogue change invalidates its editorial receipt
+ok 21 - catalogue change invalidates its editorial receipt
+  ---
+  duration_ms: 1.579844
+  type: 'test'
+  ...
+# Subtest: missing evidence files block approvals
+ok 22 - missing evidence files block approvals
+  ---
+  duration_ms: 2.124092
+  type: 'test'
+  ...
+# Subtest: source timestamps do not assert checkout delivery availability
+ok 23 - source timestamps do not assert checkout delivery availability
+  ---
+  duration_ms: 0.78525
+  type: 'test'
+  ...
+# Subtest: invented commercial facts rejected by content validator
+ok 24 - invented commercial facts rejected by content validator
+  ---
+  duration_ms: 0.900423
+  type: 'test'
+  ...
+# Subtest: duplicate candidate identifiers fail validation
+ok 25 - duplicate candidate identifiers fail validation
+  ---
+  duration_ms: 0.791921
+  type: 'test'
+  ...
+# Subtest: analytics cannot be activated with an unimplemented flag
+ok 26 - analytics cannot be activated with an unimplemented flag
+  ---
+  duration_ms: 1.268266
+  type: 'test'
+  ...
+# Subtest: default affiliate resolver returns original research URL
+ok 27 - default affiliate resolver returns original research URL
+  ---
+  duration_ms: 0.734724
+  type: 'test'
+  ...
+# Subtest: monetization flag alone does not authorise a link
+ok 28 - monetization flag alone does not authorise a link
+  ---
+  duration_ms: 0.889397
+  type: 'test'
+  ...
+# Subtest: approved synthetic affiliate links use exact authorized URL
+ok 29 - approved synthetic affiliate links use exact authorized URL
+  ---
+  duration_ms: 1.217499
+  type: 'test'
+  ...
+# Subtest: affiliate account mismatch blocks a synthetic link
+ok 30 - affiliate account mismatch blocks a synthetic link
+  ---
+  duration_ms: 1.054124
+  type: 'test'
+  ...
+# Subtest: changed affiliate product mapping blocks the link
+ok 31 - changed affiliate product mapping blocks the link
+  ---
+  duration_ms: 1.042497
+  type: 'test'
+  ...
+# Subtest: revoked programme and unapproved site fail closed
+ok 32 - revoked programme and unapproved site fail closed
+  ---
+  duration_ms: 0.948485
+  type: 'test'
+  ...
+# Subtest: stale source prevents affiliate resolution
+ok 33 - stale source prevents affiliate resolution
+  ---
+  duration_ms: 0.962987
+  type: 'test'
+  ...
+# Subtest: public origin rejects unsafe and placeholder values
+ok 34 - public origin rejects unsafe and placeholder values
+  ---
+  duration_ms: 0.29943
+  type: 'test'
+  ...
+# Subtest: privacy and brand approvals require named, dated evidence
+ok 35 - privacy and brand approvals require named, dated evidence
+  ---
+  duration_ms: 1.943841
+  type: 'test'
+  ...
+# Subtest: pending is not approved or paid income
+ok 36 - pending is not approved or paid income
+  ---
+  duration_ms: 2.130241
+  type: 'test'
+  ...
+# Subtest: identical report is idempotent
+ok 37 - identical report is idempotent
+  ---
+  duration_ms: 1.163598
+  type: 'test'
+  ...
+# Subtest: pending approved paid sequence is counted once
+ok 38 - pending approved paid sequence is counted once
+  ---
+  duration_ms: 9.29707
+  type: 'test'
+  ...
+# Subtest: approved unpaid remains separate
+ok 39 - approved unpaid remains separate
+  ---
+  duration_ms: 0.401584
+  type: 'test'
+  ...
+# Subtest: paid reversal produces a clawback and no inflated net cash
+ok 40 - paid reversal produces a clawback and no inflated net cash
+  ---
+  duration_ms: 0.27291
+  type: 'test'
+  ...
+# Subtest: initial reversed record does not fabricate earlier payment
+ok 41 - initial reversed record does not fabricate earlier payment
+  ---
+  duration_ms: 0.202744
+  type: 'test'
+  ...
+# Subtest: stale events cannot rewind a transaction
+ok 42 - stale events cannot rewind a transaction
+  ---
+  duration_ms: 0.358379
+  type: 'test'
+  ...
+# Subtest: timestamp collisions with different states are rejected
+ok 43 - timestamp collisions with different states are rejected
+  ---
+  duration_ms: 0.552941
+  type: 'test'
+  ...
+# Subtest: paid to pending transition rejected
+ok 44 - paid to pending transition rejected
+  ---
+  duration_ms: 0.467222
+  type: 'test'
+  ...
+# Subtest: amount overwrites require separate reconciliation
+ok 45 - amount overwrites require separate reconciliation
+  ---
+  duration_ms: 0.567383
+  type: 'test'
+  ...
+# Subtest: foreign currencies and fractional cents fail
+ok 46 - foreign currencies and fractional cents fail
+  ---
+  duration_ms: 0.325529
+  type: 'test'
+  ...
+# Subtest: future date and invalid calendar day fail
+ok 47 - future date and invalid calendar day fail
+  ---
+  duration_ms: 0.270676
+  type: 'test'
+  ...
+# Subtest: customer identity fields are refused
+ok 48 - customer identity fields are refused
+  ---
+  duration_ms: 0.209936
+  type: 'test'
+  ...
+# Subtest: different providers have separate transaction keys
+ok 49 - different providers have separate transaction keys
+  ---
+  duration_ms: 0.223846
+  type: 'test'
+  ...
+# Subtest: invalid batch leaves input ledger unchanged
+ok 50 - invalid batch leaves input ledger unchanged
+  ---
+  duration_ms: 1.046974
+  type: 'test'
+  ...
+# Subtest: summary rejects duplicate and malformed stored records
+ok 51 - summary rejects duplicate and malformed stored records
+  ---
+  duration_ms: 0.313611
+  type: 'test'
+  ...
+# Subtest: exact fit with zero clearance
+ok 52 - exact fit with zero clearance
+  ---
+  duration_ms: 1.799164
+  type: 'test'
+  ...
+# Subtest: default clearance is applied once on every axis
+ok 53 - default clearance is applied once on every axis
+  ---
+  duration_ms: 0.209896
+  type: 'test'
+  ...
+# Subtest: base rotation is opt-in and never changes vertical orientation
+ok 54 - base rotation is opt-in and never changes vertical orientation
+  ---
+  duration_ms: 0.138849
+  type: 'test'
+  ...
+# Subtest: manufacturer minimum drawer height overrides product height
+ok 55 - manufacturer minimum drawer height overrides product height
+  ---
+  duration_ms: 0.214402
+  type: 'test'
+  ...
+# Subtest: clearance can exceed separate manufacturer minimum
+ok 56 - clearance can exceed separate manufacturer minimum
+  ---
+  duration_ms: 0.185559
+  type: 'test'
+  ...
+# Subtest: invalid fit dimensions and blank input fail rather than imply zero
+ok 57 - invalid fit dimensions and blank input fail rather than imply zero
+  ---
+  duration_ms: 0.343416
+  type: 'test'
+  ...
+# Subtest: fit rejects unknown product dimensions
+ok 58 - fit rejects unknown product dimensions
+  ---
+  duration_ms: 0.163346
+  type: 'test'
+  ...
+# Subtest: numeric utility rejects booleans and Infinity
+ok 59 - numeric utility rejects booleans and Infinity
+  ---
+  duration_ms: 0.174392
+  type: 'test'
+  ...
+# Subtest: plan scenario is 400 gross and 360 before tax, explicitly hypothetical
+ok 60 - plan scenario is 400 gross and 360 before tax, explicitly hypothetical
+  ---
+  duration_ms: 0.324768
+  type: 'test'
+  ...
+# Subtest: scenario accounts for reversals
+ok 61 - scenario accounts for reversals
+  ---
+  duration_ms: 0.376656
+  type: 'test'
+  ...
+# Subtest: zero visits means zero commission, not a guaranteed return
+ok 62 - zero visits means zero commission, not a guaranteed return
+  ---
+  duration_ms: 0.1601
+  type: 'test'
+  ...
+# Subtest: scenario rejects percentages outside 0..1
+ok 63 - scenario rejects percentages outside 0..1
+  ---
+  duration_ms: 0.107552
+  type: 'test'
+  ...
+# Subtest: search is accent-insensitive and filter applies simultaneously
+ok 64 - search is accent-insensitive and filter applies simultaneously
+  ---
+  duration_ms: 0.256055
+  type: 'test'
+  ...
+# Subtest: empty ledger does not claim verified income
+ok 65 - empty ledger does not claim verified income
+  ---
+  duration_ms: 0.190737
+  type: 'test'
+  ...
+# Subtest: numeric inputs reject arrays, objects, null and booleans
+ok 66 - numeric inputs reject arrays, objects, null and booleans
+  ---
+  duration_ms: 0.209444
+  type: 'test'
+  ...
+1..66
+# tests 66
+# suites 0
+# pass 66
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 223.693349

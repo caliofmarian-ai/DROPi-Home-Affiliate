@@ -1,32 +1,38 @@
-# Session handoff — 2026-09-15
+# Session handoff — 2026-09-16
 
 ## Owner request
 
-Create a new GitHub repository and implement the previously agreed affiliate-business plan there. Standalone private target: `caliofmarian-ai/DROPi-Home-Affiliate`.
+Create and populate a standalone GitHub repository for the agreed affiliate-business MVP, connect it to Railway, and provide a real private preview that can be checked from the owner’s phone.
 
-## Actual result
+## Current state
 
-A runnable local implementation, tests, source records, original draft content and operational documentation are prepared. The owner has now created the standalone repository `caliofmarian-ai/DROPi-Home-Affiliate`, and its initial GitHub commit was verified before upload. No existing DROPi game, token, mobile, toolkit or trading repository is being used for this project.
+Canonical repository: `caliofmarian-ai/DROPi-Home-Affiliate`, branch `main`. The source, tests, editorial drafts, research data and delivery documentation are uploaded. GitHub remains the source of truth.
 
-The current transfer step uploads the complete prepared source tree into the new repository without force-pushing. Remote commit/tree verification must complete before SOURCE UPLOADED is claimed.
+A separate private Railway project named `DROPi-Home-Affiliate` is connected to `main`. The preview service is deployed at `https://dropi-home-affiliate-production.up.railway.app`, routes to port 3000, and runs in `RELEASE_MODE=preview`. Network preview access is protected by HTTP Basic authentication; the credential lives only in Railway variables and must never be committed.
 
-## Next action after remote verification
+The Railway deployment is **not** commercial publication. Affiliate links remain inactive, checkout is absent, analytics is absent and publication readiness remains `HOLD`.
 
-1. Confirm the remote tree, important files and final GitHub SHA.
-2. Keep GitHub Actions manual until the owner explicitly chooses to run them; workflow files do not themselves prove CI.
-3. Review the site and source from GitHub on the owner's phone.
-4. If the owner approves moving beyond source hosting, create a separate Railway project/service and deploy a protected preview first.
-5. Run live preview checks and physical-phone acceptance before any public/affiliate launch.
-6. Complete editorial, privacy, brand and affiliate-programme approvals before enabling commercial links or public indexing.
+## Verified evidence
 
-The user works primarily from an Android phone. Do not require terminal work when one GitHub UI action can resolve the current blocker. Repository documentation is English; report to the owner in Romanian.
+- Local Node test suite: 66/66 PASS.
+- Local static build: 19 pages, 10 guide drafts and 16 researched product candidates.
+- Offline Chromium QA harness: PASS; it is not a physical Android test.
+- GitHub source: uploaded to `main` and read back through the connected GitHub API.
+- Railway: Docker build executed successfully and the container was observed listening on `0.0.0.0:3000`.
+- Railway domain: `dropi-home-affiliate-production.up.railway.app`, target port 3000.
+- Commercial release check: intentionally `HOLD` until real owner/editorial/privacy/brand/programme approvals exist.
 
-## Unfinished business work
+## Owner acceptance still required
 
-Programme sign-ups, payouts, actual affiliate links, monetisation, publication approvals, operator identity, cleared brand/domain, traffic acquisition, analytics, revenue verification and recurring automation are not completed. The 16 candidates do not imply merchant-programme availability. The 10 drafts are not yet approved for public publication.
+1. Open the private Railway preview on the owner’s physical Android phone.
+2. Confirm authentication blocks access with a wrong password and allows access with the current Railway-only credential.
+3. Check home, Guides, Research shortlist, Will it fit?, disclosure/privacy drafts and owner workspace.
+4. Report any wording, layout or navigation changes before public launch work.
 
-## Evidence boundaries
+## Business work still open
 
-Node tests and local HTTP tests ran. Chromium offline UI interactions ran by rendering build files with injected local assets; live Chromium navigation is blocked by this environment's administrator policy. No policy was disabled. Offline UI screenshots are not screenshots of a hosted website or an Android device. GitHub Actions, Docker, Railway and physical Android acceptance have not run.
+Programme sign-ups, payout setup, real affiliate URLs, operator identity, brand/domain clearance, final privacy/disclosure wording, guide approval, product-offer mapping, analytics consent design, traffic acquisition and revenue verification are not complete. The 16 candidates are a research shortlist, not claimed merchant partnerships. The ten guides are drafts.
 
-No paid subscription, advertisement, domain, hosting service, AI-generation credits or external automation was activated. The project has no live API keys.
+## Safety and authority
+
+Do not switch to `RELEASE_MODE=public`, enable indexing, add tracking IDs, invent approvals or activate paid acquisition merely to make the project look launched. Real affiliate credentials and payout details belong only on the relevant official platforms. GitHub remains canonical; Railway is a deployment target.
