@@ -19,22 +19,23 @@ The owner-approved priority is: **finish the employer-independent commerce strea
 | AF-011 | eBay Partner Network adapter | IMPLEMENTED / NOT CONFIGURED | EPN/developer account accepted; credentials/campaign and exact mappings supplied |
 | AF-012 | Commercial offer approval gate | IMPLEMENTED RESOLVER | Real mappings/offers exist and the owner has actual decisions to approve/revoke |
 | AF-013 | Ireland/EU legal release gate | IMPLEMENTED / PUBLIC RELEASE HOLD | Real operator/business-name/tax/privacy/brand/editorial facts and evidence pass the gate |
-| AF-014 | SEO/public organic launch | HOLD | AF-013 passes and a deliberate public release is approved |
-| AF-015 | Analytics/conversion measurement | HOLD | Consent-compliant ePrivacy/GDPR implementation is designed and approved |
-| AF-016 | Dropshipping supplier qualification | IMPLEMENTED FOUNDATION / SELLING DISABLED | Supplier and exact SKUs pass trade, consumer, GPSR, import, media, shipping, sample and landed-margin gates |
-| AF-017 | Dropshipping order automation | STATE MACHINE READY / BLOCKED BY APPROVED SUPPLIER | Exact supplier/API chosen, legal contract pack exists and pilot economics pass |
-| AF-018 | Independent commerce handoff | NEAR EXTERNAL-BLOCKER BOUNDARY | No material repository-controlled work remains that can be truthful without a real account, counterparty, supplier, tax/operator fact or owner publication decision |
-| LF-001 | Custom Furniture AI Intake | APPROVED / DEFERRED | Start only after AF-018 condition is reached |
+| AF-014 | Accessibility baseline / EAA scope gate | IMPLEMENTED BASELINE / LEGAL SCOPE HOLD | Real operator/service facts establish whether the microenterprise exemption applies; full in-scope requirements are reviewed if needed |
+| AF-015 | SEO/public organic launch | HOLD | AF-013 and AF-014 pass and a deliberate public release is approved |
+| AF-016 | Analytics/conversion measurement | HOLD | Consent-compliant ePrivacy/GDPR implementation is designed and approved |
+| AF-017 | Dropshipping supplier qualification | IMPLEMENTED FOUNDATION / SELLING DISABLED | Supplier and exact SKUs pass trade, consumer, GPSR, import, media, shipping, sample and landed-margin gates |
+| AF-018 | Dropshipping order automation | STATE MACHINE READY / BLOCKED BY APPROVED SUPPLIER | Exact supplier/API chosen, legal contract pack exists and pilot economics pass |
+| AF-019 | Independent commerce handoff | NEAR EXTERNAL-BLOCKER BOUNDARY | No material repository-controlled work remains that can be truthful without a real account, counterparty, supplier, tax/operator fact or owner publication decision |
+| LF-001 | Custom Furniture AI Intake | APPROVED / DEFERRED | Start only after AF-019 condition is reached |
 | LF-002 | Manufacturing referral route | HOLD | Written manufacturing/referral/data agreement exists |
 | LF-003 | Who Fits It | HOLD | Custom/fitting governance and real partner model approved |
 
 ## Current independent-commerce checkpoint
 
-A verified Railway deployment has passed **138/138 tests with 0 failures** after the Ireland/EU legal audit and counterparty-specific affiliate tax gate.
+A verified Railway deployment has passed **141/141 tests with 0 failures** after the Ireland/EU legal audit, counterparty-specific affiliate tax gate and basic accessibility regression baseline.
 
-The production Neon database now contains the privacy-minimised affiliate ledger/sync schema. It is deliberately empty until real provider reporting exists. Applying schema did not activate monetisation or create any transaction data.
+The production Neon database contains the privacy-minimised affiliate ledger/sync schema. It is deliberately empty until real provider reporting exists. Applying schema did not activate monetisation or create any transaction data.
 
-The legal source of truth is `docs/LEGAL-COMPLIANCE-IRELAND-EU.md`. The application remains fail-closed: public commercial release, tracking and dropshipping selling cannot be activated merely by changing a provider feed.
+The legal source of truth is `docs/LEGAL-COMPLIANCE-IRELAND-EU.md`; owner/external actions are separated in `docs/OWNER-LEGAL-ACTION-CHECKLIST.md`. The application remains fail-closed: public commercial release, tracking and dropshipping selling cannot be activated merely by changing a provider feed. `SUPER_ADMIN` now receives the current public/legal blocker count and blocker list from build metadata.
 
 ### 1. Affiliate
 
@@ -50,7 +51,7 @@ No programme is marked live until actual acceptance evidence exists.
 
 Dropshipping remains secondary and disabled. It is not activated merely to increase catalogue size.
 
-A pilot supplier now fails closed unless the evidence includes Ireland fulfilment, returns, supplier/trade terms, media rights, GPSR/product-safety status, EU responsible person, traceability, recall process, consumer-remedy support, category-specific product rules and a lawful customs/VAT model. Non-EU fulfilment additionally requires a verified IOSS/DDP/importer-of-record model.
+A pilot supplier fails closed unless the evidence includes Ireland fulfilment, returns, supplier/trade terms, media rights, GPSR/product-safety status, EU responsible person, traceability, recall process, consumer-remedy support, category-specific product rules and a lawful customs/VAT model. Non-EU fulfilment additionally requires a verified IOSS/DDP/importer-of-record model.
 
 The contribution model includes customs duty, import VAT and customs handling. A cheap supplier price is therefore not treated as profit.
 
@@ -58,7 +59,9 @@ Local/Irish or EU stock remains preferred over opaque non-EU direct fulfilment. 
 
 ### 3. Legal/compliance boundary
 
-Current official-source review covers Irish e-commerce disclosures, affiliate advertising disclosure, CRO business-name registration, Revenue self-assessment and cross-border VAT issues, GDPR/ePrivacy tracking rules, Consumer Rights Act distance-sales duties, GPSR/product safety, IOSS/customs and EORI.
+Current official-source review covers Irish e-commerce disclosures, affiliate advertising disclosure, CRO business-name registration, Revenue self-assessment and cross-border VAT issues, GDPR/ePrivacy tracking rules, Consumer Rights Act distance-sales duties, GPSR/product safety, IOSS/customs/EORI, intellectual-property/brand-content risks and the European Accessibility Act implementation in Ireland.
+
+The accessibility test suite is only a regression baseline; it is not represented as legal certification. E-commerce service scope and the statutory microenterprise exemption depend on the real operator/service facts and remain an explicit launch-gate decision.
 
 The gate intentionally does **not** invent the operator's final legal/tax facts. Before commercial release we still need the actual legal operator/trading-name decision, public business contact address, provider paying entities/VAT treatment, privacy/hosting review and publication approval.
 
@@ -79,6 +82,7 @@ The independent stream can reach a legitimate implementation-ready point even wh
 - paid supplier subscriptions;
 - real operator/trading-name/business-address decision;
 - final brand/privacy/editorial/publication approvals;
+- accessibility microenterprise/scope facts where relevant;
 - sample purchases, SKU compliance evidence or trade contracts.
 
 The repository is responsible for making each connection safe and low-friction when the real approval/evidence exists.
