@@ -7,8 +7,11 @@ COPY public ./public
 COPY content ./content
 COPY data ./data
 COPY docs/evidence ./docs/evidence
+COPY tests ./tests
 ARG RELEASE_MODE=preview
 ARG SITE_ORIGIN
+RUN node scripts/check.mjs
+RUN node --test tests/*.test.mjs
 RUN RELEASE_MODE="$RELEASE_MODE" SITE_ORIGIN="$SITE_ORIGIN" node scripts/build.mjs
 FROM node:24-bookworm-slim
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3000
