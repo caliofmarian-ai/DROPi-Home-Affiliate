@@ -12,8 +12,16 @@
     "returnsTerms": "NOT_VERIFIED",
     "mediaRights": "NOT_VERIFIED",
     "tradeAccount": "APPLICATION_REQUIRED",
+    "gpsrCompliance": "NOT_VERIFIED",
+    "euResponsiblePerson": "NOT_VERIFIED",
+    "productTraceability": "NOT_VERIFIED",
+    "recallProcess": "NOT_VERIFIED",
+    "consumerRemedySupport": "NOT_VERIFIED",
+    "customsVatModel": "NOT_REVIEWED",
+    "categoryCompliance": "NOT_REVIEWED",
+    "nonEuFulfilment": false,
     "paidPlanApproved": false,
-    "notes": "Public material describes furniture dropshipping/direct delivery and trade-account signup. Exact commercial terms require direct verification."
+    "notes": "Public material describes furniture dropshipping/direct delivery and trade-account signup. Exact commercial terms, GPSR evidence, consumer-remedy support and SKU compliance require direct verification."
   },
   {
     "id": "syncee-marketplace",
@@ -28,8 +36,16 @@
     "returnsTerms": "SUPPLIER_DEPENDENT",
     "mediaRights": "SUPPLIER_DEPENDENT",
     "tradeAccount": "PLATFORM_ACCOUNT_REQUIRED",
+    "gpsrCompliance": "SUPPLIER_DEPENDENT",
+    "euResponsiblePerson": "SUPPLIER_DEPENDENT",
+    "productTraceability": "SUPPLIER_DEPENDENT",
+    "recallProcess": "SUPPLIER_DEPENDENT",
+    "consumerRemedySupport": "SUPPLIER_DEPENDENT",
+    "customsVatModel": "SUPPLIER_DEPENDENT",
+    "categoryCompliance": "NOT_REVIEWED",
+    "nonEuFulfilment": false,
     "paidPlanApproved": false,
-    "notes": "Marketplace includes Home & Garden/Furniture; each supplier and SKU must independently pass Irish delivery, returns, compliance and margin gates."
+    "notes": "Marketplace includes Home & Garden/Furniture; every supplier and SKU must independently pass Irish delivery, returns, GPSR/responsible-person, import, category-compliance and margin gates."
   },
   {
     "id": "bigbuy-eu",
@@ -44,7 +60,15 @@
     "returnsTerms": "TO_VERIFY",
     "mediaRights": "TO_VERIFY",
     "tradeAccount": "TO_VERIFY",
+    "gpsrCompliance": "TO_VERIFY",
+    "euResponsiblePerson": "TO_VERIFY",
+    "productTraceability": "TO_VERIFY",
+    "recallProcess": "TO_VERIFY",
+    "consumerRemedySupport": "TO_VERIFY",
+    "customsVatModel": "TO_VERIFY",
+    "categoryCompliance": "NOT_REVIEWED",
+    "nonEuFulfilment": false,
     "paidPlanApproved": false,
-    "notes": "EU supplier candidate. No subscription or commercial claim is approved until exact Irish pricing, API access and terms are checked directly."
+    "notes": "EU supplier candidate. No subscription or commercial claim is approved until exact Irish pricing, API access, terms, product-safety evidence and consumer-remedy support are checked directly."
   }
 ]
