@@ -1,29 +1,38 @@
-import { escapeHTML as e, affiliateDecision, isFresh, releaseIssues } from './domain.mjs';
+import { escapeHTML as e, isFresh, releaseIssues } from './domain.mjs';
+import { commerceDecision } from './commercial-offers.mjs';
 
 const categories = { drawer: 'Drawers', underbed: 'Under the bed', wardrobe: 'Wardrobes', desk: 'Desks', shelf: 'Shelves' };
 const dims = p => `${p.dimensionsMM.width} × ${p.dimensionsMM.depth} × ${p.dimensionsMM.height} mm`;
 const chip = text => `<span class="chip">${e(text)}</span>`;
+const euro = n => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(n);
 
 export function viewData(p, origin, now) {
-  return p.products.map(product => ({
-    ...product,
-    merchantName: p.merchants.find(m => m.id === product.merchantId).name,
-    affiliate: affiliateDecision(product, p, origin, now),
-    fresh: isFresh(product.source.checkedAt, p.site.sourceMaxAgeDays, now)
-  }));
+  return p.products.map(product => {
+    const affiliate = commerceDecision(product, p, origin, now);
+    return {
+      ...product,
+      merchantName: p.merchants.find(m => m.id === product.merchantId).name,
+      affiliate,
+      media: affiliate.active && affiliate.media ? affiliate.media : product.media,
+      fresh: isFresh(product.source.checkedAt, p.site.sourceMaxAgeDays, now)
+    };
+  });
 }
 
 function productCard(p, { compare = true } = {}) {
   const destination = p.affiliate.active
-    ? `<span class="ad-label">Advertisement · affiliate link</span><a class="text-link" href="${e(p.affiliate.url)}" rel="sponsored nofollow noopener" target="_blank">View at ${e(p.merchantName)} ↗</a>`
+    ? `<span class="ad-label">Advertisement · affiliate link</span><a class="text-link" href="${e(p.affiliate.url)}" rel="sponsored nofollow noopener" target="_blank">View offer ↗</a>`
     : `<a class="text-link" href="${e(p.source.url)}" rel="noopener noreferrer" target="_blank">Manufacturer specification ↗</a>`;
+  const commercial = p.affiliate.active && p.affiliate.price?.currency === 'EUR'
+    ? `<p class="offer-price"><strong>${e(euro(p.affiliate.price.amount))}</strong><br><span class="small muted">Provider feed price · checked ${e(p.affiliate.checkedAt || '')}. Retailer price at checkout controls.</span></p>`
+    : '';
   return `<article class="product-card" data-product-id="${e(p.id)}" data-category="${e(p.category)}">
     <div class="card-top">${chip(categories[p.category])}${compare ? `<label class="compare-choice"><input type="checkbox" data-compare="${e(p.id)}"> Compare</label>` : ''}</div>
     <p class="small muted">${e(p.merchantName)} · ${e(p.sku)}</p><h3>${e(p.name)}</h3>
-    <p class="dimensions">${e(dims(p))}</p><p>${e(p.note)}</p><p class="caution">${e(p.caution)}</p>
+    ${commercial}<p class="dimensions">${e(dims(p))}</p><p>${e(p.note)}</p><p class="caution">${e(p.caution)}</p>
     ${p.minSpaceHeightMM ? `<p class="requirement">Minimum space height: ${p.minSpaceHeightMM} mm.</p>` : ''}
     ${p.maxWidthMM ? `<p class="small">Maximum expanded width: ${p.maxWidthMM} mm. Calculator uses compact size.</p>` : ''}
-    <div class="source-note"><span class="dot ${p.fresh ? '' : 'stale'}"></span>${p.fresh ? 'Specification checked' : 'Specification needs recheck'} ${e(p.source.checkedAt)}<br>Stock and Irish delivery: not confirmed. No hands-on test.</div>${destination}
+    <div class="source-note"><span class="dot ${p.fresh ? '' : 'stale'}"></span>${p.fresh ? 'Specification checked' : 'Specification needs recheck'} ${e(p.source.checkedAt)}<br>${p.affiliate.active ? `Affiliate offer source: ${e(p.affiliate.provider || p.affiliate.programId || 'approved programme')}.` : 'Stock and Irish delivery: not confirmed.'} No hands-on test.</div>${destination}
   </article>`;
 }
 
@@ -58,7 +67,7 @@ export function renderSite(p, ctx) {
 
   add('/disclosure/', 'Commercial disclosure', 'Affiliate status and the distinction between research and advertising links.', `<section class="page-head"><p class="eyebrow">TRANSPARENCY</p><h1>Know what a link means.</h1></section><article class="reading"><section><h2>${p.site.monetization.enabled ? 'Affiliate advertising' : 'No active affiliate monetisation'}</h2><p>${e(p.site.monetization.enabled ? p.site.affiliateDisclosure : p.site.disclosure)}</p><p>Manufacturer links are research references unless explicitly labelled as affiliate advertisements.</p></section><section><h2>Where purchases happen</h2><p>The retailer controls prices, stock, delivery and purchase terms. DROPi Home has no cart, payment collection or fulfilment.</p></section></article>`);
 
-  add('/privacy/', 'Privacy', 'The data-minimising behaviour of the current DROPi Home build.', `<section class="page-head"><p class="eyebrow">PRIVACY</p><h1>Less data.<br>Fewer assumptions.</h1></section><article class="reading">${ctx.mode === 'preview' ? '<div class="note"><strong>DRAFT — Not a completed public privacy notice.</strong></div>' : `<p>Operator: ${e(p.site.operator.publicName)}. Contact: ${e(p.site.operator.contactEmail)}.</p>`}<section><h2>What this application does</h2><p>No cookies, local storage, analytics scripts, accounts, newsletter forms or checkout are used.</p></section><section><h2>Requests and hosting</h2><p>Hosting infrastructure receives connection requests. Provider logging and retention require review before public launch.</p></section><section><h2>Leaving this site</h2><p>External retailers have their own privacy practices.</p></section></article>`);
+  add('/privacy/', 'Privacy', 'The data-minimising behaviour of the current DROPi Home build.', `<section class="page-head"><p class="eyebrow">PRIVACY</p><h1>Less data.<br>Fewer assumptions.</h1></section><article class="reading">${ctx.mode === 'preview' ? '<div class="note"><strong>DRAFT — Not a completed public privacy notice.</strong></div>' : `<p>Operator: ${e(p.site.operator.publicName)}. Contact: ${e(p.site.operator.contactEmail)}.</p>`}<section><h2>What this application does</h2><p>No cookies, local storage, analytics scripts, customer accounts, newsletter forms or checkout are used in the public affiliate build. Private administrator authentication is separate from public visitor behaviour.</p></section><section><h2>Requests and hosting</h2><p>Hosting infrastructure receives connection requests. Provider logging and retention require review before public launch.</p></section><section><h2>Leaving this site</h2><p>External retailers have their own privacy practices.</p></section></article>`);
 
   if (ctx.mode === 'preview') {
     const blockers = releaseIssues(p, { SITE_ORIGIN: ctx.origin }, ctx.now);
