@@ -1,0 +1,32 @@
+{
+  "status": "FOUNDATION_ONLY",
+  "publicIntakeEnabled": false,
+  "structuredSubmissionEnabled": false,
+  "mediaUploadsEnabled": false,
+  "aiProcessingEnabled": false,
+  "manufacturerRoutingEnabled": false,
+  "storageProvider": "NOT_PROVISIONED",
+  "mediaStorageProvider": "NOT_PROVISIONED",
+  "retentionDays": null,
+  "privacyNoticeVersion": null,
+  "consentVersion": null,
+  "aiDataUse": "NO_TRAINING",
+  "privacyReview": {
+    "approved": false,
+    "approvedAt": null,
+    "approvedBy": null,
+    "evidenceFile": null
+  },
+  "processorReview": {
+    "approved": false,
+    "approvedAt": null,
+    "approvedBy": null,
+    "evidenceFile": null
+  },
+  "manufacturerAgreement": {
+    "approved": false,
+    "approvedAt": null,
+    "approvedBy": null,
+    "evidenceFile": null
+  }
+}
