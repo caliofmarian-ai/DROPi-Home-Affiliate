@@ -8,6 +8,7 @@ import { validateProviderMappings, validateProviderOffers } from '../src/provide
 import { validateCommercialApprovals } from '../src/commercial-offers.mjs';
 import { validateDropshipSuppliers } from '../src/dropship.mjs';
 import { validateDropshipSkus } from '../src/dropship-sku.mjs';
+import { validateCustomIntakePolicy } from '../src/custom-intake.mjs';
 import { renderSite } from '../src/render.mjs';
 
 function counts(list, key = 'status') {
@@ -26,7 +27,8 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     ...validateProviderOffers(p.providerOffers),
     ...validateCommercialApprovals(p, now),
     ...validateDropshipSuppliers(p.dropshipSuppliers),
-    ...validateDropshipSkus(p.dropshipSkus, p.dropshipSuppliers)
+    ...validateDropshipSkus(p.dropshipSkus, p.dropshipSuppliers),
+    ...validateCustomIntakePolicy(p.customIntakePolicy, p.evidenceExists)
   ];
   if (issues.length) throw new Error(`Build blocked:\n- ${issues.join('\n- ')}`);
   const origin = publicOrigin(env.SITE_ORIGIN); const rendered = renderSite(p, { mode, origin, now });
@@ -65,14 +67,24 @@ export function build({ root = process.cwd(), outDir = resolve(root, 'dist'), en
     consumerCheckoutEnabled: p.site.legalControls?.consumerCheckoutEnabled === true,
     conversionTrackingEnabled: p.site.legalControls?.conversionTrackingEnabled === true,
     publicReleaseBlockerCount: publicReleaseBlockers.length,
-    publicReleaseBlockers
+    publicReleaseBlockers,
+    customIntake: {
+      status: p.customIntakePolicy.status,
+      publicIntakeEnabled: p.customIntakePolicy.publicIntakeEnabled,
+      structuredSubmissionEnabled: p.customIntakePolicy.structuredSubmissionEnabled,
+      mediaUploadsEnabled: p.customIntakePolicy.mediaUploadsEnabled,
+      aiProcessingEnabled: p.customIntakePolicy.aiProcessingEnabled,
+      manufacturerRoutingEnabled: p.customIntakePolicy.manufacturerRoutingEnabled,
+      storageProvider: p.customIntakePolicy.storageProvider,
+      mediaStorageProvider: p.customIntakePolicy.mediaStorageProvider
+    }
   };
   const metadata = {
     schemaVersion: 1,
     mode,
     builtAt: new Date(now).toISOString(),
     expiresAt: new Date(Math.min(...deadlines)).toISOString(),
-    sourceSnapshotSha256: sha256({ site: p.site, products: p.products, guides: p.guides, links: p.links, programs: p.programs, reviews: p.reviews, providerMappings: p.providerMappings, providerOffers: p.providerOffers, dropshipSuppliers: p.dropshipSuppliers, dropshipSkus: p.dropshipSkus }),
+    sourceSnapshotSha256: sha256({ site: p.site, products: p.products, guides: p.guides, links: p.links, programs: p.programs, reviews: p.reviews, providerMappings: p.providerMappings, providerOffers: p.providerOffers, dropshipSuppliers: p.dropshipSuppliers, dropshipSkus: p.dropshipSkus, customIntakePolicy: p.customIntakePolicy }),
     pages: rendered.pages.size,
     products: p.products.length,
     guides: p.guides.length,
