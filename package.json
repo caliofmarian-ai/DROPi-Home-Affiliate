@@ -15,6 +15,7 @@
     "release:check": "node scripts/release-check.mjs",
     "scenario": "node scripts/scenario.mjs",
     "import:ledger": "node scripts/import-ledger.mjs",
-    "sync:awin": "node scripts/sync-awin.mjs"
+    "sync:awin": "node scripts/sync-awin.mjs",
+    "sync:ebay": "node scripts/sync-ebay.mjs"
   }
 }
