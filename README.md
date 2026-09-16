@@ -11,7 +11,7 @@ The employer-independent stream is intentionally built first: affiliate catalogu
 | Layer | Status | Evidence |
 | --- | --- | --- |
 | Core preview | IMPLEMENTED | 19 pages, 10 guides, 16 research candidates |
-| Railway verification | PASS | 141/141 Node tests, 0 failures, verified deployment SUCCESS |
+| Railway verification | PASS | 144/144 Node tests, 0 failures, verified deployment SUCCESS |
 | GitHub | CANONICAL SOURCE | private `main` branch |
 | SUPER_ADMIN auth | ACTIVE | Neon Auth in Frankfurt; one promoted `super_admin`; bootstrap closed |
 | Irish/EU legal gate | IMPLEMENTED / PUBLIC RELEASE HOLD | canonical legal control document plus fail-closed code gates |
@@ -36,7 +36,7 @@ The temporary HTTP Basic preview gate remains in front of the whole pre-launch s
 
 ## Irish/EU legal controls
 
-The canonical legal gate is [docs/LEGAL-COMPLIANCE-IRELAND-EU.md](docs/LEGAL-COMPLIANCE-IRELAND-EU.md). The real-owner checklist is [docs/OWNER-LEGAL-ACTION-CHECKLIST.md](docs/OWNER-LEGAL-ACTION-CHECKLIST.md).
+The canonical legal gate is [docs/LEGAL-COMPLIANCE-IRELAND-EU.md](docs/LEGAL-COMPLIANCE-IRELAND-EU.md). The real-owner checklist is [docs/OWNER-LEGAL-ACTION-CHECKLIST.md](docs/OWNER-LEGAL-ACTION-CHECKLIST.md). Accessibility/EAA scope is separately pinned in [docs/ACCESSIBILITY-EAA.md](docs/ACCESSIBILITY-EAA.md).
 
 Repository rules now enforce, among other things:
 
@@ -44,6 +44,7 @@ Repository rules now enforce, among other things:
 - public commercial release requires a real legal/operator identity, geographic address and contact email;
 - a trading name different from the legal name remains blocked until Irish business-name treatment is evidenced;
 - affiliate monetisation requires both an overall tax-filing review and a counterparty-specific VAT/tax profile for every used programme;
+- feed prices are suppressed unless the product mapping separately proves how tax and delivery are represented;
 - analytics/conversion tracking remain disabled until consent-compliant ePrivacy/GDPR controls exist;
 - dropshipping checkout remains disabled;
 - a future dropship pilot requires verified product-safety/GPSR, EU responsible-person, traceability, recall, consumer-remedy and customs/VAT evidence;
@@ -79,11 +80,13 @@ Implemented providers/foundations:
 
 `data/provider-mappings.json` and `data/affiliate-offers.generated.json` are intentionally empty until real accounts and exact products exist. `data/programs.json` also keeps each programme's real paying entity/country/VAT treatment in `NOT_REVIEWED` state until evidence exists.
 
-### Product media
+### Product media and prices
 
 No arbitrary retailer/manufacturer images are copied into the repository. Catalogue media is exposed only through an approved provider/merchant rights path. Remote partner images are HTTPS-only, use `no-referrer`, and the application keeps script/connect origins locked to itself.
 
 Until authorised media exists, product cards show a placeholder rather than a fabricated image.
+
+Feed price data can be staged internally, but the user-facing catalogue receives no price unless `priceDisplayApproved`, the tax-inclusion state, delivery-cost state and supporting evidence are all present. This prevents an API number from becoming an ambiguous public price claim.
 
 ### Affiliate reporting
 
@@ -157,6 +160,7 @@ Secrets, payout/bank data, tax credentials and private reports must never be com
 
 - [Ireland / EU legal compliance gate](docs/LEGAL-COMPLIANCE-IRELAND-EU.md)
 - [Owner legal/commercial action checklist](docs/OWNER-LEGAL-ACTION-CHECKLIST.md)
+- [Accessibility / European Accessibility Act gate](docs/ACCESSIBILITY-EAA.md)
 - [Independent commerce plan](docs/INDEPENDENT-COMMERCE-PLAN.md)
 - [Affiliate provider onboarding](docs/AFFILIATE-PROVIDER-ONBOARDING.md)
 - [Affiliate reporting and ledger](docs/AFFILIATE-REPORTING.md)
