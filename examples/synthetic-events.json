@@ -1,0 +1,29 @@
+[
+  {
+    "provider": "synthetic-demo",
+    "transactionId": "example-only-001",
+    "status": "PENDING",
+    "commissionCents": 400,
+    "currency": "EUR",
+    "updatedAt": "2026-09-15T09:00:00.000Z",
+    "statementRef": "SYNTHETIC-EXAMPLE-NOT-INCOME"
+  },
+  {
+    "provider": "synthetic-demo",
+    "transactionId": "example-only-001",
+    "status": "APPROVED",
+    "commissionCents": 400,
+    "currency": "EUR",
+    "updatedAt": "2026-09-15T10:00:00.000Z",
+    "statementRef": "SYNTHETIC-EXAMPLE-NOT-INCOME"
+  },
+  {
+    "provider": "synthetic-demo",
+    "transactionId": "example-only-001",
+    "status": "PAID",
+    "commissionCents": 400,
+    "currency": "EUR",
+    "updatedAt": "2026-09-15T11:00:00.000Z",
+    "statementRef": "SYNTHETIC-EXAMPLE-NOT-INCOME"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "amazon-ie",
+    "name": "Amazon.ie Associates",
+    "status": "NOT_APPLIED",
+    "allowedHosts": [
+      "www.amazon.ie",
+      "amazon.ie"
+    ],
+    "accountId": null,
+    "approvalEvidenceFile": null,
+    "approvedSiteOrigin": null,
+    "termsReviewedAt": null,
+    "publicInfoUrl": "https://affiliate-program.amazon.ie/"
+  },
+  {
+    "id": "awin",
+    "name": "Awin publisher programmes",
+    "status": "NOT_APPLIED",
+    "allowedHosts": [
+      "www.awin1.com",
+      "awin1.com"
+    ],
+    "accountId": null,
+    "approvalEvidenceFile": null,
+    "approvedSiteOrigin": null,
+    "termsReviewedAt": null,
+    "publicInfoUrl": "https://www.awin.com/gb/faqs"
+  }
+]

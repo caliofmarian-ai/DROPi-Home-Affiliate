@@ -1,0 +1,45 @@
+{
+  "name": "DROPi Home",
+  "workingBrand": true,
+  "tagline": "Less clutter. Better-fitting choices.",
+  "language": "en-IE",
+  "market": "IE",
+  "sourceMaxAgeDays": 30,
+  "editorialMaxAgeDays": 180,
+  "publication": {
+    "approved": false,
+    "approvedBy": null,
+    "approvedAt": null,
+    "evidenceFile": null
+  },
+  "operator": {
+    "publicName": null,
+    "contactEmail": null
+  },
+  "privacyReview": {
+    "approved": false,
+    "evidenceFile": null,
+    "approvedAt": null,
+    "approvedBy": null
+  },
+  "brandReview": {
+    "approved": false,
+    "evidenceFile": null,
+    "approvedAt": null,
+    "approvedBy": null
+  },
+  "monetization": {
+    "enabled": false
+  },
+  "analytics": {
+    "enabled": false
+  },
+  "spending": {
+    "approvedNewMonthlyEUR": 0,
+    "proposedMonthlyCeilingEUR": 50,
+    "adsEnabled": false
+  },
+  "disclosure": "Research links are not affiliate links in this build. No commission is earned from them. We do not sell products, take payments or fulfil orders.",
+  "affiliateDisclosure": "Advertisement / affiliate links. We may earn a commission from eligible purchases. You buy from the named retailer, not from DROPi Home.",
+  "amazonDisclosure": "As an Amazon Associate I earn from qualifying purchases."
+}

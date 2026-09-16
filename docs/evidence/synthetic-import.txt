@@ -1,0 +1,4 @@
+Synthetic example only; not business income.
+First import: applied=3 duplicate=0 stale=0 bankReconciled=false
+Second import: applied=0 duplicate=1 stale=2 bankReconciled=false
+Local output stayed under ignored private/example-ledger.json. No actual account or statement connected.

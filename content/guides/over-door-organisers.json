@@ -1,0 +1,39 @@
+{
+  "slug": "over-door-organisers",
+  "title": "Before choosing an over-door organiser",
+  "category": "wardrobe",
+  "summary": "Check door operation before adding a new storage surface.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Inspect the door without modifying it",
+      "paragraphs": [
+        "Identify the exact door and the area where a proposed bracket would sit. Record door thickness and look at the gap along the top with the door closed. Note the hinges, latch, frame and any seals. These observations help formulate questions for a manufacturer; they do not establish that a bracket is suitable.",
+        "Do not interfere with a fire door, a safety-critical closer or a seal. In rented accommodation, check what changes or accessories are allowed before installing anything. When the door’s purpose or the product’s compatibility is unclear, leave the installation out of the shortlist."
+      ]
+    },
+    {
+      "heading": "Check the complete assembly",
+      "paragraphs": [
+        "The organiser body is only part of the geometry. Include the bracket projection, loaded pockets or baskets, handles, door swing and the area behind the door. A door must continue to open, close and latch as intended without rubbing or forcing it.",
+        "Ask for the manufacturer’s supported door thickness, clearance requirements, load limit and restrictions on use. Do not replace those specifications with a general claim that a product fits all doors. We have not approved an over-door product for the launch catalogue, so this guide intentionally has no purchase recommendation."
+      ]
+    },
+    {
+      "heading": "Consider a lower-complexity alternative",
+      "paragraphs": [
+        "Compare the proposed benefit with a free-standing box on an existing suitable shelf or a rearrangement of the contents you already own. Count the objects that need a place and decide how frequently you need to retrieve them. An accessory that obstructs normal movement is not an improvement just because it adds compartments.",
+        "The site’s rectangular-space calculator is not an over-door installation checker. It cannot assess door operation, attachment security or load capacity. Keep those questions separate and use the exact product’s instructions when considering a future candidate."
+      ]
+    }
+  ],
+  "checklist": [
+    "Door function, seals and restrictions identified.",
+    "Bracket dimensions and loaded projection checked.",
+    "Manufacturer compatibility and load limits obtained.",
+    "No installation where safety or permission is unclear."
+  ],
+  "productIds": []
+}

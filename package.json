@@ -1,0 +1,19 @@
+{
+  "name": "dropi-home-affiliate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build.mjs",
+    "start": "node src/server.mjs",
+    "audit:content": "node scripts/audit-content.mjs",
+    "release:check": "node scripts/release-check.mjs",
+    "scenario": "node scripts/scenario.mjs",
+    "import:ledger": "node scripts/import-ledger.mjs"
+  }
+}

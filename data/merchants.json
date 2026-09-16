@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ikea",
+    "name": "IKEA Ireland",
+    "allowedHosts": [
+      "www.ikea.com"
+    ],
+    "sourcePathPrefix": "/ie/en/p/",
+    "affiliateRelationship": "NONE_VERIFIED"
+  },
+  {
+    "id": "joseph-joseph",
+    "name": "Joseph Joseph EU",
+    "allowedHosts": [
+      "eu.josephjoseph.com"
+    ],
+    "sourcePathPrefix": "/products/",
+    "affiliateRelationship": "NONE_VERIFIED"
+  }
+]

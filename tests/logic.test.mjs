@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { checkFit, estimateScenario, filterProducts, finiteNumber, summariseLedger } from '../public/logic.js';
+const p = { dimensionsMM: { width: 100, depth: 200, height: 50 } };
+test('exact fit with zero clearance', () => assert.equal(checkFit(p, { width: 100, depth: 200, height: 50 }, { clearanceMM: 0 }).fits, true));
+test('default clearance is applied once on every axis', () => { assert.equal(checkFit(p, { width: 104, depth: 205, height: 55 }).fits, false); assert.equal(checkFit(p, { width: 105, depth: 205, height: 55 }).fits, true); });
+test('base rotation is opt-in and never changes vertical orientation', () => { assert.equal(checkFit(p, { width: 205, depth: 105, height: 55 }).fits, false); const r = checkFit(p, { width: 205, depth: 105, height: 55 }, { allowRotation: true }); assert.equal(r.fits, true); assert.equal(r.rotated, true); assert.equal(checkFit(p, { width: 205, depth: 105, height: 40 }, { allowRotation: true }).fits, false); });
+test('manufacturer minimum drawer height overrides product height', () => { const small = { dimensionsMM: { width: 110, depth: 395, height: 57 }, minSpaceHeightMM: 80 }; assert.equal(checkFit(small, { width: 120, depth: 405, height: 70 }).fits, false); assert.equal(checkFit(small, { width: 120, depth: 405, height: 80 }).fits, true); });
+test('clearance can exceed separate manufacturer minimum', () => assert.equal(checkFit({ ...p, minSpaceHeightMM: 51 }, { width: 110, depth: 210, height: 55 }, { clearanceMM: 10 }).requiredHeight, 60));
+test('invalid fit dimensions and blank input fail rather than imply zero', () => { for (const value of ['', null, undefined, NaN, Infinity, -1, 0, true]) assert.throws(() => checkFit(p, { width: value, depth: 200, height: 50 })); });
+test('fit rejects unknown product dimensions', () => assert.throws(() => checkFit({}, { width: 300, depth: 300, height: 100 })));
+test('numeric utility rejects booleans and Infinity', () => { assert.throws(() => finiteNumber(false, 'test')); assert.throws(() => finiteNumber(Infinity, 'test')); });
+const scenario = { visits: 10000, outboundRate: .25, conversionRate: .04, basketEUR: 80, commissionRate: .05, reversalRate: 0, costsEUR: 40 };
+test('plan scenario is 400 gross and 360 before tax, explicitly hypothetical', () => { const x = estimateScenario(scenario); assert.equal(x.grossEUR, 400); assert.equal(x.beforeTaxEUR, 360); assert.equal(x.expectedCommissionPerClickEUR, .16); assert.equal(x.hypothetical, true); });
+test('scenario accounts for reversals', () => { const x = estimateScenario({ ...scenario, reversalRate: .25 }); assert.equal(x.netCommissionEUR, 300); assert.equal(x.beforeTaxEUR, 260); });
+test('zero visits means zero commission, not a guaranteed return', () => { const x = estimateScenario({ ...scenario, visits: 0 }); assert.equal(x.grossEUR, 0); assert.equal(x.beforeTaxEUR, -40); assert.equal(x.expectedCommissionPerClickEUR, 0); });
+test('scenario rejects percentages outside 0..1', () => assert.throws(() => estimateScenario({ ...scenario, conversionRate: 4 })));
+test('search is accent-insensitive and filter applies simultaneously', () => { const products = [{ name: 'PÄRKLA', note: 'case', category: 'wardrobe', merchantId: 'ikea' }, { name: 'Tray', note: '', category: 'drawer', merchantId: 'ikea' }]; assert.equal(filterProducts(products, { query: 'parkla' }).length, 1); assert.equal(filterProducts(products, { query: 'parkla', category: 'drawer' }).length, 0); });
+test('empty ledger does not claim verified income', () => { const s = summariseLedger({ schemaVersion: 1, records: [] }); assert.equal(s.transactions, 0); assert.equal(s.verifiedIncome, false); });
+
+test('numeric inputs reject arrays, objects, null and booleans', () => { for (const value of [[10], [], {}, null, true, false]) assert.throws(() => finiteNumber(value, 'test')); });

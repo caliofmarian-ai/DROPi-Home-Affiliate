@@ -1,0 +1,40 @@
+name: Manual validation
+# Manual only: no runner usage is activated merely by uploading this project.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - name: Report readiness without fabricating approval
+        shell: bash
+        run: |
+          set +e
+          npm run release:check
+          status=$?
+          set -e
+          if [ "$status" -eq 2 ]; then
+            echo 'Publication remains HOLD; this is independent of test success.'
+          elif [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi

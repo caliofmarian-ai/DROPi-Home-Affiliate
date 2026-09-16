@@ -1,0 +1,39 @@
+{
+  "slug": "removable-fixings",
+  "title": "No-drill does not mean no checks",
+  "category": "shelf",
+  "summary": "A checklist for evaluating removable hooks and adhesive accessories.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Begin with the surface and the instructions",
+      "paragraphs": [
+        "Write down the type of surface where you are considering an accessory. Include whether it is painted, textured, tiled or coated, and whether the finish is already loose or damaged. Compare that information with the exact product’s supported and excluded surfaces.",
+        "Do not assume that a claim about one adhesive system applies to another. Follow the manufacturer’s preparation, waiting-time, load and removal instructions. A product described as removable is not a guarantee that every finish will remain unmarked."
+      ]
+    },
+    {
+      "heading": "Define the real use before choosing",
+      "paragraphs": [
+        "List the items you intend to hang and how the accessory will be used. Consider whether it will be pulled sideways, repeatedly moved or exposed to conditions outside the instructions. Stay within the stated application; this guide does not calculate attachment strength or determine a safe load.",
+        "Avoid making safety-critical storage depend on an accessory whose suitability has not been established. Check permission before changing a rented property’s surfaces. Where manufacturer instructions or surface compatibility are missing, mark the candidate as unresolved rather than guessing."
+      ]
+    },
+    {
+      "heading": "Make the comparison reversible in practice",
+      "paragraphs": [
+        "Before buying, compare a no-installation solution using a suitable existing drawer, shelf or container. This may resolve the problem without an adhesive attachment at all. Also consider the time and tools required for the manufacturer’s removal procedure, not just the installation method.",
+        "No adhesive-fixing candidate has been approved in this research catalogue. This article is an editorial checklist, not a tested-product review. The dimensional calculator only checks rectangular space and must not be used to assess adhesive performance or surface safety."
+      ]
+    }
+  ],
+  "checklist": [
+    "Exact surface matched against manufacturer exclusions.",
+    "Real use compared with instructions and load limit.",
+    "Permission and removal procedure checked.",
+    "Unresolved compatibility means no recommendation."
+  ],
+  "productIds": []
+}

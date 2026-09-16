@@ -1,0 +1,44 @@
+{
+  "recordedAt": "2026-09-15T20:52:00Z",
+  "localNode": "v22.16.0",
+  "localNpm": "10.9.2",
+  "nodeTests": {
+    "passed": 66,
+    "failed": 0,
+    "evidence": "docs/evidence/node-tests.tap"
+  },
+  "browser": {
+    "version": "144.0.7559.96",
+    "checksPassed": 56,
+    "mode": "offline built HTML + CSS + application JS; catalogue fetch substituted with local build data",
+    "physicalAndroidTested": false,
+    "liveBrowserHTTPTested": false
+  },
+  "preview": {
+    "pages": 19,
+    "guides": 10,
+    "candidates": 16,
+    "affiliateLinksActive": 0,
+    "revenueMeasured": false
+  },
+  "publication": {
+    "state": "HOLD",
+    "blockerCount": 16
+  },
+  "remote": {
+    "repositoryCreated": true,
+    "uploaded": false,
+    "lastRepositoryRead": "016df209c3421256929fb85598dfce5a64e8b041 (Initial commit)",
+    "githubActionsRun": false,
+    "dockerTested": false,
+    "railwayDeployed": false,
+    "target": "caliofmarian-ai/DROPi-Home-Affiliate"
+  },
+  "additionalSpendingAuthorisedEUR": 0,
+  "costCreatingActionsOrExternalServicesInSession": false,
+  "limitations": [
+    "Chromium navigation blocked by managed environment URL policy; offline DOM harness used without changing policy.",
+    "No programme, merchant, banking, analytics or paid asset connection activated.",
+    "Product-source checks are dated specifications, not checkout availability or commercial partnership approval."
+  ]
+}

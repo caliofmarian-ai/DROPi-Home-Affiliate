@@ -1,0 +1,514 @@
+[
+  {
+    "id": "nojig-square",
+    "name": "NOJIG small organiser",
+    "merchantId": "ikea",
+    "category": "drawer",
+    "sku": "604.770.37",
+    "dimensionsMM": {
+      "width": 100,
+      "depth": 100,
+      "height": 50
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A square starting point for small-item compartments.",
+    "caution": "Measure the usable base of the drawer, not its front.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/nojig-organiser-plastic-beige-60477037/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "nojig-long",
+    "name": "NOJIG long organiser",
+    "merchantId": "ikea",
+    "category": "drawer",
+    "sku": "704.574.87",
+    "dimensionsMM": {
+      "width": 100,
+      "depth": 200,
+      "height": 50
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A longer compartment for separating small accessories.",
+    "caution": "Allow room to grasp items and lift the organiser.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/nojig-organiser-plastic-beige-70457487/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "nojig-medium",
+    "name": "NOJIG medium organiser",
+    "merchantId": "ikea",
+    "category": "drawer",
+    "sku": "504.681.04",
+    "dimensionsMM": {
+      "width": 150,
+      "depth": 200,
+      "height": 50
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A wider module to compare against your existing drawer layout.",
+    "caution": "Nominal module sizes do not guarantee a tight multi-box layout.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/nojig-organiser-plastic-beige-50468104/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "nojig-tall",
+    "name": "NOJIG tall organiser",
+    "merchantId": "ikea",
+    "category": "shelf",
+    "sku": "204.681.05",
+    "dimensionsMM": {
+      "width": 200,
+      "depth": 250,
+      "height": 100
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A taller option for a shelf or deep drawer.",
+    "caution": "Check overhead clearance with the intended contents inside.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/nojig-organiser-plastic-beige-20468105/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "uppdatera-plastic",
+    "name": "UPPDATERA white cutlery tray",
+    "merchantId": "ikea",
+    "category": "drawer",
+    "sku": "104.600.20",
+    "dimensionsMM": {
+      "width": 316,
+      "depth": 495,
+      "height": 50
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A fixed-layout cutlery tray with a long footprint.",
+    "caution": "The nominal 32 × 50 cm name differs from its stated external dimensions.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/uppdatera-cutlery-tray-white-10460020/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "uppdatera-bamboo",
+    "name": "UPPDATERA light bamboo cutlery tray",
+    "merchantId": "ikea",
+    "category": "drawer",
+    "sku": "404.599.73",
+    "dimensionsMM": {
+      "width": 316,
+      "depth": 495,
+      "height": 56
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A bamboo-finish alternative with the same stated footprint.",
+    "caution": "It is taller than the white tray; do not substitute on width alone.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/uppdatera-cutlery-tray-light-bamboo-40459973/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "skubb-small",
+    "name": "SKUBB small storage case",
+    "merchantId": "ikea",
+    "category": "underbed",
+    "sku": "605.910.47",
+    "dimensionsMM": {
+      "width": 430,
+      "depth": 530,
+      "height": 190
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A fabric case to assess for seasonal textiles.",
+    "caution": "A full soft case may bulge; measure the opening and pull-out route.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/skubb-storage-case-white-60591047/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "skubb-large",
+    "name": "SKUBB large storage case",
+    "merchantId": "ikea",
+    "category": "underbed",
+    "sku": "205.910.49",
+    "dimensionsMM": {
+      "width": 900,
+      "depth": 530,
+      "height": 190
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A wider textile-storage case for a larger clear footprint.",
+    "caution": "Bed legs and central supports can prevent a wide case from sliding out.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/skubb-storage-case-white-20591049/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "skubb-divided",
+    "name": "SKUBB box with compartments",
+    "merchantId": "ikea",
+    "category": "wardrobe",
+    "sku": "101.855.93",
+    "dimensionsMM": {
+      "width": 440,
+      "depth": 340,
+      "height": 110
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A divided textile box for comparing a ready-made layout.",
+    "caution": "Measure your intended folded items; compartment interiors are not supplied here.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/skubb-box-with-compartments-white-10185593/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "samla-box",
+    "name": "SAMLA 11 litre box, without lid",
+    "merchantId": "ikea",
+    "category": "shelf",
+    "sku": "401.029.78",
+    "dimensionsMM": {
+      "width": 390,
+      "depth": 280,
+      "height": 140
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A transparent storage-box candidate.",
+    "caution": "Lid is separate. Manufacturer states it is not approved for food contact.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/samla-box-transparent-40102978/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "samla-lidded",
+    "name": "SAMLA 11 litre box with lid",
+    "merchantId": "ikea",
+    "category": "shelf",
+    "sku": "694.408.36",
+    "dimensionsMM": {
+      "width": 390,
+      "depth": 280,
+      "height": 140
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A box-and-lid combination to compare with the box-only listing.",
+    "caution": "Confirm assembled dimensions and safe stacking in the current instructions.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/samla-box-with-lid-transparent-s69440836/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "kuggis-small",
+    "name": "KUGGIS white storage box",
+    "merchantId": "ikea",
+    "category": "desk",
+    "sku": "705.685.60",
+    "dimensionsMM": {
+      "width": 180,
+      "depth": 260,
+      "height": 80
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A low-profile box to assess for loose desk accessories.",
+    "caution": "Lid is separate. Keep powered devices and ventilation outside storage boxes.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/kuggis-box-white-70568560/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "parkla-tall",
+    "name": "PÄRKLA tall storage case",
+    "merchantId": "ikea",
+    "category": "wardrobe",
+    "sku": "006.011.05",
+    "dimensionsMM": {
+      "width": 550,
+      "depth": 490,
+      "height": 300
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": null,
+    "note": "A foldable case for assessing seasonal textile storage.",
+    "caution": "This is the 30 cm tall variant, not the lower 19 cm model.",
+    "source": {
+      "url": "https://www.ikea.com/ie/en/p/paerkla-storage-case-00601105/",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "drawerstore-expandable",
+    "name": "DrawerStore grey expandable cutlery tray",
+    "merchantId": "joseph-joseph",
+    "category": "drawer",
+    "sku": "85042",
+    "dimensionsMM": {
+      "width": 290,
+      "depth": 380,
+      "height": 53
+    },
+    "maxWidthMM": 480,
+    "minSpaceHeightMM": null,
+    "note": "An adjustable-width tray; the fit check uses its compact setting.",
+    "caution": "Check the chosen expansion and the clearance above loaded utensils.",
+    "source": {
+      "url": "https://eu.josephjoseph.com/products/drawerstore-expanding-organiser-grey",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "drawerstore-compact",
+    "name": "DrawerStore blue compact cutlery organiser",
+    "merchantId": "joseph-joseph",
+    "category": "drawer",
+    "sku": "85181",
+    "dimensionsMM": {
+      "width": 110,
+      "depth": 395,
+      "height": 57
+    },
+    "maxWidthMM": null,
+    "minSpaceHeightMM": 80,
+    "note": "A narrow, layered organiser to compare for cutlery storage.",
+    "caution": "Manufacturer requires a drawer height of at least 80 mm, despite 57 mm product height.",
+    "source": {
+      "url": "https://eu.josephjoseph.com/products/drawerstore-compact-cutlery-organiser-blue",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  },
+  {
+    "id": "drawerstore-cookware",
+    "name": "DrawerStore grey expanding cookware organiser",
+    "merchantId": "joseph-joseph",
+    "category": "shelf",
+    "sku": "85167",
+    "dimensionsMM": {
+      "width": 306,
+      "depth": 204,
+      "height": 147
+    },
+    "maxWidthMM": 560,
+    "minSpaceHeightMM": null,
+    "note": "An adjustable frame to assess for pans, lids or baking tins.",
+    "caution": "Dimensions cover the frame, not cookware. Source prose says 305 mm minimum; specification says 306 mm, used conservatively here.",
+    "source": {
+      "url": "https://eu.josephjoseph.com/products/drawerstore-expanding-cookware-organiser-grey",
+      "checkedAt": "2026-09-15",
+      "kind": "manufacturer-product-page",
+      "fields": [
+        "name",
+        "sku",
+        "dimensionsMM"
+      ],
+      "verification": "WEB_SOURCE_CHECKED"
+    },
+    "availability": "UNKNOWN",
+    "deliveryToIreland": "NOT_CHECKED_AT_CHECKOUT",
+    "handsOnTested": false,
+    "image": null,
+    "editorialStatus": "DRAFT"
+  }
+]

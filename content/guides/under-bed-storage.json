@@ -1,0 +1,43 @@
+{
+  "slug": "under-bed-storage",
+  "title": "Under-bed storage: check the way in and out",
+  "category": "underbed",
+  "summary": "The largest empty rectangle is not always the space you can use.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Measure the entrance as well as the floor",
+      "paragraphs": [
+        "Begin at the edge where you would pull a storage case out. Measure from the floor covering to the lowest fixed part of the bed along that route. Then check legs, central supports and any changes in clearance further underneath. A case that fits the space at the centre may not pass through the opening.",
+        "Plan enough floor space outside the bed to remove and open the case. If a bedside cabinet or wall obstructs the route, a smaller case may be more usable than a larger one. Test with a folded cardboard footprint before filling a real container."
+      ]
+    },
+    {
+      "heading": "Compare the exact case, not a family name",
+      "paragraphs": [
+        "The SKUBB candidates here have manufacturer-listed heights of 190 mm, with different widths. PÄRKLA is also sold in different sizes; the candidate currently recorded in this project is 300 mm tall. Do not transfer a dimension from one version to another simply because the product family name matches.",
+        "Soft cases need special care when screening a fit. Their contents can change the outside shape. Our calculator uses the published empty dimensions and cannot model bulging textiles, carpet compression, handles or the force needed to pull a loaded case."
+      ]
+    },
+    {
+      "heading": "Store for access rather than maximum volume",
+      "paragraphs": [
+        "Choose a clear use for each case, such as a specific set of seasonal textiles, and avoid mixing items needed at very different intervals. Keep a simple written list on the case rather than relying on memory. Leave the items you use most often easiest to reach.",
+        "Follow the current care and storage instructions for both the container and its contents. Do not treat a fabric case as proof of moisture protection or as a substitute for addressing a damp area. The practical question is whether you can retrieve and replace the contents without lifting the bed or dragging a case through an unsuitable opening."
+      ]
+    }
+  ],
+  "checklist": [
+    "Lowest point along the extraction route measured.",
+    "Bed supports and nearby furniture mapped.",
+    "Exact variant checked, including height.",
+    "Filled shape and opening space considered."
+  ],
+  "productIds": [
+    "skubb-small",
+    "skubb-large",
+    "parkla-tall"
+  ]
+}

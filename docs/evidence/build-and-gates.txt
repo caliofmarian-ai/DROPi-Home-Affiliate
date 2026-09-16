@@ -1,0 +1,36 @@
+
+> dropi-home-affiliate@0.1.0 check
+> node scripts/check.mjs
+
+PASS: 10 guides, 16 candidates; source and configuration contracts valid.
+
+> dropi-home-affiliate@0.1.0 build
+> node scripts/build.mjs
+
+Built 19 pages; 10 guides; 16 candidates. Mode: PREVIEW.
+
+> dropi-home-affiliate@0.1.0 release:check
+> node scripts/release-check.mjs
+
+{
+  "state": "HOLD",
+  "blockers": [
+    "Set an approved HTTPS SITE_ORIGIN (not a placeholder).",
+    "Owner publication approval and evidence are missing or stale.",
+    "Approved public operator identity and contact email are missing.",
+    "Privacy and hosting-log review is not approved.",
+    "Working brand/domain clearance is not approved.",
+    "Editorial review missing/stale/changed: desk-cable-organisation.",
+    "Editorial review missing/stale/changed: floor-protection.",
+    "Editorial review missing/stale/changed: measure-drawer.",
+    "Editorial review missing/stale/changed: narrow-wardrobe.",
+    "Editorial review missing/stale/changed: over-door-organisers.",
+    "Editorial review missing/stale/changed: removable-fixings.",
+    "Editorial review missing/stale/changed: small-item-trays.",
+    "Editorial review missing/stale/changed: storage-box-dimensions.",
+    "Editorial review missing/stale/changed: under-bed-storage.",
+    "Editorial review missing/stale/changed: when-not-to-buy.",
+    "Catalogue editorial approval is missing/stale/changed."
+  ]
+}
+Release check exit: 2 (2 = expected HOLD)

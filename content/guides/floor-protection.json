@@ -1,0 +1,39 @@
+{
+  "slug": "floor-protection",
+  "title": "Choosing furniture floor protection without guessing",
+  "category": "shelf",
+  "summary": "Match the furniture contact point and flooring instructions first.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Document the two surfaces",
+      "paragraphs": [
+        "Identify the furniture feet, their shape and the way the furniture moves during normal use. Separately identify the floor finish and any guidance supplied by its manufacturer. A material that suits one combination should not automatically be recommended for every chair, table or floor.",
+        "Look at the contact points before covering them. Loose parts, sharp edges or damaged feet may need attention rather than simply a new pad. This guide does not diagnose damage or certify a repair."
+      ]
+    },
+    {
+      "heading": "Compare fit and maintenance, not just appearance",
+      "paragraphs": [
+        "For a candidate protector, obtain its intended applications, dimensions, attachment method and exclusions. Compare the shape with the actual bearing surface. Check that the accessory will remain positioned as intended without creating an unstable contact point.",
+        "Include the manufacturer’s inspection and replacement guidance in your decision. A protective accessory is not a permanent guarantee against marking. Avoid claims such as suitable for every floor or completely scratch-proof unless the precise claim is supported for the relevant product and use."
+      ]
+    },
+    {
+      "heading": "Keep the research honest",
+      "paragraphs": [
+        "No floor-protection product is currently approved in this project’s candidate list. That is deliberate: the launch starts with better-documented storage dimensions rather than treating an unverified accessory as a proven solution.",
+        "For now, record the furniture and floor details and consult the relevant manufacturer’s guidance before purchasing. Do not use the rectangular storage calculator to select a pad or infer floor compatibility. A future review needs product-specific evidence and should state whether it is a specification comparison or a genuine hands-on test."
+      ]
+    }
+  ],
+  "checklist": [
+    "Furniture contact shape and floor type identified.",
+    "Manufacturer compatibility and exclusions reviewed.",
+    "Stability and inspection requirements considered.",
+    "No universal protection claim assumed."
+  ],
+  "productIds": []
+}

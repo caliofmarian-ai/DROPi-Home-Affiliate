@@ -1,0 +1,26 @@
+[
+  {
+    "id": "amazon-review",
+    "url": "https://affiliate-program.amazon.ie/help/node/topic/G8TW5AE9XL2VX9VM",
+    "checkedAt": "2026-09-15",
+    "scope": "Application review requirements; not evidence of owner account approval."
+  },
+  {
+    "id": "dpc-analytics",
+    "url": "https://www.dataprotection.ie/en/faqs/cookies/do-i-need-consent-analytics-cookies",
+    "checkedAt": "2026-09-15",
+    "scope": "Analytics cookie consent. MVP has no analytics SDK or cookies."
+  },
+  {
+    "id": "node-releases",
+    "url": "https://nodejs.org/en/about/previous-releases",
+    "checkedAt": "2026-09-15",
+    "scope": "Supported release lines; Node 24 is the configured deployment target."
+  },
+  {
+    "id": "github-new",
+    "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository",
+    "checkedAt": "2026-09-15",
+    "scope": "New-repository UI and supported prefilled URL parameters."
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "slug": "narrow-wardrobe",
+  "title": "Organise a narrow wardrobe around what you reach for",
+  "category": "wardrobe",
+  "summary": "Start with access frequency, then decide whether a container helps.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Map the awkward areas",
+      "paragraphs": [
+        "Look at the wardrobe with its doors fully open and identify hinges, fixed shelves and the edges of adjacent doors. Measure the usable shelf width and depth inside these obstructions. Keep door movement in mind; a box should not need to be bent or forced past a hinge every time you use it.",
+        "Divide your belongings into things used frequently and things stored for longer periods. Try rearranging what you already own before selecting new boxes. A smaller number of accessible containers may be more useful than a tightly packed row."
+      ]
+    },
+    {
+      "heading": "Choose a useful internal layout",
+      "paragraphs": [
+        "A divided organiser is worth considering only when its compartments suit the items. Fold or group a representative set of belongings first, then compare that real arrangement with the proposed layout. External box dimensions do not tell you the width of each internal compartment.",
+        "The SKUBB divided candidate has a listed external size of 440 × 340 × 110 mm. We have not recorded its compartment interiors, so the fit calculator cannot confirm that a particular accessory fits inside a compartment. Treat it as a candidate for a shelf or drawer footprint, not a promise about capacity."
+      ]
+    },
+    {
+      "heading": "Keep the arrangement maintainable",
+      "paragraphs": [
+        "Try using the proposed layout for a few days with existing containers or simple temporary divisions. Note what is repeatedly left outside because its assigned space is awkward. That is useful feedback about the layout rather than a reason to buy more storage immediately.",
+        "Allow space to lift a box out and put things back without disturbing the whole shelf. Follow wardrobe load and anchoring instructions; this guide does not assess the strength of furniture. Record the measurements and the problem you are trying to solve before considering a purchase."
+      ]
+    }
+  ],
+  "checklist": [
+    "Hinges and door swing included in measurements.",
+    "Frequently used belongings kept within easy reach.",
+    "Internal compartments checked separately.",
+    "Existing storage tried before buying more."
+  ],
+  "productIds": [
+    "skubb-divided",
+    "skubb-small",
+    "parkla-tall"
+  ]
+}

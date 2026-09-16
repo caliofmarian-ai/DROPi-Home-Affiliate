@@ -1,0 +1,43 @@
+{
+  "slug": "desk-cable-organisation",
+  "title": "A calmer desk without hiding the important parts",
+  "category": "desk",
+  "summary": "Separate loose accessories from equipment that needs power or ventilation.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Sort before adding storage",
+      "paragraphs": [
+        "Lay out the spare, disconnected cables and small accessories you actually use. Separate these from connected equipment and items that are no longer needed. Group cables by their real purpose and keep any labels specific enough to be useful the next time you need one.",
+        "Try one existing tray or box before buying a set. Consider the longest item, how easily you can identify it, and whether you can remove it without emptying the whole container. The aim is easier access, not simply moving a pile out of sight."
+      ]
+    },
+    {
+      "heading": "Keep powered equipment out of this comparison",
+      "paragraphs": [
+        "The KUGGIS box in the research list is a candidate for loose accessories. Its dimensions do not establish that it is suitable for powered chargers, batteries in use, power strips or other equipment that produces heat or requires ventilation. Follow each device manufacturer’s instructions and keep ventilation unobstructed.",
+        "Do not modify electrical equipment, pinch leads or use a storage box as an electrical enclosure. This guide is about organising ordinary loose items, not designing a safe power installation. Questions about damaged equipment or electrical suitability need the appropriate qualified help."
+      ]
+    },
+    {
+      "heading": "Measure for retrieval",
+      "paragraphs": [
+        "Measure the clear desk shelf or drawer where the container would sit, then check the space required to reach inside or lift it out. A lidded arrangement also needs somewhere to put the lid during use. The recorded KUGGIS candidate is a box-only listing, so a lid should not be assumed included.",
+        "Use the fit calculator only for the external footprint. Check internal dimensions and the intended contents separately. Keep a small set of frequently used accessories accessible and move less-used disconnected items to clearly labelled storage."
+      ]
+    }
+  ],
+  "checklist": [
+    "Loose accessories separated from powered equipment.",
+    "Ventilation and device instructions respected.",
+    "External and internal dimensions treated separately.",
+    "Frequently used items remain easy to retrieve."
+  ],
+  "productIds": [
+    "kuggis-small",
+    "nojig-long",
+    "nojig-medium"
+  ]
+}

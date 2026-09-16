@@ -1,0 +1,39 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { loadProject } from '../src/project.mjs';
+import { safeHttps, isFresh, dateOnly, validateProject, releaseIssues, affiliateDecision, sha256, escapeHTML, publicOrigin } from '../src/domain.mjs';
+const now = new Date('2026-09-15T20:00:00Z');
+const fresh = () => { const p = loadProject(); p.evidenceExists = () => true; return p; };
+function approved() {
+  const p = fresh(); p.site.publication = { approved: true, approvedBy: 'Synthetic fixture', approvedAt: '2026-09-15', evidenceFile: 'docs/evidence/synthetic.md' }; p.site.privacyReview = { approved: true, approvedBy: 'Synthetic only', approvedAt: '2026-09-15', evidenceFile: 'docs/evidence/synthetic.md' }; p.site.brandReview = { approved: true, approvedBy: 'Synthetic only', approvedAt: '2026-09-15', evidenceFile: 'docs/evidence/synthetic.md' }; p.site.operator = { publicName: 'Synthetic fixture', contactEmail: 'fixture@example.org' };
+  for (const g of p.guides) p.reviews[g.slug] = { status: 'APPROVED', reviewer: 'Synthetic fixture', sha256: sha256(g), reviewedAt: '2026-09-15', evidenceFile: 'docs/evidence/synthetic.md' };
+  p.reviews.catalogue = { status: 'APPROVED', reviewer: 'Synthetic fixture', sha256: sha256(p.products), reviewedAt: '2026-09-15', evidenceFile: 'docs/evidence/synthetic.md' }; return p;
+}
+function affiliateFixture() {
+  const p = approved(); const product = p.products[0]; p.site.monetization.enabled = true; const program = p.programs.find(x => x.id === 'awin'); Object.assign(program, { status: 'APPROVED', accountId: '12345', approvedSiteOrigin: 'https://fixture.example.org', termsReviewedAt: '2026-09-15', approvalEvidenceFile: 'docs/evidence/synthetic.md' });
+  p.links.push({ productId: product.id, programId: 'awin', merchantProgramId: '54321', status: 'APPROVED', url: `https://www.awin1.com/cread.php?awinaffid=12345&awinmid=54321&ued=${encodeURIComponent(product.source.url)}`, sourceUrl: product.source.url, productSnapshotSha256: sha256(product), reviewedAt: '2026-09-15', approvalEvidenceFile: 'docs/evidence/synthetic.md' }); return { p, product };
+}
+test('seed project validates: 10 full guides and 16 candidates', () => { const p = fresh(); assert.deepEqual(validateProject(p), []); assert.equal(p.guides.length, 10); assert.equal(p.products.length, 16); });
+test('safe HTTPS requires exact hostname and prefix', () => { assert.equal(safeHttps('https://www.ikea.com/ie/en/p/item/', ['www.ikea.com'], '/ie/en/p/'), true); for (const x of ['http://www.ikea.com/ie/en/p/x/', 'https://www.ikea.com.evil.invalid/ie/en/p/x/', 'https://user:pass@www.ikea.com/ie/en/p/x/', 'javascript:alert(1)', 'https://www.ikea.com:444/ie/en/p/x/']) assert.equal(safeHttps(x, ['www.ikea.com'], '/ie/en/p/'), false); });
+test('invalid/future/stale dates fail closed', () => { assert.equal(isFresh('2026-09-15', 30, now), true); for (const x of ['2026-02-30', 'not-a-date', '2026-10-15', '2026-08-01', '2026-9-15']) assert.equal(isFresh(x, 30, now), false); assert.ok(Number.isNaN(dateOnly('2026-02-30'))); });
+test('freshness boundary expires exactly at midnight plus window', () => assert.equal(isFresh('2026-09-15', 30, new Date('2026-10-15T00:00:00Z')), false));
+test('HTML escapes script delimiters and quotes', () => assert.equal(escapeHTML('<script>"&\''), '&lt;script&gt;&quot;&amp;&#39;'));
+test('seed public release is held for real approvals', () => { const p = loadProject(); const issues = releaseIssues(p, {}, now); assert.ok(issues.length >= 16); assert.ok(issues.some(x => x.includes('Owner'))); });
+test('synthetic fully reviewed non-commercial release passes pure gates', () => assert.deepEqual(releaseIssues(approved(), { SITE_ORIGIN: 'https://fixture.example.org' }, now), []));
+test('content change invalidates editorial receipt', () => { const p = approved(); p.guides[0].summary += ' changed'; assert.ok(releaseIssues(p, { SITE_ORIGIN: 'https://fixture.example.org' }, now).some(x => x.includes(p.guides[0].slug))); });
+test('catalogue change invalidates its editorial receipt', () => { const p = approved(); p.products[0].note += ' changed'; assert.ok(releaseIssues(p, { SITE_ORIGIN: 'https://fixture.example.org' }, now).some(x => x.includes('Catalogue'))); });
+test('missing evidence files block approvals', () => { const p = approved(); p.evidenceExists = () => false; assert.ok(releaseIssues(p, { SITE_ORIGIN: 'https://fixture.example.org' }, now).length > 5); });
+test('source timestamps do not assert checkout delivery availability', () => { const p = fresh(); assert.ok(p.products.every(x => x.availability === 'UNKNOWN' && x.deliveryToIreland === 'NOT_CHECKED_AT_CHECKOUT')); });
+test('invented commercial facts rejected by content validator', () => { const p = fresh(); p.products[0].price = 1; assert.ok(validateProject(p).some(x => x.includes('unsupported commercial'))); });
+test('duplicate candidate identifiers fail validation', () => { const p = fresh(); p.products.push(p.products[0]); assert.ok(validateProject(p).some(x => x.includes('duplicate'))); });
+test('analytics cannot be activated with an unimplemented flag', () => { const p = fresh(); p.site.analytics.enabled = true; assert.ok(validateProject(p).some(x => x.includes('Analytics'))); });
+test('default affiliate resolver returns original research URL', () => { const p = fresh(); assert.equal(affiliateDecision(p.products[0], p, null, now).reason, 'MONETIZATION_DISABLED'); });
+test('monetization flag alone does not authorise a link', () => { const p = fresh(); p.site.monetization.enabled = true; assert.equal(affiliateDecision(p.products[0], p, null, now).active, false); assert.ok(releaseIssues(p, {}, now).some(x => x.includes('without approved'))); });
+test('approved synthetic affiliate links use exact authorized URL', () => { const { p, product } = affiliateFixture(); const d = affiliateDecision(product, p, 'https://fixture.example.org', now); assert.equal(d.active, true); assert.equal(d.url, p.links[0].url); });
+test('affiliate account mismatch blocks a synthetic link', () => { const { p, product } = affiliateFixture(); p.links[0].url = p.links[0].url.replace('12345', '11111'); assert.equal(affiliateDecision(product, p, 'https://fixture.example.org', now).active, false); });
+test('changed affiliate product mapping blocks the link', () => { const { p, product } = affiliateFixture(); product.sku = 'CHANGED'; assert.equal(affiliateDecision(product, p, 'https://fixture.example.org', now).reason, 'PRODUCT_MAPPING_CHANGED'); });
+test('revoked programme and unapproved site fail closed', () => { const { p, product } = affiliateFixture(); assert.equal(affiliateDecision(product, p, 'https://wrong.example.org', now).active, false); p.programs.find(x => x.id === 'awin').status = 'REVOKED'; assert.equal(affiliateDecision(product, p, 'https://fixture.example.org', now).active, false); });
+test('stale source prevents affiliate resolution', () => { const { p, product } = affiliateFixture(); product.source.checkedAt = '2026-01-01'; assert.equal(affiliateDecision(product, p, 'https://fixture.example.org', now).reason, 'STALE_SOURCE'); });
+test('public origin rejects unsafe and placeholder values', () => { for (const u of ['http://example.org', 'https://a.example', 'https://a.invalid', 'https://a.test', 'https://localhost', 'https://user:pass@example.org', 'https://example.org/subpath']) assert.equal(publicOrigin(u), null); assert.equal(publicOrigin('https://fixture.example.org'), 'https://fixture.example.org'); });
+
+test('privacy and brand approvals require named, dated evidence', () => { const p = approved(); delete p.site.privacyReview.approvedAt; p.site.brandReview.approvedBy = ''; const issues = releaseIssues(p, { SITE_ORIGIN: 'https://fixture.example.org' }, now); assert.ok(issues.some(x => x.includes('Privacy'))); assert.ok(issues.some(x => x.includes('brand'))); });

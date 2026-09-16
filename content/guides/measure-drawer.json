@@ -1,0 +1,44 @@
+{
+  "slug": "measure-drawer",
+  "title": "Measure the drawer, not its front",
+  "category": "drawer",
+  "summary": "A practical measurement routine before you choose an organiser.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Start with the space that is actually usable",
+      "paragraphs": [
+        "Empty the drawer and look at the inside rather than the decorative front. Measure the narrowest clear width and depth at the level where an organiser will sit. Drawer sides, runners and corner curves can make the usable base smaller than it first appears. Write down the measurements in millimetres so you are comparing like with like.",
+        "Next, measure the clear height when the drawer closes. Include anything hanging down from the structure above. A tray can fit an empty drawer and still fail once cutlery or accessories project above its rim. Do not force a drawer shut to test a doubtful fit."
+      ]
+    },
+    {
+      "heading": "Separate the name from the specification",
+      "paragraphs": [
+        "A size in a product name is not always the exact external size. The two UPPDATERA candidates in this research list are named 32 × 50 cm; their manufacturer specifications list a 316 × 495 mm footprint. The white version is listed at 50 mm high and the bamboo version at 56 mm. Use the linked specification for the exact variant rather than rounding both products to the same height.",
+        "For an expandable product, note both the compact and maximum width. Our calculator checks the compact footprint. It does not establish that a particular expanded arrangement will hold your utensils comfortably."
+      ]
+    },
+    {
+      "heading": "Try the arrangement before buying",
+      "paragraphs": [
+        "Mark the external footprint on scrap paper or cardboard and place it in the empty drawer. Arrange the items you already own within that outline. Leave enough room to pick them up without unpacking adjacent compartments. For multiple trays, add their widths and a little handling space; do not assume that nominal dimensions tile perfectly.",
+        "The calculator provides a geometric screen, not a fit guarantee. Its clearance setting is the total extra space on each axis, not an amount added on both sides. Check the manufacturer’s loaded-height requirement and your opening path separately."
+      ]
+    }
+  ],
+  "checklist": [
+    "Internal width, depth and closed-drawer clearance recorded in mm.",
+    "Correct colour, variant and article number checked.",
+    "Loaded contents and handling room considered.",
+    "Paper footprint tried before ordering."
+  ],
+  "productIds": [
+    "uppdatera-plastic",
+    "uppdatera-bamboo",
+    "drawerstore-compact",
+    "drawerstore-expandable"
+  ]
+}

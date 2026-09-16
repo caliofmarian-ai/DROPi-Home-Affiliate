@@ -1,0 +1,44 @@
+{
+  "slug": "small-item-trays",
+  "title": "Small trays: build a layout around your objects",
+  "category": "drawer",
+  "summary": "A simple method for choosing modules without wasting the drawer.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Start with a small inventory",
+      "paragraphs": [
+        "Choose a single drawer and remove what does not belong there. Group the remaining objects by use rather than buying a matching set of containers first. Measure the largest objects in each group and note how much room your hand needs to pick them up.",
+        "Try arranging the groups on paper cut to the drawer’s usable base. Draw separate outlines for likely compartments. This can reveal that two long compartments work better than many small squares, or that a divider is not needed for part of the space."
+      ]
+    },
+    {
+      "heading": "Add the modules with real dimensions",
+      "paragraphs": [
+        "The NOJIG examples in this research list include 100 × 100, 100 × 200 and 150 × 200 mm footprints with listed 50 mm heights. Another version is listed at 200 × 250 × 100 mm. These are external product dimensions from the linked pages, not measurements of the usable interior.",
+        "When combining modules, sum the widths and depths for the arrangement you intend. Leave handling room and account for curved drawer corners. The calculator checks one product at a time; it is not an automatic packing optimiser and does not establish that several boxes fit together."
+      ]
+    },
+    {
+      "heading": "Test the routine, not just the photograph",
+      "paragraphs": [
+        "Use the arrangement temporarily with existing containers or paper markers. Notice whether you can find and replace the usual objects without moving everything else. A visually tidy arrangement that is difficult to maintain may need fewer compartments rather than more.",
+        "Compare the full set you actually need, including any delivery costs shown at checkout. This site deliberately does not display unverified prices or assume that a low-priced individual module makes an entire order good value. Confirm the current variant and purchase terms at the retailer."
+      ]
+    }
+  ],
+  "checklist": [
+    "Objects grouped before selecting containers.",
+    "Internal capacity not inferred from external size.",
+    "Combined footprint and handling room checked.",
+    "Layout tried with an ordinary daily routine."
+  ],
+  "productIds": [
+    "nojig-square",
+    "nojig-long",
+    "nojig-medium",
+    "nojig-tall"
+  ]
+}

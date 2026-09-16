@@ -1,0 +1,235 @@
+{
+  "mode": "offline built HTML + CSS + application JS; catalogue fetch substituted with local build data",
+  "browser": "Chromium via Playwright on Linux",
+  "browserVersion": "144.0.7559.96",
+  "physicalAndroidTested": false,
+  "checks": [
+    {
+      "check": "Offline built page rendered /",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /",
+      "pass": true
+    },
+    {
+      "check": "One H1 /",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /guides/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /guides/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /guides/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /guides/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /catalogue/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /catalogue/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /catalogue/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /catalogue/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /fit/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /fit/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /fit/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /fit/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /about/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /about/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /about/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /about/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /privacy/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /privacy/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /privacy/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /privacy/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /disclosure/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /disclosure/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /disclosure/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /disclosure/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /ops/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /ops/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /ops/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /ops/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /guides/measure-drawer/",
+      "pass": true
+    },
+    {
+      "check": "No mobile horizontal overflow /guides/measure-drawer/",
+      "pass": true
+    },
+    {
+      "check": "One H1 /guides/measure-drawer/",
+      "pass": true
+    },
+    {
+      "check": "Main landmark /guides/measure-drawer/",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /catalogue/",
+      "pass": true
+    },
+    {
+      "check": "Search returns three SKUBB candidates",
+      "pass": true
+    },
+    {
+      "check": "Accent-insensitive search",
+      "pass": true
+    },
+    {
+      "check": "Empty state appears",
+      "pass": true
+    },
+    {
+      "check": "Comparison shows three candidate columns",
+      "pass": true
+    },
+    {
+      "check": "Fourth compare rejected",
+      "pass": true
+    },
+    {
+      "check": "Comparison keeps mobile page within viewport",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /fit/",
+      "pass": true
+    },
+    {
+      "check": "Manufacturer minimum height blocks low drawer",
+      "pass": true
+    },
+    {
+      "check": "Adequate height passes geometric screen",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /ops/",
+      "pass": true
+    },
+    {
+      "check": "Hypothetical scenario returns 400 gross and 360 pre-tax",
+      "pass": true
+    },
+    {
+      "check": "Scenario is labelled hypothetical",
+      "pass": true
+    },
+    {
+      "check": "Local report viewer separates paid values",
+      "pass": true
+    },
+    {
+      "check": "No cookies",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /",
+      "pass": true
+    },
+    {
+      "check": "Offline built page rendered /",
+      "pass": true
+    },
+    {
+      "check": "No desktop horizontal overflow",
+      "pass": true
+    },
+    {
+      "check": "No page script errors",
+      "pass": true
+    },
+    {
+      "check": "No third-party resource requests",
+      "pass": true
+    }
+  ],
+  "passed": 56,
+  "errors": [],
+  "externalRequests": []
+}

@@ -1,0 +1,43 @@
+{
+  "slug": "storage-box-dimensions",
+  "title": "Why litres alone do not tell you whether a box works",
+  "category": "shelf",
+  "summary": "Compare the outside footprint, useful interior and lid separately.",
+  "status": "DRAFT",
+  "createdAt": "2026-09-15",
+  "authorship": "AI-assisted original editorial draft; not yet owner-reviewed. No hands-on product tests claimed.",
+  "sections": [
+    {
+      "heading": "Ask two different fit questions",
+      "paragraphs": [
+        "The first question is whether the box fits your shelf. For that you need its external width, depth and height, plus space to insert and remove it. The second question is whether your belongings fit inside. For that you need the usable interior shape, including tapered walls, corners and any lid intrusion.",
+        "A volume label cannot answer either question by itself. Two shapes can have the same volume and accommodate very different objects. Lay out the items you plan to store and measure the longest, widest and tallest examples instead of choosing only by litre capacity."
+      ]
+    },
+    {
+      "heading": "Check what the listing includes",
+      "paragraphs": [
+        "Our research list deliberately distinguishes the SAMLA 11 litre box-only listing from the box-and-lid combination. A lid bought separately changes the total purchase cost and can change the practical opening and stacking arrangement. Confirm the components at the retailer rather than assuming that every photograph shows what is included.",
+        "The recorded SAMLA box-only source states that it is not approved for food contact. Do not infer suitability for a different use merely from its shape or transparency. Check the intended-use statements on the exact listing and follow the current manufacturer’s instructions."
+      ]
+    },
+    {
+      "heading": "Make access part of your comparison",
+      "paragraphs": [
+        "Consider whether you can identify the contents without moving other boxes, and whether there is room to open or remove the lid. A stack that is easy to assemble once may be inconvenient for daily access. Keep heavier items and stacking arrangements within the instructions for the box and the supporting furniture.",
+        "Our size calculator compares external dimensions only. It does not calculate interior capacity, load capacity, safe stacking height or the strength of a shelf. Missing interior measurements should remain a question for the retailer, not a number guessed from the outside."
+      ]
+    }
+  ],
+  "checklist": [
+    "Outside footprint compared with the shelf.",
+    "Interior dimensions checked for intended contents.",
+    "Box-only versus lid combination confirmed.",
+    "Intended use and stacking instructions reviewed."
+  ],
+  "productIds": [
+    "samla-box",
+    "samla-lidded",
+    "kuggis-small"
+  ]
+}
