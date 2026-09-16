@@ -27,9 +27,15 @@ export function validateProject(p) {
   for (const [key, name] of [['products', 'id'], ['merchants', 'id'], ['programs', 'id'], ['guides', 'slug']]) unique(p[key], name, key);
   if (!Number.isInteger(p.site?.sourceMaxAgeDays) || p.site.sourceMaxAgeDays < 1 || p.site.sourceMaxAgeDays > 90) fail('sourceMaxAgeDays must be 1–90.');
   if (!Number.isInteger(p.site?.editorialMaxAgeDays) || p.site.editorialMaxAgeDays < 1 || p.site.editorialMaxAgeDays > 365) fail('editorialMaxAgeDays must be 1–365.');
-  for (const [label, value] of [['monetization.enabled', p.site?.monetization?.enabled], ['publication.approved', p.site?.publication?.approved], ['privacyReview.approved', p.site?.privacyReview?.approved], ['brandReview.approved', p.site?.brandReview?.approved], ['analytics.enabled', p.site?.analytics?.enabled], ['spending.adsEnabled', p.site?.spending?.adsEnabled]]) if (typeof value !== 'boolean') fail(`${label} must be boolean.`);
-  if (p.site?.analytics?.enabled !== false) fail('Analytics are not implemented; leave disabled.');
+  for (const [label, value] of [['monetization.enabled', p.site?.monetization?.enabled], ['publication.approved', p.site?.publication?.approved], ['privacyReview.approved', p.site?.privacyReview?.approved], ['brandReview.approved', p.site?.brandReview?.approved], ['analytics.enabled', p.site?.analytics?.enabled], ['spending.adsEnabled', p.site?.spending?.adsEnabled], ['legalControls.conversionTrackingEnabled', p.site?.legalControls?.conversionTrackingEnabled], ['legalControls.dropshippingSellingEnabled', p.site?.legalControls?.dropshippingSellingEnabled], ['legalControls.consumerCheckoutEnabled', p.site?.legalControls?.consumerCheckoutEnabled]]) if (typeof value !== 'boolean') fail(`${label} must be boolean.`);
+  if (p.site?.analytics?.enabled !== false) fail('Analytics are not implemented; leave disabled until a consent-compliant analytics layer exists.');
+  if (p.site?.legalControls?.conversionTrackingEnabled !== false) fail('Conversion tracking is not implemented; leave disabled until ePrivacy/GDPR consent controls exist.');
+  if (p.site?.legalControls?.dropshippingSellingEnabled !== false) fail('Dropshipping selling is not implemented or legally released; leave disabled.');
+  if (p.site?.legalControls?.consumerCheckoutEnabled !== false) fail('Consumer checkout is not implemented or legally released; leave disabled.');
   if (p.site?.spending?.adsEnabled !== false) fail('Ad buying is not implemented; leave disabled.');
+  if (p.site?.legalControls?.affiliateDisclosureLabel !== '#Ad') fail('affiliateDisclosureLabel must remain #Ad for Irish affiliate disclosure.');
+  if (!['NOT_REVIEWED', 'NOT_REQUIRED', 'REGISTERED'].includes(p.site?.operator?.businessNameStatus)) fail('operator.businessNameStatus must be NOT_REVIEWED, NOT_REQUIRED or REGISTERED.');
+  if (!['NOT_REVIEWED', 'REVIEWED'].includes(p.site?.operator?.taxReviewStatus)) fail('operator.taxReviewStatus must be NOT_REVIEWED or REVIEWED.');
   for (const product of p.products) {
     const label = `Product ${product.id}`;
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(product.id)) fail(`${label}: invalid ID.`);
@@ -86,14 +92,21 @@ export function releaseIssues(p, env = {}, now = new Date()) {
   const origin = publicOrigin(env.SITE_ORIGIN);
   if (!origin) issues.push('Set an approved HTTPS SITE_ORIGIN (not a placeholder).');
   if (!approvedRecord(p.site.publication, p.evidenceExists, p.site.editorialMaxAgeDays, now) || !p.site.publication.approvedBy || !isFresh(p.site.publication.approvedAt, p.site.editorialMaxAgeDays, now)) issues.push('Owner publication approval and evidence are missing or stale.');
-  if (!p.site.operator.publicName?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.site.operator.contactEmail ?? '') || /\.(example|invalid|test)$/.test(p.site.operator.contactEmail)) issues.push('Approved public operator identity and contact email are missing.');
+  const operator = p.site.operator || {};
+  if (!operator.publicName?.trim() || !operator.legalName?.trim() || !operator.geographicAddress?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(operator.contactEmail ?? '') || /\.(example|invalid|test)$/.test(operator.contactEmail)) issues.push('Irish e-commerce operator identity, legal name, geographic address and contact email are missing.');
+  if (operator.publicName?.trim() && operator.legalName?.trim() && operator.publicName.trim() !== operator.legalName.trim()) {
+    if (operator.businessNameStatus !== 'REGISTERED' || !p.evidenceExists(operator.businessNameEvidenceFile)) issues.push('Trading under a different public name requires a verified Irish business-name registration before commercial release.');
+  } else if (operator.publicName?.trim() && operator.legalName?.trim() && operator.businessNameStatus === 'NOT_REVIEWED') {
+    issues.push('Business-name registration applicability has not been reviewed.');
+  }
   if (!approvedRecord(p.site.privacyReview, p.evidenceExists, p.site.editorialMaxAgeDays, now)) issues.push('Privacy and hosting-log review is not approved.');
   if (!approvedRecord(p.site.brandReview, p.evidenceExists, p.site.editorialMaxAgeDays, now)) issues.push('Working brand/domain clearance is not approved.');
   for (const g of p.guides) if (!reviewValid(p.reviews[g.slug], g, p, now)) issues.push(`Editorial review missing/stale/changed: ${g.slug}.`);
   if (!reviewValid(p.reviews.catalogue, p.products, p, now)) issues.push('Catalogue editorial approval is missing/stale/changed.');
   for (const product of p.products) if (!isFresh(product.source.checkedAt, p.site.sourceMaxAgeDays, now)) issues.push(`Source stale or future-dated: ${product.id}.`);
   if (p.site.monetization.enabled) {
-    if (!p.links.length) issues.push('Monetization enabled without approved affiliate links.');
+    if (operator.taxReviewStatus !== 'REVIEWED' || !p.evidenceExists(operator.taxReviewEvidenceFile)) issues.push('Affiliate tax/VAT treatment has not been reviewed and evidenced for the actual provider/counterparty.');
+    if (!p.links.length && !(p.providerMappings?.length > 0)) issues.push('Monetization enabled without approved affiliate links or provider mappings.');
     for (const link of p.links) { const product = p.products.find(x => x.id === link.productId); if (product) { const decision = affiliateDecision(product, p, origin, now); if (!decision.active) issues.push(`Affiliate gate ${link.productId}: ${decision.reason}.`); } }
   }
   return [...new Set(issues)];
