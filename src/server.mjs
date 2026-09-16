@@ -36,7 +36,7 @@ export function createApp({ root = resolve(process.cwd(), 'dist'), host = '127.0
   async function session(req) { if (!authBase) return null; const upstream = await auth('/get-session', { method: 'GET', headers: { cookie: req.headers.cookie || '' } }); if (!upstream.ok) return null; const data = await upstream.json().catch(() => null); return data?.user ? data : data?.data?.user ? data.data : null; }
 
   return httpServer({ requestTimeout: 15000, headersTimeout: 10000, maxHeaderSize: 8192 }, async (req, res) => {
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https:; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin'); res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()'); res.setHeader('Cache-Control', 'private, no-store');
     if (meta.mode === 'preview') res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const send = (status, body, type = 'text/plain; charset=utf-8') => { const data = Buffer.isBuffer(body) ? body : Buffer.from(body); res.statusCode = status; res.setHeader('Content-Type', type); res.setHeader('Content-Length', data.length); res.end(req.method === 'HEAD' ? undefined : data); };
