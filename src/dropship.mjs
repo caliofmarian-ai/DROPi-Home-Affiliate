@@ -24,6 +24,22 @@ function dateOnly(value) {
   return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === value;
 }
 
+const PILOT_EVIDENCE_FIELDS = [
+  'irelandDelivery',
+  'stockSync',
+  'orderAutomation',
+  'returnsTerms',
+  'mediaRights',
+  'tradeAccount',
+  'gpsrCompliance',
+  'euResponsiblePerson',
+  'productTraceability',
+  'recallProcess',
+  'consumerRemedySupport',
+  'customsVatModel'
+];
+const UNVERIFIED = /^(NOT_VERIFIED|TO_VERIFY|SUPPLIER_DEPENDENT|PUBLICLY_CLAIMED|UNKNOWN|NOT_REVIEWED)$/;
+
 export function validateDropshipSuppliers(suppliers) {
   if (!Array.isArray(suppliers)) return ['Dropship suppliers must be an array.'];
   const issues = []; const seen = new Set();
@@ -37,9 +53,11 @@ export function validateDropshipSuppliers(suppliers) {
     if (!dateOnly(supplier?.checkedAt)) issues.push(`${key}: checkedAt must be YYYY-MM-DD.`);
     if (typeof supplier?.paidPlanApproved !== 'boolean') issues.push(`${key}: paidPlanApproved must be boolean.`);
     if (supplier?.status === 'APPROVED_FOR_PILOT') {
-      for (const field of ['irelandDelivery','stockSync','orderAutomation','returnsTerms','mediaRights','tradeAccount']) {
-        if (!supplier[field] || /^(NOT_VERIFIED|TO_VERIFY|SUPPLIER_DEPENDENT|PUBLICLY_CLAIMED)$/.test(supplier[field])) issues.push(`${key}: ${field} is not sufficiently verified for pilot approval.`);
+      for (const field of PILOT_EVIDENCE_FIELDS) {
+        if (!supplier[field] || UNVERIFIED.test(supplier[field])) issues.push(`${key}: ${field} is not sufficiently verified for pilot approval.`);
       }
+      if (supplier.nonEuFulfilment === true && !['IOSS_VERIFIED','DDP_VERIFIED','IMPORTER_MODEL_VERIFIED'].includes(supplier.customsVatModel)) issues.push(`${key}: non-EU fulfilment requires a verified IOSS/DDP/importer-of-record model.`);
+      if (supplier.categoryCompliance === 'NOT_REVIEWED' || !supplier.categoryCompliance) issues.push(`${key}: category-specific product compliance has not been reviewed.`);
     }
   }
   return issues;
@@ -69,12 +87,16 @@ export function contributionModel(input) {
   const payment = money('paymentFeeEUR', input.paymentFeeEUR);
   const returns = money('returnDamageReserveEUR', input.returnDamageReserveEUR);
   const support = money('supportReserveEUR', input.supportReserveEUR || 0);
+  const customsDuty = money('customsDutyEUR', input.customsDutyEUR || 0);
+  const importVat = money('importVatEUR', input.importVatEUR || 0);
+  const customsHandling = money('customsHandlingEUR', input.customsHandlingEUR || 0);
   const other = money('otherVariableCostEUR', input.otherVariableCostEUR || 0);
-  const contributionEUR = retail - wholesale - shipping - payment - returns - support - other;
+  const variableCostEUR = wholesale + shipping + payment + returns + support + customsDuty + importVat + customsHandling + other;
+  const contributionEUR = retail - variableCostEUR;
   const marginRate = retail === 0 ? 0 : contributionEUR / retail;
-  return { retailPriceEUR: retail, variableCostEUR: wholesale + shipping + payment + returns + support + other, contributionEUR, marginRate };
+  return { retailPriceEUR: retail, variableCostEUR, contributionEUR, marginRate };
 }
 
-export function pilotEligible({ supplierStatus, sampleOrderStatus, contributionEUR, marginRate }) {
-  return supplierStatus === 'APPROVED_FOR_PILOT' && sampleOrderStatus === 'PASS' && Number(contributionEUR) > 0 && Number(marginRate) > 0;
+export function pilotEligible({ supplierStatus, sampleOrderStatus, contributionEUR, marginRate, legalComplianceStatus = 'PASS' }) {
+  return supplierStatus === 'APPROVED_FOR_PILOT' && sampleOrderStatus === 'PASS' && legalComplianceStatus === 'PASS' && Number(contributionEUR) > 0 && Number(marginRate) > 0;
 }
