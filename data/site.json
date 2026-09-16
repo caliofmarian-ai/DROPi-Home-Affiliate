@@ -21,7 +21,9 @@
     "businessNameStatus": "NOT_REVIEWED",
     "businessNameEvidenceFile": null,
     "taxReviewStatus": "NOT_REVIEWED",
-    "taxReviewEvidenceFile": null
+    "taxReviewEvidenceFile": null,
+    "accessibilityScopeStatus": "NOT_REVIEWED",
+    "accessibilityScopeEvidenceFile": null
   },
   "privacyReview": {
     "approved": false,
