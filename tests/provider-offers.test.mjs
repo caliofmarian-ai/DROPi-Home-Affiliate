@@ -3,40 +3,31 @@ import assert from 'node:assert/strict';
 import { parseAwinJsonl, normaliseAwinProduct, stageAwinOffers, attachAwinTracking, normaliseEbayItem, stageEbayOffers, validateProviderMappings, validateProviderOffers } from '../src/provider-offers.mjs';
 
 const row = {
-  id: 'AW-100',
-  title: 'Compact storage unit',
-  link: 'https://merchant.example/products/aw-100',
-  image_link: 'https://cdn.merchant.example/aw-100.webp',
-  price: '49.95 EUR',
-  availability: 'in_stock',
-  brand: 'Example',
-  gtin: '1234567890123',
-  mpn: 'M-100'
+  id: 'AW-100', title: 'Compact storage unit', link: 'https://merchant.example/products/aw-100',
+  image_link: 'https://cdn.merchant.example/aw-100.webp', price: '49.95 EUR', availability: 'in_stock',
+  brand: 'Example', gtin: '1234567890123', mpn: 'M-100'
+};
+const nestedAwinRow = {
+  meta: { advertiser_id: 9876, advertiser_name: 'Example Merchant' },
+  product_basic: { id: 'AW-100', title: 'Compact storage unit', link: 'https://merchant.example/products/aw-100', image_link: 'https://cdn.merchant.example/aw-100.webp' },
+  price_and_availability: { price: '49.95 EUR', availability: 'in_stock' },
+  product_identifiers: { brand: 'Example', gtin: '1234567890123', mpn: 'M-100' }
 };
 const mapping = [{ provider: 'awin', productId: 'local-product', advertiserId: '9876', externalProductId: 'AW-100' }];
 const ebayItem = {
-  itemId: 'v1|123456789012|0',
-  title: 'Compact storage item',
-  itemWebUrl: 'https://www.ebay.ie/itm/123456789012',
+  itemId: 'v1|123456789012|0', title: 'Compact storage item', itemWebUrl: 'https://www.ebay.ie/itm/123456789012',
   itemAffiliateWebUrl: 'https://www.ebay.ie/itm/123456789012?campid=1234567890&customid=dropi-home-local-product',
-  image: { imageUrl: 'https://i.ebayimg.com/images/g/example/s-l1600.webp' },
-  price: { value: '59.95', currency: 'EUR' },
+  image: { imageUrl: 'https://i.ebayimg.com/images/g/example/s-l1600.webp' }, price: { value: '59.95', currency: 'EUR' },
   estimatedAvailabilities: [{ estimatedAvailabilityStatus: 'IN_STOCK' }]
 };
 const ebayMapping = [{ provider: 'ebay', productId: 'local-product', externalProductId: 'v1|123456789012|0' }];
 
-test('provider mapping registry is empty-safe', () => {
-  assert.deepEqual(validateProviderMappings([], ['local-product']), []);
-});
+test('provider mapping registry is empty-safe', () => assert.deepEqual(validateProviderMappings([], ['local-product']), []));
 
 test('provider mapping rejects unknown local products and duplicates', () => {
-  const mappings = [
-    { provider: 'ebay', productId: 'missing-product', externalProductId: 'v1|1|0' },
-    { provider: 'ebay', productId: 'missing-product', externalProductId: 'v1|2|0' }
-  ];
+  const mappings = [{ provider: 'ebay', productId: 'missing-product', externalProductId: 'v1|1|0' }, { provider: 'ebay', productId: 'missing-product', externalProductId: 'v1|2|0' }];
   const issues = validateProviderMappings(mappings, ['local-product']);
-  assert.ok(issues.some(x => x.includes('unknown or missing')));
-  assert.ok(issues.some(x => x.includes('duplicate')));
+  assert.ok(issues.some(x => x.includes('unknown or missing'))); assert.ok(issues.some(x => x.includes('duplicate')));
 });
 
 test('Amazon mapping stores only stable ASIN-shaped identifiers', () => {
@@ -48,12 +39,17 @@ test('Awin mapping registry requires numeric advertiser id', () => {
   assert.ok(validateProviderMappings([{ provider: 'awin', productId: 'local-product', advertiserId: 'x', externalProductId: 'AW-100' }], ['local-product']).some(x => x.includes('advertiserId')));
 });
 
-test('Awin JSONL parser accepts one JSON object per line', () => {
-  assert.deepEqual(parseAwinJsonl(`${JSON.stringify(row)}\n\n`).map(x => x.id), ['AW-100']);
+test('Awin JSONL parser accepts one JSON object per line', () => assert.deepEqual(parseAwinJsonl(`${JSON.stringify(row)}\n\n`).map(x => x.id), ['AW-100']));
+
+test('Awin JSONL parser rejects malformed lines', () => assert.throws(() => parseAwinJsonl('{bad json}\n'), /line 1/));
+
+test('Awin JSONL parser treats final API error object as a failed refresh', () => {
+  assert.throws(() => parseAwinJsonl(`${JSON.stringify(nestedAwinRow)}\n${JSON.stringify({ error: 500, message: 'Internal server error' })}\n`), /ended with an error/);
 });
 
-test('Awin JSONL parser rejects malformed lines', () => {
-  assert.throws(() => parseAwinJsonl('{bad json}\n'), /line 1/);
+test('Awin normalization supports current enhanced-feed section format', () => {
+  const product = normaliseAwinProduct(nestedAwinRow);
+  assert.equal(product.externalProductId, 'AW-100'); assert.equal(product.price.amount, 49.95); assert.equal(product.availability, 'in_stock'); assert.equal(product.imageUrl.includes('cdn.merchant.example'), true);
 });
 
 test('Awin product normalization requires HTTPS destinations', () => {
@@ -62,16 +58,12 @@ test('Awin product normalization requires HTTPS destinations', () => {
 });
 
 test('Awin mapping is exact by external product id', () => {
-  const offers = stageAwinOffers({ rows: [row], mappings: mapping, advertiserId: '9876', checkedAt: '2026-09-16' });
-  assert.equal(offers.length, 1);
-  assert.equal(offers[0].productId, 'local-product');
-  assert.equal(offers[0].externalProductId, 'AW-100');
-  assert.equal(offers[0].status, 'STAGED');
+  const offers = stageAwinOffers({ rows: [nestedAwinRow], mappings: mapping, advertiserId: '9876', checkedAt: '2026-09-16' });
+  assert.equal(offers.length, 1); assert.equal(offers[0].productId, 'local-product'); assert.equal(offers[0].externalProductId, 'AW-100'); assert.equal(offers[0].status, 'STAGED');
 });
 
 test('unmapped Awin feed products never create catalogue offers', () => {
-  const offers = stageAwinOffers({ rows: [{ ...row, id: 'OTHER' }], mappings: mapping, advertiserId: '9876', checkedAt: '2026-09-16' });
-  assert.equal(offers.length, 0);
+  const offers = stageAwinOffers({ rows: [{ ...row, id: 'OTHER' }], mappings: mapping, advertiserId: '9876', checkedAt: '2026-09-16' }); assert.equal(offers.length, 0);
 });
 
 test('tracking URL must stay on known Awin hosts', () => {
@@ -87,29 +79,21 @@ test('v1 rejects non-EUR commercial price snapshots', () => {
 
 test('valid staged mapped Awin offer passes provider validation', () => {
   const [offer] = stageAwinOffers({ rows: [row], mappings: mapping, advertiserId: '9876', checkedAt: '2026-09-16' });
-  const tracked = attachAwinTracking(offer, 'https://www.awin1.com/cread.php?awinmid=9876&awinaffid=123');
-  assert.deepEqual(validateProviderOffers([tracked]), []);
+  const tracked = attachAwinTracking(offer, 'https://www.awin1.com/cread.php?awinmid=9876&awinaffid=123'); assert.deepEqual(validateProviderOffers([tracked]), []);
 });
 
 test('eBay normalizer requires official Ireland item and affiliate URLs', () => {
-  const item = normaliseEbayItem(ebayItem);
-  assert.equal(item.price.currency, 'EUR');
-  assert.equal(item.externalProductId, ebayItem.itemId);
+  const item = normaliseEbayItem(ebayItem); assert.equal(item.price.currency, 'EUR'); assert.equal(item.externalProductId, ebayItem.itemId);
   assert.throws(() => normaliseEbayItem({ ...ebayItem, itemAffiliateWebUrl: 'https://evil.example/x' }), /ebay.ie/);
 });
 
 test('eBay exact mapping stages official itemAffiliateWebUrl', () => {
   const offers = stageEbayOffers({ items: [ebayItem], mappings: ebayMapping, campaignId: '1234567890', checkedAt: '2026-09-16' });
-  assert.equal(offers.length, 1);
-  assert.equal(offers[0].trackingUrl, ebayItem.itemAffiliateWebUrl);
-  assert.deepEqual(validateProviderOffers(offers), []);
+  assert.equal(offers.length, 1); assert.equal(offers[0].trackingUrl, ebayItem.itemAffiliateWebUrl); assert.deepEqual(validateProviderOffers(offers), []);
 });
 
 test('eBay mapping never falls back to a similar item', () => {
-  const offers = stageEbayOffers({ items: [{ ...ebayItem, itemId: 'v1|999999999999|0' }], mappings: ebayMapping, campaignId: '1234567890', checkedAt: '2026-09-16' });
-  assert.equal(offers.length, 0);
+  const offers = stageEbayOffers({ items: [{ ...ebayItem, itemId: 'v1|999999999999|0' }], mappings: ebayMapping, campaignId: '1234567890', checkedAt: '2026-09-16' }); assert.equal(offers.length, 0);
 });
 
-test('eBay campaign IDs fail closed unless exactly 10 digits', () => {
-  assert.throws(() => stageEbayOffers({ items: [ebayItem], mappings: ebayMapping, campaignId: '123', checkedAt: '2026-09-16' }), /10-digit/);
-});
+test('eBay campaign IDs fail closed unless exactly 10 digits', () => assert.throws(() => stageEbayOffers({ items: [ebayItem], mappings: ebayMapping, campaignId: '123', checkedAt: '2026-09-16' }), /10-digit/));
