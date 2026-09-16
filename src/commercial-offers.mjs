@@ -1,4 +1,4 @@
-import { isFresh, affiliateDecision } from './domain.mjs';
+import { isFresh, affiliateDecision, affiliateTaxProfileValid } from './domain.mjs';
 
 const PROGRAM_BY_PROVIDER = Object.freeze({ awin: 'awin', ebay: 'ebay-epn' });
 const MEDIA_SOURCE_BY_PROVIDER = Object.freeze({ awin: 'AWIN_FEED', ebay: 'EBAY_BROWSE_API' });
@@ -26,6 +26,7 @@ function approvedProgramme(project, provider, origin, now) {
   const program = project.programs?.find(x => x.id === programId);
   if (!program || program.status !== 'APPROVED') return { ok: false, reason: 'PROGRAM_NOT_APPROVED' };
   if (!program.accountId || !evidenceOk(project, program.approvalEvidenceFile)) return { ok: false, reason: 'PROGRAM_APPROVAL_EVIDENCE_MISSING' };
+  if (!affiliateTaxProfileValid(program, project)) return { ok: false, reason: 'PROGRAM_TAX_PROFILE_NOT_REVIEWED' };
   if (!origin || program.approvedSiteOrigin !== origin) return { ok: false, reason: 'PROGRAM_SITE_NOT_APPROVED' };
   if (!isFresh(program.termsReviewedAt, project.site.sourceMaxAgeDays, now)) return { ok: false, reason: 'PROGRAM_TERMS_STALE' };
   return { ok: true, program, programId };
