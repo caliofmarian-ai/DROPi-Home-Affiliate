@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseAwinJsonl, normaliseAwinProduct, stageAwinOffers, attachAwinTracking, normaliseEbayItem, stageEbayOffers, validateProviderOffers } from '../src/provider-offers.mjs';
+import { parseAwinJsonl, normaliseAwinProduct, stageAwinOffers, attachAwinTracking, normaliseEbayItem, stageEbayOffers, validateProviderMappings, validateProviderOffers } from '../src/provider-offers.mjs';
 
 const row = {
   id: 'AW-100',
@@ -24,6 +24,29 @@ const ebayItem = {
   estimatedAvailabilities: [{ estimatedAvailabilityStatus: 'IN_STOCK' }]
 };
 const ebayMapping = [{ provider: 'ebay', productId: 'local-product', externalProductId: 'v1|123456789012|0' }];
+
+test('provider mapping registry is empty-safe', () => {
+  assert.deepEqual(validateProviderMappings([], ['local-product']), []);
+});
+
+test('provider mapping rejects unknown local products and duplicates', () => {
+  const mappings = [
+    { provider: 'ebay', productId: 'missing-product', externalProductId: 'v1|1|0' },
+    { provider: 'ebay', productId: 'missing-product', externalProductId: 'v1|2|0' }
+  ];
+  const issues = validateProviderMappings(mappings, ['local-product']);
+  assert.ok(issues.some(x => x.includes('unknown or missing')));
+  assert.ok(issues.some(x => x.includes('duplicate')));
+});
+
+test('Amazon mapping stores only stable ASIN-shaped identifiers', () => {
+  assert.deepEqual(validateProviderMappings([{ provider: 'amazon', productId: 'local-product', externalProductId: 'B0ABC12345', status: 'PENDING' }], ['local-product']), []);
+  assert.ok(validateProviderMappings([{ provider: 'amazon', productId: 'local-product', externalProductId: 'not-an-asin' }], ['local-product']).some(x => x.includes('ASIN')));
+});
+
+test('Awin mapping registry requires numeric advertiser id', () => {
+  assert.ok(validateProviderMappings([{ provider: 'awin', productId: 'local-product', advertiserId: 'x', externalProductId: 'AW-100' }], ['local-product']).some(x => x.includes('advertiserId')));
+});
 
 test('Awin JSONL parser accepts one JSON object per line', () => {
   assert.deepEqual(parseAwinJsonl(`${JSON.stringify(row)}\n\n`).map(x => x.id), ['AW-100']);
