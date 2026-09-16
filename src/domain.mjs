@@ -19,6 +19,7 @@ export function isFresh(date, maxDays, now = new Date()) {
   return Number.isFinite(time) && Number.isFinite(nowMS) && Number.isInteger(maxDays) && maxDays > 0 && time <= nowMS && nowMS < time + maxDays * DAY;
 }
 const TAX_TREATMENTS = new Set(['IRISH_DOMESTIC','EU_B2B_REVERSE_CHARGE','NON_EU_B2B_REVIEWED','OTHER_REVIEWED']);
+const ACCESSIBILITY_SCOPE_STATUSES = new Set(['NOT_REVIEWED','OUT_OF_SCOPE_REVIEWED','MICROENTERPRISE_EXEMPTION_VERIFIED','IN_SCOPE_REQUIREMENTS_REVIEWED']);
 export function affiliateTaxProfileValid(program, p) {
   const t = program?.taxProfile;
   if (!t || t.status !== 'REVIEWED' || !t.counterpartyLegalName?.trim() || !/^[A-Z]{2}$/.test(t.countryCode || '') || !TAX_TREATMENTS.has(t.treatment) || !p.evidenceExists(t.evidenceFile)) return false;
@@ -43,6 +44,7 @@ export function validateProject(p) {
   if (p.site?.legalControls?.affiliateDisclosureLabel !== '#Ad') fail('affiliateDisclosureLabel must remain #Ad for Irish affiliate disclosure.');
   if (!['NOT_REVIEWED', 'NOT_REQUIRED', 'REGISTERED'].includes(p.site?.operator?.businessNameStatus)) fail('operator.businessNameStatus must be NOT_REVIEWED, NOT_REQUIRED or REGISTERED.');
   if (!['NOT_REVIEWED', 'REVIEWED'].includes(p.site?.operator?.taxReviewStatus)) fail('operator.taxReviewStatus must be NOT_REVIEWED or REVIEWED.');
+  if (!ACCESSIBILITY_SCOPE_STATUSES.has(p.site?.operator?.accessibilityScopeStatus)) fail('operator.accessibilityScopeStatus is invalid.');
   for (const program of p.programs) {
     const tax = program.taxProfile;
     if (!tax || !['NOT_REVIEWED','REVIEWED'].includes(tax.status)) fail(`Programme ${program.id}: taxProfile.status must be NOT_REVIEWED or REVIEWED.`);
@@ -115,6 +117,7 @@ export function releaseIssues(p, env = {}, now = new Date()) {
   } else if (operator.publicName?.trim() && operator.legalName?.trim() && operator.businessNameStatus === 'NOT_REVIEWED') {
     issues.push('Business-name registration applicability has not been reviewed.');
   }
+  if (operator.accessibilityScopeStatus === 'NOT_REVIEWED' || !p.evidenceExists(operator.accessibilityScopeEvidenceFile)) issues.push('Irish/EU accessibility scope or microenterprise exemption has not been reviewed and evidenced.');
   if (!approvedRecord(p.site.privacyReview, p.evidenceExists, p.site.editorialMaxAgeDays, now)) issues.push('Privacy and hosting-log review is not approved.');
   if (!approvedRecord(p.site.brandReview, p.evidenceExists, p.site.editorialMaxAgeDays, now)) issues.push('Working brand/domain clearance is not approved.');
   for (const g of p.guides) if (!reviewValid(p.reviews[g.slug], g, p, now)) issues.push(`Editorial review missing/stale/changed: ${g.slug}.`);
