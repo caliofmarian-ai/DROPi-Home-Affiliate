@@ -9,7 +9,7 @@ function productMedia(product) {
   const media = el('div', null, 'product-media');
   if (product?.media?.status === 'APPROVED' && typeof product.media.url === 'string') {
     const img = document.createElement('img');
-    img.src = product.media.url; img.alt = product.media.alt || product.name || 'Product image'; img.loading = 'lazy'; img.decoding = 'async';
+    img.src = product.media.url; img.alt = product.media.alt || product.name || 'Product image'; img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
     media.append(img);
     const label = el('span', product.media.source === 'AWIN_FEED' ? 'Partner feed image' : 'Authorised product image', 'media-source'); media.append(label);
   } else {
