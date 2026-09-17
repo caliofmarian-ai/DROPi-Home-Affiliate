@@ -15,6 +15,14 @@ function lines(value, maxItems = 30) {
   if (Array.isArray(value)) return value.map(x => clean(x)).filter(Boolean).slice(0, maxItems);
   return String(value || '').split(/\r?\n/).map(x => clean(x)).filter(Boolean).slice(0, maxItems);
 }
+function dateOnly(value) {
+  if (value == null || value === '') return null;
+  const text = clean(value, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) throw new Error('targetDate must use YYYY-MM-DD.');
+  const time = Date.parse(`${text}T00:00:00Z`);
+  if (!Number.isFinite(time) || new Date(time).toISOString().slice(0, 10) !== text) throw new Error('targetDate is not a valid calendar date.');
+  return text;
+}
 function requiredPolicy(policy) {
   if (!policy?.structuredSubmissionEnabled) throw new Error('Structured intake is not enabled by policy.');
   if (!Number.isInteger(policy.retentionDays) || policy.retentionDays < 1 || policy.retentionDays > 365) throw new Error('An approved retention period is required.');
@@ -53,7 +61,7 @@ export function prepareTextIntake(input, policy, now = new Date()) {
     missingInformation: [],
     riskFlags: [],
     budgetRange: optional(input?.budgetRange, 120),
-    targetDate: optional(input?.targetDate, 20),
+    targetDate: dateOnly(input?.targetDate),
     deliveryRequired: bool(input?.deliveryRequired),
     fittingRequired: bool(input?.fittingRequired),
     customerNotes: optional(input?.customerNotes, 5000),
@@ -104,7 +112,7 @@ export function createIntakeStore(connectionString = process.env.INTAKE_DATABASE
             ${request.contactEmail}, ${request.contactPhone}, ${request.serviceArea}, ${request.roomType}, ${request.furnitureType},
             ${request.widthMM}, ${request.heightMM}, ${request.depthMM}, ${request.measurementProvenance.width}, ${request.measurementProvenance.height}, ${request.measurementProvenance.depth},
             ${tx.json(request.obstacles)}, ${tx.json(request.accessConstraints)}, ${tx.json(request.materialPreferences)}, ${tx.json(request.finishPreferences)},
-            ${tx.json(request.missingInformation)}, ${tx.json(request.riskFlags)}, ${request.budgetRange}, ${request.targetDate || null},
+            ${tx.json(request.missingInformation)}, ${tx.json(request.riskFlags)}, ${request.budgetRange}, ${request.targetDate},
             ${request.deliveryRequired}, ${request.fittingRequired}, ${request.customerNotes},
             true, ${request.consent.version}, ${request.consent.privacyNoticeVersion}, ${request.consent.acceptedAt},
             ${deleteAfter}
