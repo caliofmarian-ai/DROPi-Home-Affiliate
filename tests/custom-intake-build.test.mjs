@@ -23,7 +23,7 @@ test('current build records provisioned private storage but keeps all customer p
     assert.equal(b.commerce.customIntake.aiProcessingEnabled, false);
     assert.equal(b.commerce.customIntake.manufacturerRoutingEnabled, false);
     assert.equal(b.commerce.customIntake.storageProvider, 'NEON_POSTGRES_EU_FRANKFURT');
-    assert.equal(b.commerce.customIntake.mediaStorageProvider, 'NOT_PROVISIONED');
+    assert.equal(b.commerce.customIntake.mediaStorageProvider, 'NEON_PRIVATE_OBJECT_STORAGE_EU_CENTRAL_1');
   } finally {
     rmSync(root, { recursive: true });
   }
