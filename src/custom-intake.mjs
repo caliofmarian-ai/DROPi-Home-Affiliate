@@ -34,6 +34,7 @@ const DIMENSION_PROVENANCE = new Set(['CUSTOMER_TYPED', 'CUSTOMER_CONFIRMED', 'P
 const REVIEW_READY_PROVENANCE = new Set(['CUSTOMER_TYPED', 'CUSTOMER_CONFIRMED', 'SITE_SURVEY_VERIFIED']);
 const ROUTES = new Set(['UNDECIDED', 'STANDARD_PRODUCT', 'CUSTOM_MANUFACTURING', 'INSTALLATION_ONLY']);
 const ACTORS = new Set(['CUSTOMER', 'AI_INTAKE', 'HUMAN_REVIEWER', 'SYSTEM']);
+const APPROVED_LAWFUL_BASES = new Set(['CONSENT_APPROVED', 'PRECONTRACTUAL_APPROVED', 'LEGITIMATE_INTERESTS_APPROVED']);
 
 function nonBlank(value) { return typeof value === 'string' && value.trim().length > 0; }
 function validIso(value) { return typeof value === 'string' && Number.isFinite(Date.parse(value)); }
@@ -54,6 +55,10 @@ export function validateCustomIntakePolicy(policy, evidenceExists = () => false)
     if (!nonBlank(policy.storageProvider) || policy.storageProvider === 'NOT_PROVISIONED') issues.push('Structured intake requires private persistent storage.');
     if (!Number.isInteger(policy.retentionDays) || policy.retentionDays < 1 || policy.retentionDays > 365) issues.push('Structured intake requires an approved retentionDays value from 1 to 365.');
     if (!nonBlank(policy.privacyNoticeVersion) || !nonBlank(policy.consentVersion)) issues.push('Structured intake requires versioned privacy notice and consent text.');
+    if (!APPROVED_LAWFUL_BASES.has(policy.lawfulBasisStatus)) issues.push('Structured intake requires an approved Article 6 lawful-basis decision.');
+    if (policy.controllerIdentityStatus !== 'VERIFIED') issues.push('Structured intake requires verified controller identity.');
+    if (policy.privacyContactStatus !== 'VERIFIED') issues.push('Structured intake requires a verified privacy contact route.');
+    if (policy.rightsProcedureStatus !== 'VERIFIED') issues.push('Structured intake requires a tested data-subject-rights and withdrawal/erasure procedure.');
     if (!evidenceApproved(policy.privacyReview, evidenceExists)) issues.push('Structured intake privacy review is not approved/evidenced.');
   }
   if (policy.publicIntakeEnabled && !policy.structuredSubmissionEnabled) issues.push('Public intake cannot be enabled before structured submission is enabled.');
