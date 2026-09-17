@@ -64,3 +64,11 @@ test('text intake normalises bounded list fields and does not accept media', () 
   assert.deepEqual(result.request.obstacles, ['one', 'two']);
   assert.equal('mediaRefs' in result.request, false);
 });
+
+test('target date is optional but invalid calendar dates fail closed', () => {
+  assert.equal(prepareTextIntake({ ...complete, targetDate: '' }, policy, now).request.targetDate, null);
+  assert.equal(prepareTextIntake({ ...complete, targetDate: '2026-12-01' }, policy, now).request.targetDate, '2026-12-01');
+  for (const bad of ['2026-02-30', '01/12/2026', 'not-a-date', '2026-2-1']) {
+    assert.throws(() => prepareTextIntake({ ...complete, targetDate: bad }, policy, now), /targetDate/);
+  }
+});
