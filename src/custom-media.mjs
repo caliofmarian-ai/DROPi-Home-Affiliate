@@ -1,6 +1,16 @@
 const MEDIA_KINDS = new Set(['PHOTO', 'VIDEO']);
 const MEDIA_MIME = new Set(['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm']);
 const TERMINAL_CLOSE_REASONS = new Set(['JOB_COMPLETED', 'CUSTOMER_CANCELLED', 'DECLINED', 'OTHER_CLOSED']);
+const PRECONTRACT_ABANDONMENT_STATES = new Set([
+  'DRAFT_CUSTOMER_INPUT',
+  'WAITING_FOR_CUSTOMER_INFO',
+  'READY_FOR_HUMAN_REVIEW',
+  'NEEDS_SITE_SURVEY',
+  'NEEDS_CLARIFICATION',
+  'POTENTIALLY_PRODUCIBLE',
+  'READY_FOR_QUOTATION',
+  'QUOTED'
+]);
 
 function nonBlank(v) { return typeof v === 'string' && v.trim().length > 0; }
 
@@ -8,6 +18,7 @@ export const MEDIA_CAPTURE_GUIDANCE_VERSION = 'custom-media-guidance-v1';
 export const MEDIA_CONSENT_VERSION = 'custom-media-consent-v1-draft';
 export const MEDIA_DELETE_RULE = 'DELETE_ON_TERMINAL_CLOSE';
 export const MEDIA_DELETE_NOTICE_RULE = 'EMAIL_AFTER_CONFIRMED_PURGE';
+export const APPROVED_ABANDONED_MEDIA_RETENTION_DAYS = 30;
 
 export function mediaActivationIssues(policy, evidenceExists = () => false) {
   const issues = [];
@@ -28,6 +39,7 @@ export function mediaActivationIssues(policy, evidenceExists = () => false) {
     issues.push('Media uploads require approved processor/data-transfer review evidence.');
   }
   if (policy.mediaFallbackRetentionStatus !== 'APPROVED') issues.push('Media uploads require an approved fallback retention rule for abandoned requests.');
+  if (policy.abandonedMediaRetentionDays !== APPROVED_ABANDONED_MEDIA_RETENTION_DAYS) issues.push(`Media uploads require the owner-approved ${APPROVED_ABANDONED_MEDIA_RETENTION_DAYS}-day abandoned-request fallback.`);
   if (policy.deletionEmailStatus !== 'VERIFIED') issues.push('Media uploads require a verified deletion-confirmation email route.');
   return issues;
 }
@@ -43,6 +55,16 @@ export function validateMediaSubmission(input, policy) {
   if (input.privacyAttestationAccepted !== true) issues.push('Customer must confirm they reviewed the media for unnecessary private information.');
   if (!nonBlank(input.requestId) || !/^[A-Za-z0-9-]{8,80}$/.test(input.requestId)) issues.push('requestId is invalid.');
   return [...new Set(issues)];
+}
+
+export function abandonedMediaDeleteAfter({ lastCustomerActivityAt, requestState }, policy) {
+  if (policy?.mediaFallbackRetentionStatus !== 'APPROVED' || policy?.abandonedMediaRetentionDays !== APPROVED_ABANDONED_MEDIA_RETENTION_DAYS) {
+    throw new Error('Approved abandoned-media retention policy is required.');
+  }
+  if (!PRECONTRACT_ABANDONMENT_STATES.has(requestState)) throw new Error('Abandoned-media fallback applies only before customer acceptance/contract stage.');
+  const last = new Date(lastCustomerActivityAt);
+  if (!Number.isFinite(last.getTime())) throw new Error('lastCustomerActivityAt must be a valid timestamp.');
+  return new Date(last.getTime() + APPROVED_ABANDONED_MEDIA_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
 }
 
 export function mediaPurgePlan({ requestId, mediaIds = [], closeReason, customerEmail }) {
