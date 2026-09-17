@@ -1,10 +1,13 @@
 {
   "name": "dropi-home-affiliate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=22.16.0"
+  },
+  "dependencies": {
+    "postgres": "3.4.7"
   },
   "scripts": {
     "check": "node scripts/check.mjs",
