@@ -1,31 +1,38 @@
 # Custom Furniture Intake — Privacy / Consent / Retention
 
-Status: OWNER-APPROVED RETENTION / CONSENT MODEL DRAFT — REAL CUSTOMER COLLECTION STILL OFF
+Status: OWNER-APPROVED RETENTION + TEXT CONSENT MODEL / REAL CUSTOMER COLLECTION STILL OFF
 
 Last legal-source review: 2026-09-17
 
-This document governs the first proposed **text-only private pilot**. It is deliberately narrower than the full Custom Furniture AI Intake design.
+This document governs the first proposed **text-only private pilot**. Photo/video is governed separately by `docs/CUSTOM-INTAKE-MEDIA-POLICY.md` and remains OFF.
 
-## 1. Approved owner decision
+## 1. Approved owner decisions
 
 The Project Owner approved on 2026-09-17:
 
 - a **30-day retention period** for private text-only pilot submissions;
-- continued implementation of the privacy and consent/acknowledgement layer;
-- keeping public intake, media, AI processing, manufacturer routing and employer sharing disabled until their separate gates pass.
+- Article 6(1)(a) **consent** as the chosen lawful-basis model for the private text-only pilot;
+- the initial controller/operator model as the Project Owner operating personally / as an Irish sole trader, subject to completing the relevant Revenue/business-name/public-identity steps before commercial public launch;
+- creation of a separate dedicated privacy/business email, address still pending and not to be invented;
+- future photo/video intake with separate guidance and consent;
+- deletion of customer media on terminal closure/completion/cancellation/decline when the media is no longer needed, followed by a customer email only after deletion is technically confirmed;
+- keeping AI processing and manufacturer/employer sharing disabled until separate later gates pass.
 
-Canonical evidence: `docs/evidence/owner-custom-intake-retention-consent-approval-2026-09-17.md`.
+Canonical evidence:
 
-The 30-day period is an operational design decision, **not** a statutory GDPR period. The Irish Data Protection Commission states that GDPR does not prescribe one universal retention period; identifiable data should be kept no longer than necessary for the purpose.
+- `docs/evidence/owner-custom-intake-retention-consent-approval-2026-09-17.md`
+- `docs/evidence/owner-custom-intake-operator-media-decisions-2026-09-17.md`
+
+The 30-day text period is an operational design decision, **not** a statutory GDPR period. The Irish Data Protection Commission states that GDPR does not prescribe one universal retention period; identifiable data should be kept no longer than necessary for the purpose.
 
 ## 2. What remains disabled
 
-Until later explicit approval:
+Until later activation approval:
 
 - no public customer intake;
-- no room photographs;
-- no room video;
-- no voice/audio upload;
+- no real private-pilot customer submission;
+- no room photo/video upload;
+- no standalone voice/audio upload;
 - no AI processing of customer data;
 - no automated quotation or manufacturing decision;
 - no manufacturer/employer data sharing;
@@ -69,23 +76,25 @@ Do **not** request PPSN, payment-card data, identity documents, exact birth date
 
 ## 5. Lawful-basis model
 
-For this **private text-only pilot**, the proposed model is Article 6(1)(a) consent, because the feature is currently a voluntary intake experiment and is not yet tied to an established manufacturer contract or a defined seller/agent role.
+For this **private text-only pilot**, the Project Owner selected **Article 6(1)(a) consent**.
 
-This remains `CONSENT_MODEL_PROPOSED_NOT_ACTIVATED` until the real data-controller identity and privacy contact are fixed.
+Engineering status: `CONSENT_APPROVED`, but real collection remains OFF until the controller's verified public identity/contact, final notice wording, processor review and rights/erasure verification are complete.
 
-If the future commercial model becomes a genuine request for steps before entering a contract, Article 6(1)(b) may be more appropriate for some processing. That later change requires a separate review; the system must not silently switch legal basis.
+The consent must be freely given, specific, informed and unambiguous, captured by a clear affirmative action and capable of being withdrawn.
 
-If consent is used, it must be freely given, specific, informed and unambiguous, captured by a clear affirmative action, and withdrawal must be supported.
+If the future commercial model becomes a genuine request for steps before entering a contract, Article 6(1)(b) may become more appropriate for some processing. Any future change requires a separate documented review; the system must not silently switch legal basis.
 
 ## 6. Retention
 
-**Approved pilot value: 30 days from submission.**
+**Approved text-only pilot value: 30 days from submission.**
 
 At expiry, an unconverted pilot request should be securely deleted. Dependent audit records are deleted with the request according to the database relationship.
 
 The automated retention worker exists but remains disabled until the real pilot is deliberately activated. It uses a separate maintenance database role.
 
 If a request later becomes a real quotation, customer relationship, contract, dispute or accounting record, a different retention rule may apply. That future record must not silently inherit the pilot's 30-day policy.
+
+Photo/video uses a separate lifecycle. See `docs/CUSTOM-INTAKE-MEDIA-POLICY.md`.
 
 ## 7. Storage and access
 
@@ -95,7 +104,15 @@ Runtime access uses a dedicated least-privilege role that can access only the in
 
 Customer data must never be committed to GitHub. Railway stores database credentials only as environment secrets; they must not be exposed to the browser, repository or logs.
 
-## 8. Versioned privacy notice
+## 8. Controller / operator model
+
+Initial intended model: **individual / sole trader**, with the Project Owner as controller/operator.
+
+Before activation/publication the project still requires the real legal identity as it must appear in the notice, a real contact route and any Revenue/CRO steps applicable to trading. If `DROPi Home` is used as a public business name different from the owner's true name, the required business-name registration must be completed before relying on that public identity.
+
+A company can be reconsidered later if liability, tax, staffing, investment or scale make incorporation more appropriate; the pilot does not require inventing a company that does not exist.
+
+## 9. Versioned privacy notice
 
 Draft version identifier: `custom-intake-privacy-v1-draft`.
 
@@ -103,18 +120,18 @@ The notice cannot become active until it contains the real controller identity a
 
 - who the data controller is and how to contact them;
 - the purpose of processing;
-- the Article 6 lawful basis;
+- Article 6(1)(a) consent for the text-only pilot;
 - categories of data collected;
 - recipients/processors;
 - any relevant non-EEA transfer information/safeguards;
 - the 30-day pilot retention period;
 - applicable access, rectification, erasure, restriction, portability and objection rights;
-- if relying on consent, the right to withdraw it at any time without affecting processing already lawfully carried out;
+- the right to withdraw consent at any time without affecting processing already lawfully carried out;
 - the right to complain to the Data Protection Commission;
 - whether providing each field is required and what happens if it is not provided;
 - whether automated decision-making is used. For this pilot, binding automated decisions are not used.
 
-## 9. Draft concise form notice
+## 10. Draft concise form notice
 
 This text is for owner review and UI testing only until controller details are inserted:
 
@@ -124,57 +141,65 @@ This text is for owner review and UI testing only until controller details are i
 >
 > We use the details you submit only to structure and review this request. In this stage we do not accept photos, video or audio, do not send the request to a manufacturer, do not make an automated production decision and do not use the information for AI training.
 >
-> Unconverted pilot submissions are retained for 30 days and then deleted under the pilot retention rule. The full privacy notice identifies the controller, lawful basis, processors/recipients and your data-protection rights.
+> Unconverted pilot submissions are retained for 30 days and then deleted under the pilot retention rule. The full privacy notice identifies the controller, processors/recipients and your data-protection rights.
 
-## 10. Draft consent text
+## 11. Draft consent text
 
 Draft version identifier: `custom-intake-consent-v1-draft`.
 
 Proposed checkbox wording:
 
-> I have read the Custom Furniture Request privacy information. I consent to DROPi Home processing the information I submit for the sole purpose of structuring and reviewing this non-binding request. I understand that I can withdraw this consent and request deletion, subject to any separate legal reason that may later require specific records to be retained.
+> I have read the Custom Furniture Request privacy information. I consent to the named controller processing the information I submit for the sole purpose of structuring and reviewing this non-binding request. I understand that I can withdraw this consent and request deletion, subject to any separate legal reason that may later require specific records to be retained.
 
 The checkbox must be **unticked by default** and submission must fail closed without it while consent is the selected lawful basis.
 
-## 11. Rights and withdrawal implementation requirements
+## 12. Rights and withdrawal implementation
 
-Before activating real customer collection, the system/process must support:
+Implemented foundation:
 
-- access to a person's stored intake data;
-- correction of inaccurate intake information;
-- deletion/erasure where applicable;
-- consent withdrawal where consent is relied upon;
-- restriction/other applicable rights handling;
-- retention expiry deletion;
-- an auditable record of the privacy/consent version presented at submission.
+- request lookup requires both request ID and matching contact detail;
+- access export is implemented;
+- an erasure function exists and uses the separate maintenance database role;
+- access identity matching was verified with synthetic data on an isolated Neon branch.
 
-No self-service customer portal is required for the first private pilot, but there must be a published privacy contact and an admin procedure that can identify and erase a request safely.
+Still required before real collection:
 
-## 12. Remaining activation blockers
+- destructive erasure verification using only the synthetic test row, after explicit owner approval;
+- correction/restriction handling procedure;
+- verified privacy contact route;
+- retention-expiry execution test;
+- published withdrawal instructions.
 
-Real customer collection remains blocked until all of the following are true:
+## 13. Remaining activation blockers
 
-1. real legal controller identity is supplied;
-2. real public privacy/contact email or other contact route is supplied;
-3. owner confirms consent as the pilot's Article 6 lawful basis;
-4. final privacy notice text/version is approved;
-5. final consent wording/version is approved;
-6. Railway and Neon processor/data-transfer review is documented as applicable;
-7. access/correction/erasure/withdrawal procedure is tested;
-8. retention worker is tested and deliberately enabled;
-9. owner authorises activation of the private pilot.
+Real text-only customer collection remains blocked until all of the following are true:
 
-## 13. Media and AI are separate later gates
+1. controller identity/public business details are verified;
+2. dedicated privacy contact email is supplied and verified;
+3. final privacy notice text/version is approved;
+4. final text consent wording/version is approved;
+5. Railway and Neon processor/data-transfer review is approved/evidenced;
+6. access/correction/erasure/withdrawal procedure is fully tested;
+7. retention worker is tested and deliberately enabled;
+8. owner authorises activation of the private pilot.
 
-Photo/video/audio and AI analysis add materially different processing. They must not be enabled merely because text intake is approved.
+The lawful-basis choice and 30-day text retention are no longer open decisions; they are owner-approved for this private text-only pilot.
 
-Before those stages, separately review private object storage, processor terms/data locations, media retention/deletion, upload warnings, transcription/vision provider data use, human-review safeguards, role-based access and audit logs.
+## 14. Photo/video is a separate gate
 
-## 14. Official Irish guidance rechecked
+The owner approved the *design* of photo/video intake, not activation.
 
-- DPC — Right to be informed / transparency (Articles 13 & 14): https://www.dataprotection.ie/en/individuals/know-your-rights/right-be-informed-transparency-article-13-14-gdpr
-- DPC — Definition of key terms / Article 6 lawful bases and consent: https://www.dataprotection.ie/en/organisations/data-protection-basics/definition-key-terms
-- DPC — Storage limitation FAQ: https://www.dataprotection.ie/en/faqs/responsibilities-data-controllers/how-long-should-personal-data-be-held-meet-obligations-imposed-gdpr
-- DPC — Self-assessment checklist, including consent/withdrawal procedures: https://www.dataprotection.ie/en/organisations/resources-organisations/self-assessment-checklist
+Canonical media policy: `docs/CUSTOM-INTAKE-MEDIA-POLICY.md`.
 
-These sources should be rechecked immediately before activation if the design, operator or providers change.
+Before media activation, private object storage, media-specific consent/guidance, processor review, deletion verification, deletion-confirmation email and an abandoned-request fallback retention rule must all be operational. Enabling text intake must never automatically enable media.
+
+## 15. Official Irish guidance rechecked
+
+- DPC — Right to be informed / transparency (Articles 13 & 14)
+- DPC — Lawful processing / Article 6 bases
+- DPC — Storage limitation
+- DPC — Principles of data protection
+- DPC — What is personal data (including photos/audio/video where identifiable)
+- DPC — Video recording guidance
+
+Canonical source URLs are maintained in the project's legal source notes and should be rechecked immediately before activation if the design, operator or providers change.
