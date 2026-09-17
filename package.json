@@ -21,6 +21,7 @@
     "sync:awin": "node scripts/sync-awin.mjs",
     "sync:ebay": "node scripts/sync-ebay.mjs",
     "report:awin": "node scripts/fetch-awin-transactions.mjs",
-    "report:ebay": "node scripts/normalise-ebay-tdr.mjs"
+    "report:ebay": "node scripts/normalise-ebay-tdr.mjs",
+    "intake:retention": "node scripts/intake-retention.mjs"
   }
 }
