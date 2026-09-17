@@ -25,11 +25,11 @@ Owner-approved priority: **take employer-independent commerce to its truthful ex
 | AF-017 | Dropshipping supplier qualification | IMPLEMENTED FOUNDATION / SELLING DISABLED | Real supplier passes all gates |
 | AF-018 | Dropshipping exact-SKU compliance | IMPLEMENTED / EMPTY REGISTRY | Real SKUs pass GPSR/import/EPR/category/sample/margin gates |
 | AF-019 | Independent commerce handoff | **EXTERNAL-BLOCKER BOUNDARY REACHED** | Remaining work requires real accounts, counterparties, suppliers or owner legal/publication decisions |
-| LF-001 | Custom Furniture AI Intake | **PRIVATE DATA FOUNDATION IMPLEMENTED / COLLECTION OFF** | Controller/privacy/processor/rights gates pass, then private text pilot can be deliberately staged |
-| LF-002 | Text-only intake persistence | IMPLEMENTED / ACTIVATION HOLD | Verified controller/contact + final privacy wording + processor review + rights tests + deliberate activation |
+| LF-001 | Custom Furniture AI Intake | **PRIVATE DATA FOUNDATION IMPLEMENTED / COLLECTION OFF** | Controller/privacy/processor/contact gates pass, then private text pilot can be deliberately staged |
+| LF-002 | Text-only intake persistence | IMPLEMENTED / ACTIVATION HOLD | Verified controller/contact + final privacy wording + processor review + deliberate activation |
 | LF-003 | Privacy/consent/retention | **30-DAY TEXT RETENTION + ARTICLE 6(1)(a) CONSENT OWNER-APPROVED** | Final controller identity/contact and processor/privacy evidence are verified |
-| LF-004 | Data-subject access/erasure procedure | **ACCESS VERIFIED / SYNTHETIC ERASURE TEST PENDING** | Synthetic erasure is verified and procedure evidence is accepted |
-| LF-005 | Photo/video guided intake | **DESIGN + VALIDATORS IMPLEMENTED / ACTIVATION HOLD** | Private object storage + media privacy/processor review + fallback retention + deletion email + production schema migration |
+| LF-004 | Data-subject access/erasure procedure | **VERIFIED FOR PRIVATE PILOT FOUNDATION** | Keep procedure tested as UI/flows evolve |
+| LF-005 | Photo/video guided intake | **PRIVATE STORAGE + SCHEMA + POLICY FOUNDATION COMPLETE / UPLOADS OFF** | Media privacy/processor review + verified privacy email + controlled upload route |
 | LF-006 | AI text/voice/media processing | HOLD | Processor/data-use review + private structured intake approved |
 | LF-007 | Human reviewer queue | NEXT AFTER TEXT PILOT | Restricted reviewer role and queue available |
 | LF-008 | Manufacturing referral route | HOLD | Written manufacturing/referral/data agreement exists |
@@ -37,11 +37,11 @@ Owner-approved priority: **take employer-independent commerce to its truthful ex
 
 ## Current verified checkpoint
 
-Railway remains a private authenticated preview. The media-policy test checkpoint passed **184/184 tests, 0 failures**, and the latest Railway deployment is `SUCCESS` after the owner/operator/privacy documentation updates.
+Railway remains a private authenticated preview. The media-policy checkpoint passed **184/184 tests, 0 failures** before the latest retention/storage reconciliation changes; every subsequent deployment remains subject to the same build-time test gate.
 
-Affiliate monetisation, consumer checkout, dropshipping selling, conversion tracking and Custom Furniture customer-data collection/media uploads all remain disabled.
+Affiliate monetisation, consumer checkout, dropshipping selling, conversion tracking and all real Custom Furniture customer-data collection/media uploads remain disabled.
 
-## Production data foundation
+## Production data and media foundation
 
 The production Neon database contains the privacy-minimised affiliate ledger/sync schema plus:
 
@@ -49,9 +49,11 @@ The production Neon database contains the privacy-minimised affiliate ledger/syn
 - `dropi_ops.custom_intake_media`;
 - `dropi_ops.custom_intake_events`.
 
-Public access is revoked. Runtime text-intake access uses a dedicated least-privilege database role and receives no media-table access. Retention/erasure uses a separate maintenance role. Automated retention remains disabled with `INTAKE_RETENTION_EXECUTE=false`.
+Public database access is revoked. Runtime text-intake access uses a dedicated least-privilege database role. Retention/erasure uses a separate maintenance role. Automated retention remains disabled with `INTAKE_RETENTION_EXECUTE=false`.
 
-Migration `db/migrations/003-custom-intake-media-lifecycle.sql` has been prepared and successfully tested on a temporary Neon migration branch, including a synthetic request/media row. It is **not applied to production** until explicit owner approval.
+`db/migrations/003-custom-intake-media-lifecycle.sql` was tested on an isolated migration branch and, after explicit owner approval, applied successfully to production on 2026-09-17. Its temporary branch was deleted automatically.
+
+Neon private Object Storage is now provisioned in `eu-central-1` with private bucket `dropi-custom-intake-media`. A dedicated storage credential with only `storage:read` and `storage:write` scopes is stored as Railway secrets. `MEDIA_UPLOADS_ENABLED=false` remains in force.
 
 ## Independent commerce boundary
 
@@ -75,14 +77,16 @@ Photo/video lifecycle: `docs/CUSTOM-INTAKE-MEDIA-POLICY.md`.
 Processor review: `docs/CUSTOM-INTAKE-PROCESSOR-REVIEW.md`.
 Sole-trader operator checklist: `docs/OPERATOR-SOLE-TRADER-IRELAND.md`.
 Production base schema: `db/migrations/002-custom-intake.sql`.
-Prepared media lifecycle migration: `db/migrations/003-custom-intake-media-lifecycle.sql`.
+Production media lifecycle schema: `db/migrations/003-custom-intake-media-lifecycle.sql`.
 Owner retention/privacy evidence: `docs/evidence/owner-custom-intake-retention-consent-approval-2026-09-17.md`.
 Owner operator/media evidence: `docs/evidence/owner-custom-intake-operator-media-decisions-2026-09-17.md`.
+Owner media/erasure approval: `docs/evidence/owner-custom-intake-media-erasure-approval-2026-09-17.md`.
 Rights-access evidence: `docs/evidence/custom-intake-rights-access-verification-2026-09-17.md`.
+Rights-erasure evidence: `docs/evidence/custom-intake-rights-erasure-verification-2026-09-17.md`.
 
 Implemented now:
 
-- production private request/media/event base schema;
+- production private request/media/event schema;
 - separate least-privilege application and retention/erasure database roles;
 - fail-closed feature policy;
 - text-only request preparation/persistence logic;
@@ -95,12 +99,15 @@ Implemented now:
 - strict target-date validation;
 - human-review readiness checks and actor-specific state transitions;
 - access/export service requiring request ID + matching contact;
-- erasure service requiring the separate maintenance role;
-- synthetic access verification on an isolated Neon branch; wrong contact produced zero matches;
+- synthetic access verification and synthetic erasure verification on isolated Neon branches;
+- synthetic erasure left `remaining = 0`; the rights-verification branch was then deleted;
 - privacy-first photo/video capture guidance and separate media-consent contract;
+- private EU-region object storage foundation and scoped runtime credential;
+- production media-lifecycle schema for consent versioning, verified purge and deletion-email status;
 - media lifecycle rule: completion/cancellation/decline/other terminal closure requires purge;
+- owner-approved **30-day inactivity fallback** for abandoned **pre-contract** media;
+- accepted/active work is not silently purged merely because 30 days elapsed;
 - deletion email can only be queued after every media object is verified absent;
-- media cannot activate without private storage, media-specific privacy review, processor review, abandoned-request fallback retention and verified email route;
 - critical dimensions cannot become authoritative from AI/photo inference alone;
 - AI cannot approve producibility, final quote, structural safety, decline or binding orders;
 - `NO_TRAINING` default for all customer intake/media.
@@ -124,29 +131,29 @@ Still disabled:
 - `controllerModel = INDIVIDUAL_SOLE_TRADER_PLANNED`;
 - `controllerIdentityStatus = PENDING_REGISTRATION_AND_PUBLIC_DETAILS`;
 - `privacyContactStatus = PENDING_DEDICATED_EMAIL`;
-- `rightsProcedureStatus = ACCESS_VERIFIED_ERASURE_TEST_PENDING`;
-- `mediaFallbackRetentionStatus = OPEN`;
+- `rightsProcedureStatus = VERIFIED`;
+- `mediaStorageProvider = NEON_PRIVATE_OBJECT_STORAGE_EU_CENTRAL_1`;
+- `mediaFallbackRetentionStatus = APPROVED`;
+- `abandonedMediaRetentionDays = 30`;
 - `deletionEmailStatus = MISSING`;
 - `privacyReview.approved = false`;
 - `mediaPrivacyReview.approved = false`;
 - `processorReview.approved = false`;
 - `manufacturerAgreement.approved = false`.
 
-The processor review records that Neon structured storage is in Frankfurt/EU but does not treat regional database placement as a complete GDPR processor/transfer review. Railway/Neon agreement and transfer evidence must be retained before customer activation.
+The processor review records that regional storage placement is not treated as a complete GDPR processor/transfer review. Railway/Neon agreement and transfer evidence must be retained before customer activation.
 
 ## Rights verification
 
-A synthetic request exists only on the isolated Neon rights-verification branch. Exact request ID + matching normalized contact returned the request; the same ID with a wrong contact returned zero matches. No real customer data was used and production was not modified.
-
-End-to-end erasure remains deliberately unverified because DELETE is destructive even on a temporary branch and requires explicit owner approval. The intended test deletes only the synthetic row and then removes that temporary branch; it does not affect production or the SUPER_ADMIN account.
+The synthetic rights request was deleted only after explicit owner approval. A follow-up query returned zero rows for that request, and the isolated rights-verification branch was deleted. Production customer data, production auth and the SUPER_ADMIN account were not touched.
 
 ## Media privacy / lifecycle boundary
 
 The owner approved future photo/video capability with separate consent and privacy guidance. Customers must be instructed to capture only what is needed and avoid people/children, faces/reflections, identity documents, mail, screens, family photos, medical/financial documents and unrelated private content.
 
-Primary rule: original media is deleted after the related job/request is terminally closed (completion, customer cancellation, decline or other closure) and a deletion-confirmation email is sent only after the purge has been technically verified.
+Primary rule: original media is deleted after the related job/request is terminally closed and a deletion-confirmation email is sent only after the purge has been technically verified.
 
-Before media activation a separate maximum/fallback period must be approved for **abandoned pre-contract requests** so files cannot remain indefinitely when the customer disappears without formally cancelling. Active accepted work should not be silently deleted solely because an arbitrary number of days elapsed; closure/review governs that lifecycle.
+Fallback rule: media attached to an abandoned pre-contract request is purged after **30 days of inactivity**. Active accepted work does not inherit this inactivity purge.
 
 ## Safety rule
 
