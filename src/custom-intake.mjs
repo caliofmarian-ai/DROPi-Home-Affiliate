@@ -65,6 +65,13 @@ export function validateCustomIntakePolicy(policy, evidenceExists = () => false)
   if (policy.mediaUploadsEnabled) {
     if (!policy.structuredSubmissionEnabled) issues.push('Media uploads require structured submission first.');
     if (!nonBlank(policy.mediaStorageProvider) || policy.mediaStorageProvider === 'NOT_PROVISIONED') issues.push('Media uploads require private object storage.');
+    if (!nonBlank(policy.mediaGuidanceVersion)) issues.push('Media uploads require versioned privacy capture guidance.');
+    if (!nonBlank(policy.mediaConsentVersion)) issues.push('Media uploads require separate versioned media consent.');
+    if (policy.mediaDeletionRule !== 'DELETE_ON_TERMINAL_CLOSE') issues.push('Media uploads require deletion on terminal request/work closure.');
+    if (policy.mediaDeletionNotification !== 'EMAIL_AFTER_CONFIRMED_PURGE') issues.push('Media uploads require email notification after confirmed purge.');
+    if (policy.mediaFallbackRetentionStatus !== 'APPROVED') issues.push('Media uploads require an approved fallback retention rule for abandoned requests.');
+    if (policy.deletionEmailStatus !== 'VERIFIED') issues.push('Media uploads require a verified deletion-confirmation email route.');
+    if (!evidenceApproved(policy.mediaPrivacyReview, evidenceExists)) issues.push('Media uploads require media-specific privacy review evidence.');
     if (!evidenceApproved(policy.processorReview, evidenceExists)) issues.push('Media uploads require processor/data-transfer review evidence.');
   }
   if (policy.aiProcessingEnabled) {
