@@ -13,7 +13,7 @@
   "lawfulBasisStatus": "CONSENT_MODEL_PROPOSED_NOT_ACTIVATED",
   "controllerIdentityStatus": "MISSING",
   "privacyContactStatus": "MISSING",
-  "rightsProcedureStatus": "MISSING",
+  "rightsProcedureStatus": "IMPLEMENTED_NOT_VERIFIED",
   "aiDataUse": "NO_TRAINING",
   "ownerGovernanceEvidenceFile": "docs/evidence/owner-custom-intake-retention-consent-approval-2026-09-17.md",
   "privacyReview": {
