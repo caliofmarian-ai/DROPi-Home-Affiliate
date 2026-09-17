@@ -1,6 +1,6 @@
 # Custom Furniture Intake — Photo / Video Privacy & Lifecycle Policy
 
-Status: APPROVED DESIGN / NOT ACTIVE
+Status: APPROVED DESIGN / PRIVATE STORAGE PROVISIONED / UPLOADS NOT ACTIVE
 Date: 2026-09-17
 
 This policy covers customer-supplied room photographs and video for future custom-furniture requests. It is separate from the text-only pilot.
@@ -21,6 +21,8 @@ Photo/video upload remains OFF until all of the following are real and evidenced
 - deletion-confirmation email route is configured and tested;
 - controller identity and privacy contact are verified;
 - no manufacturer forwarding occurs without a written agreement.
+
+Current storage foundation: a private Neon Object Storage bucket named `dropi-custom-intake-media` is provisioned in `eu-central-1`. Runtime storage credentials are held only as Railway secrets and are not committed to GitHub or exposed to the browser. `MEDIA_UPLOADS_ENABLED=false` remains in force.
 
 ## Customer capture guidance — required before upload
 
@@ -81,7 +83,11 @@ Required lifecycle:
 
 The system must not claim that media was deleted merely because a request was marked closed.
 
-A separate maximum/fallback rule for abandoned requests must be decided before media activation so media cannot remain indefinitely if a request is never formally closed.
+### Abandoned pre-contract requests
+
+The Project Owner approved a **30-day inactivity fallback** for media belonging to a request that has not reached customer acceptance/contract stage and has been abandoned without formal cancellation. The 30-day timer is based on the last customer activity relevant to the request.
+
+This fallback does **not** silently purge media for an accepted/active job merely because 30 calendar days elapsed. Once the customer has accepted the work, closure/review governs the media lifecycle.
 
 ## Customer deletion notice
 
@@ -107,3 +113,7 @@ Media must not be forwarded to the current employer or any manufacturer until:
 - the relevant lawful basis and sharing role are documented;
 - a written manufacturing/referral/data agreement exists;
 - the minimum necessary media is selected for sharing.
+
+## Production schema status
+
+`db/migrations/003-custom-intake-media-lifecycle.sql` was tested on a temporary Neon branch and, after explicit owner approval, applied successfully to the production database on 2026-09-17. The migration records guidance/consent versions, privacy acknowledgement, verified purge metadata and deletion-email lifecycle state. It does not enable uploads by itself.
