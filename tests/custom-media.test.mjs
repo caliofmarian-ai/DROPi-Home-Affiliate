@@ -5,8 +5,10 @@ import {
   MEDIA_CONSENT_VERSION,
   MEDIA_DELETE_RULE,
   MEDIA_DELETE_NOTICE_RULE,
+  APPROVED_ABANDONED_MEDIA_RETENTION_DAYS,
   mediaActivationIssues,
   validateMediaSubmission,
+  abandonedMediaDeleteAfter,
   mediaPurgePlan,
   confirmMediaPurge,
   buildMediaDeletionEmail
@@ -21,6 +23,7 @@ const active = {
   mediaDeletionRule: MEDIA_DELETE_RULE,
   mediaDeletionNotification: MEDIA_DELETE_NOTICE_RULE,
   mediaFallbackRetentionStatus: 'APPROVED',
+  abandonedMediaRetentionDays: APPROVED_ABANDONED_MEDIA_RETENTION_DAYS,
   deletionEmailStatus: 'VERIFIED',
   aiDataUse: 'NO_TRAINING',
   mediaPrivacyReview: { approved: true, approvedBy: 'Owner', approvedAt: '2026-09-17T08:00:00Z', evidenceFile: 'docs/evidence/media-review.md' },
@@ -32,6 +35,7 @@ test('media remains blocked without private storage processor review fallback re
     ...active,
     mediaStorageProvider: 'NOT_PROVISIONED',
     mediaFallbackRetentionStatus: 'OPEN',
+    abandonedMediaRetentionDays: null,
     deletionEmailStatus: 'MISSING',
     processorReview: { approved: false },
     mediaPrivacyReview: { approved: false }
@@ -40,7 +44,15 @@ test('media remains blocked without private storage processor review fallback re
   assert.ok(issues.some(x => x.includes('private object storage')));
   assert.ok(issues.some(x => x.includes('processor/data-transfer')));
   assert.ok(issues.some(x => x.includes('fallback retention')));
+  assert.ok(issues.some(x => x.includes('30-day')));
   assert.ok(issues.some(x => x.includes('deletion-confirmation email')));
+});
+
+test('owner-approved abandoned-media fallback is exactly 30 days for pre-contract inactivity', () => {
+  const deleteAt = abandonedMediaDeleteAfter({ lastCustomerActivityAt: '2026-09-17T08:00:00Z', requestState: 'WAITING_FOR_CUSTOMER_INFO' }, active);
+  assert.equal(deleteAt, '2026-10-17T08:00:00.000Z');
+  assert.throws(() => abandonedMediaDeleteAfter({ lastCustomerActivityAt: '2026-09-17T08:00:00Z', requestState: 'CUSTOMER_ACCEPTED' }, active), /before customer acceptance/);
+  assert.throws(() => abandonedMediaDeleteAfter({ lastCustomerActivityAt: '2026-09-17T08:00:00Z', requestState: 'WAITING_FOR_CUSTOMER_INFO' }, { ...active, abandonedMediaRetentionDays: 31 }), /retention policy/);
 });
 
 test('photo/video submission requires current guidance separate media consent and privacy attestation', () => {
