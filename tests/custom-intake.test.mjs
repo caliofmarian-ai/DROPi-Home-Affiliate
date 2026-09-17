@@ -23,6 +23,10 @@ const enabledPolicy = {
   retentionDays: 30,
   privacyNoticeVersion: 'privacy-v1',
   consentVersion: 'intake-consent-v1',
+  lawfulBasisStatus: 'CONSENT_APPROVED',
+  controllerIdentityStatus: 'VERIFIED',
+  privacyContactStatus: 'VERIFIED',
+  rightsProcedureStatus: 'VERIFIED',
   aiDataUse: 'NO_TRAINING',
   privacyReview: { approved: true, approvedAt: '2026-09-16T18:00:00Z', approvedBy: 'Owner', evidenceFile: 'docs/evidence/privacy.md' },
   processorReview: { approved: true, approvedAt: '2026-09-16T18:00:00Z', approvedBy: 'Owner', evidenceFile: 'docs/evidence/processor.md' },
@@ -65,11 +69,15 @@ test('foundation-only intake policy is safe while every collection feature is di
     mediaUploadsEnabled: false,
     aiProcessingEnabled: false,
     manufacturerRoutingEnabled: false,
-    storageProvider: 'NOT_PROVISIONED',
+    storageProvider: 'NEON_POSTGRES_EU_FRANKFURT',
     mediaStorageProvider: 'NOT_PROVISIONED',
-    retentionDays: null,
-    privacyNoticeVersion: null,
-    consentVersion: null,
+    retentionDays: 30,
+    privacyNoticeVersion: 'custom-intake-privacy-v1-draft',
+    consentVersion: 'custom-intake-consent-v1-draft',
+    lawfulBasisStatus: 'CONSENT_MODEL_PROPOSED_NOT_ACTIVATED',
+    controllerIdentityStatus: 'MISSING',
+    privacyContactStatus: 'MISSING',
+    rightsProcedureStatus: 'MISSING',
     aiDataUse: 'NO_TRAINING',
     privacyReview: { approved: false },
     processorReview: { approved: false },
@@ -84,6 +92,21 @@ test('structured customer intake fails closed without storage retention consent 
   assert.ok(issues.some(x => x.includes('private persistent storage')));
   assert.ok(issues.some(x => x.includes('retentionDays')));
   assert.ok(issues.some(x => x.includes('privacy review')));
+});
+
+test('structured intake also fails closed without lawful basis controller contact and rights procedure', () => {
+  const policy = {
+    ...enabledPolicy,
+    lawfulBasisStatus: 'CONSENT_MODEL_PROPOSED_NOT_ACTIVATED',
+    controllerIdentityStatus: 'MISSING',
+    privacyContactStatus: 'MISSING',
+    rightsProcedureStatus: 'MISSING'
+  };
+  const issues = validateCustomIntakePolicy(policy, evidence);
+  assert.ok(issues.some(x => x.includes('Article 6 lawful-basis')));
+  assert.ok(issues.some(x => x.includes('controller identity')));
+  assert.ok(issues.some(x => x.includes('privacy contact')));
+  assert.ok(issues.some(x => x.includes('rights and withdrawal/erasure')));
 });
 
 test('manufacturer routing cannot activate without written agreement evidence', () => {
