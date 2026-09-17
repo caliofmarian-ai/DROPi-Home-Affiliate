@@ -1,14 +1,26 @@
-# Custom Furniture Intake — Privacy / Consent / Retention Draft
+# Custom Furniture Intake — Privacy / Consent / Retention
 
-Status: DRAFT FOR OWNER REVIEW — NOT AN ACTIVE PRIVACY NOTICE
+Status: OWNER-APPROVED RETENTION / CONSENT MODEL DRAFT — REAL CUSTOMER COLLECTION STILL OFF
 
-Date reviewed against DPC guidance: 2026-09-17
+Last legal-source review: 2026-09-17
 
-This document defines the first proposed **text-only private pilot**. It is deliberately narrower than the full Custom Furniture AI Intake design.
+This document governs the first proposed **text-only private pilot**. It is deliberately narrower than the full Custom Furniture AI Intake design.
 
-## 1. What remains disabled
+## 1. Approved owner decision
 
-Until a later explicit approval:
+The Project Owner approved on 2026-09-17:
+
+- a **30-day retention period** for private text-only pilot submissions;
+- continued implementation of the privacy and consent/acknowledgement layer;
+- keeping public intake, media, AI processing, manufacturer routing and employer sharing disabled until their separate gates pass.
+
+Canonical evidence: `docs/evidence/owner-custom-intake-retention-consent-approval-2026-09-17.md`.
+
+The 30-day period is an operational design decision, **not** a statutory GDPR period. The Irish Data Protection Commission states that GDPR does not prescribe one universal retention period; identifiable data should be kept no longer than necessary for the purpose.
+
+## 2. What remains disabled
+
+Until later explicit approval:
 
 - no public customer intake;
 - no room photographs;
@@ -22,11 +34,11 @@ Until a later explicit approval:
 
 `aiDataUse` remains `NO_TRAINING`.
 
-## 2. Purpose of the proposed text-only pilot
+## 3. Purpose of the text-only pilot
 
-The only purpose is to receive a customer's voluntary description of a possible custom-furniture requirement, identify missing information and prepare a structured request for later human review.
+The only purpose is to receive a person's voluntary description of a possible custom-furniture requirement, identify missing information and prepare a structured request for later human review.
 
-Submitting the form would **not**:
+Submitting the future form will **not**:
 
 - create a manufacturing contract;
 - guarantee that an item can be produced;
@@ -35,9 +47,9 @@ Submitting the form would **not**:
 - authorise DROPi Home to order anything;
 - send the request to the current employer or another manufacturer.
 
-## 3. Proposed data fields
+## 4. Data minimisation
 
-The pilot would collect only data reasonably needed to understand the request:
+The pilot may collect only what is reasonably needed to understand the request:
 
 - email and/or phone contact;
 - broad service area/postcode area;
@@ -50,98 +62,119 @@ The pilot would collect only data reasonably needed to understand the request:
 - preferred target date;
 - delivery/fitting preference;
 - free-text notes;
-- timestamped acknowledgement/consent version;
+- timestamped privacy/consent version;
 - request status and minimal audit events.
 
-Do not request PPSN, payment data, identity documents, exact birth date, health data or other special-category data.
+Do **not** request PPSN, payment-card data, identity documents, exact birth date, health data or other special-category data for this pilot.
 
-## 4. Lawful-basis decision remains OPEN
+## 5. Lawful-basis model
 
-The production feature must not claim a GDPR Article 6 basis until DROPi Home's real legal/operator and contracting role is fixed.
+For this **private text-only pilot**, the proposed model is Article 6(1)(a) consent, because the feature is currently a voluntary intake experiment and is not yet tied to an established manufacturer contract or a defined seller/agent role.
 
-Possible bases to review before activation include:
+This remains `CONSENT_MODEL_PROPOSED_NOT_ACTIVATED` until the real data-controller identity and privacy contact are fixed.
 
-- Article 6(1)(b), where processing is genuinely necessary to take steps at the person's request before entering a contract; or
-- Article 6(1)(a) consent, where consent is the appropriate freely given, specific, informed and withdrawable basis.
+If the future commercial model becomes a genuine request for steps before entering a contract, Article 6(1)(b) may be more appropriate for some processing. That later change requires a separate review; the system must not silently switch legal basis.
 
-The interface may require an affirmative acknowledgement before submission as an engineering safeguard, but that checkbox must not be described as the legal basis unless the legal-basis review concludes that consent is in fact being relied upon.
+If consent is used, it must be freely given, specific, informed and unambiguous, captured by a clear affirmative action, and withdrawal must be supported.
 
-## 5. Retention proposal for the private text-only pilot
+## 6. Retention
 
-**Proposed value: 30 days from submission.**
+**Approved pilot value: 30 days from submission.**
 
-This is an operational proposal, not a statutory GDPR period. The purpose is to give enough time to inspect a pilot request while keeping identifiable data for a short period.
+At expiry, an unconverted pilot request should be securely deleted. Dependent audit records are deleted with the request according to the database relationship.
 
-Before any real customer activation the owner must approve this period or replace it with a justified alternative.
+The automated retention worker exists but remains disabled until the real pilot is deliberately activated. It uses a separate maintenance database role.
 
-If a future request becomes a real quotation, customer relationship, contract, dispute or accounting record, a different retention basis/period may apply. That future record must not silently inherit the pilot's 30-day policy.
+If a request later becomes a real quotation, customer relationship, contract, dispute or accounting record, a different retention rule may apply. That future record must not silently inherit the pilot's 30-day policy.
 
-Expired pilot requests should be securely deleted, including dependent audit/media records where applicable.
+## 7. Storage and access
 
-## 6. Storage and access
+Structured text intake storage is provisioned in the private Neon PostgreSQL database in Frankfurt, EU.
 
-Structured intake data is planned for the private Neon PostgreSQL database in the EU (Frankfurt project). Runtime access uses a dedicated least-privilege role rather than the database-owner role.
+Runtime access uses a dedicated least-privilege role that can access only the intake request/event tables required for text intake. It has no media-table rights. Retention uses a separate maintenance role.
 
-The text-only role currently has access only to the request/event tables needed for intake. It does not receive media-table rights.
+Customer data must never be committed to GitHub. Railway stores database credentials only as environment secrets; they must not be exposed to the browser, repository or logs.
 
-Customer data must never be committed to GitHub.
+## 8. Versioned privacy notice
 
-The Railway application stores only its database connection as a secret environment variable; it must not expose that value to the browser or logs.
+Draft version identifier: `custom-intake-privacy-v1-draft`.
 
-## 7. Draft customer-facing transparency text
+The notice cannot become active until it contains the real controller identity and contact details. Before collection, it must clearly explain at least:
 
-The final notice must identify the real legal operator and contact details. Until those facts are approved, this draft must not be published as a completed legal notice.
+- who the data controller is and how to contact them;
+- the purpose of processing;
+- the Article 6 lawful basis;
+- categories of data collected;
+- recipients/processors;
+- any relevant non-EEA transfer information/safeguards;
+- the 30-day pilot retention period;
+- applicable access, rectification, erasure, restriction, portability and objection rights;
+- if relying on consent, the right to withdraw it at any time without affecting processing already lawfully carried out;
+- the right to complain to the Data Protection Commission;
+- whether providing each field is required and what happens if it is not provided;
+- whether automated decision-making is used. For this pilot, binding automated decisions are not used.
 
-Suggested concise form notice:
+## 9. Draft concise form notice
 
-> **Custom furniture request — private intake**
+This text is for owner review and UI testing only until controller details are inserted:
+
+> **Custom furniture request — private text-only intake**
 >
 > Use this form to describe what you may want made for your space. This is a request for review, not an order, quotation or promise that the item can be manufactured. Measurements you enter are treated as customer-supplied measurements and may need professional verification before production.
 >
-> We will use the details you submit only to structure and review this request. In this text-only stage we do not accept photos, video or audio, do not send your request to a manufacturer and do not use your information for AI training.
+> We use the details you submit only to structure and review this request. In this stage we do not accept photos, video or audio, do not send the request to a manufacturer, do not make an automated production decision and do not use the information for AI training.
 >
-> The proposed pilot retention period is 30 days. The full privacy notice will explain the legal basis, operator identity, recipients, retention, your data-protection rights and how to contact us.
+> Unconverted pilot submissions are retained for 30 days and then deleted under the pilot retention rule. The full privacy notice identifies the controller, lawful basis, processors/recipients and your data-protection rights.
 
-Suggested acknowledgement checkbox for the pilot, subject to final legal-basis review:
+## 10. Draft consent text
 
-> I have read the Custom Furniture Request privacy information and understand that this submission is non-binding, uses customer-supplied measurements and is stored only for the stated intake/review purpose.
+Draft version identifier: `custom-intake-consent-v1-draft`.
 
-## 8. Required owner/legal facts before activation
+Proposed checkbox wording:
 
-All of the following remain blocking:
+> I have read the Custom Furniture Request privacy information. I consent to DROPi Home processing the information I submit for the sole purpose of structuring and reviewing this non-binding request. I understand that I can withdraw this consent and request deletion, subject to any separate legal reason that may later require specific records to be retained.
 
-1. real legal operator identity;
-2. real public contact details/privacy contact;
-3. chosen Article 6 lawful basis for this processing operation;
-4. approved retention period;
-5. final privacy notice version;
-6. final acknowledgement/consent wording and version;
-7. Railway/Neon processor and international-transfer review as applicable;
-8. documented handling of access, correction, erasure, restriction and other applicable rights;
-9. deletion/retention execution path tested;
-10. owner approval recorded in repository evidence.
+The checkbox must be **unticked by default** and submission must fail closed without it while consent is the selected lawful basis.
 
-## 9. Media and AI are separate later gates
+## 11. Rights and withdrawal implementation requirements
 
-Photo/video/audio and AI analysis add materially different processing. They must not be enabled simply because text intake is approved.
+Before activating real customer collection, the system/process must support:
 
-Before those stages, separately review:
+- access to a person's stored intake data;
+- correction of inaccurate intake information;
+- deletion/erasure where applicable;
+- consent withdrawal where consent is relied upon;
+- restriction/other applicable rights handling;
+- retention expiry deletion;
+- an auditable record of the privacy/consent version presented at submission.
 
-- private object storage;
-- processor terms and data locations/transfers;
-- media retention/deletion;
-- content warning to avoid filming people, documents and unrelated private items;
-- transcription/vision provider data use;
-- human review and automated-decision safeguards;
-- role-based access and audit logs.
+No self-service customer portal is required for the first private pilot, but there must be a published privacy contact and an admin procedure that can identify and erase a request safely.
 
-## 10. Official guidance used
+## 12. Remaining activation blockers
 
-- Irish Data Protection Commission — Guidance on Legal Bases for Processing Personal Data
-- Irish Data Protection Commission — Lawful Processing
-- Irish Data Protection Commission — Transparency
-- Irish Data Protection Commission — Storage Limitation FAQ
-- Irish Data Protection Commission — Principles of Data Protection
-- Irish Data Protection Commission — How do I make a privacy policy?
+Real customer collection remains blocked until all of the following are true:
 
-The canonical URLs are recorded in `docs/LEGAL-COMPLIANCE-IRELAND-EU.md` / project legal source notes and should be rechecked immediately before activation.
+1. real legal controller identity is supplied;
+2. real public privacy/contact email or other contact route is supplied;
+3. owner confirms consent as the pilot's Article 6 lawful basis;
+4. final privacy notice text/version is approved;
+5. final consent wording/version is approved;
+6. Railway and Neon processor/data-transfer review is documented as applicable;
+7. access/correction/erasure/withdrawal procedure is tested;
+8. retention worker is tested and deliberately enabled;
+9. owner authorises activation of the private pilot.
+
+## 13. Media and AI are separate later gates
+
+Photo/video/audio and AI analysis add materially different processing. They must not be enabled merely because text intake is approved.
+
+Before those stages, separately review private object storage, processor terms/data locations, media retention/deletion, upload warnings, transcription/vision provider data use, human-review safeguards, role-based access and audit logs.
+
+## 14. Official Irish guidance rechecked
+
+- DPC — Right to be informed / transparency (Articles 13 & 14): https://www.dataprotection.ie/en/individuals/know-your-rights/right-be-informed-transparency-article-13-14-gdpr
+- DPC — Definition of key terms / Article 6 lawful bases and consent: https://www.dataprotection.ie/en/organisations/data-protection-basics/definition-key-terms
+- DPC — Storage limitation FAQ: https://www.dataprotection.ie/en/faqs/responsibilities-data-controllers/how-long-should-personal-data-be-held-meet-obligations-imposed-gdpr
+- DPC — Self-assessment checklist, including consent/withdrawal procedures: https://www.dataprotection.ie/en/organisations/resources-organisations/self-assessment-checklist
+
+These sources should be rechecked immediately before activation if the design, operator or providers change.
