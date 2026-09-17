@@ -5,7 +5,7 @@
   "mediaUploadsEnabled": false,
   "aiProcessingEnabled": false,
   "manufacturerRoutingEnabled": false,
-  "storageProvider": "NOT_PROVISIONED",
+  "storageProvider": "NEON_POSTGRES_EU_FRANKFURT",
   "mediaStorageProvider": "NOT_PROVISIONED",
   "retentionDays": null,
   "privacyNoticeVersion": null,
